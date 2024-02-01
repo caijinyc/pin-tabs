@@ -1,0 +1,18 @@
+.tabListItem {
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+  align-items: center;
+  font-size: 14px;
+
+  &:hover {
+    background: rgba(173, 216, 230, 0.2);
+  }
+
+  .favicon {
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+  }
+}

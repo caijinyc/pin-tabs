@@ -17,8 +17,17 @@ const Popup = () => {
       }}>
       <header className="App-header" style={{ color: theme === 'light' ? '#000' : '#fff' }}>
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/pages/popup/Popup.tsx</code> and save to reload.
+        <p onClick={()=>{
+          chrome.tabs.query({ active: true, lastFocusedWindow: true }, ([tab]) => {
+            if (chrome.runtime.lastError)
+              console.error(chrome.runtime.lastError);
+            // `tab` will either be a `tabs.Tab` instance or `undefined`.
+            console.log('tttttttttttt' ,tab)
+            // callback(tab);
+
+          });
+        }}>
+          Edit <code>src/pages/popup/Popup.tsssx</code> and save to reload.
         </p>
         <a
           className="App-link"
