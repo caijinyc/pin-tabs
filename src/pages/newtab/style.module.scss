@@ -2,9 +2,9 @@
   cursor: pointer;
   display: flex;
   gap: 8px;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
   align-items: center;
-  font-size: 14px;
+  font-size: 16px;
 
   &:hover {
     background: rgba(173, 216, 230, 0.2);
@@ -15,4 +15,44 @@
     height: 18px;
     margin-right: 4px;
   }
+}
+
+.wrapper {
+  height: 100vh;
+  display: flex;
+}
+
+.leftTitle {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.leftSpaceWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 18px;
+}
+
+.leftSpaceItem {
+  font-size: 16px;
+  //font-weight: 500;
+  cursor: pointer;
+}
+
+.leftSpaceItemActive {
+  font-weight: 700;
+  color: #1966ff;
+}
+
+.leftPanel {
+  width: 150px;
+  padding: 16px;
+  border-right: 1px solid #e0e0e0;
+}
+
+.rightPanel {
+  padding: 16px;
+  flex: 1;
 }
