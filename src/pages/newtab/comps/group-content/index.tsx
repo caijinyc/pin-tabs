@@ -149,18 +149,33 @@ export const GroupContent = () => {
                         // get tab active status from tab url
                         const activeTab = allTabs.find(t => t.url === tab.url);
 
+                        const addToGroup = async () => {
+                          const newTabId = activeTab
+                            ? activeTab.id
+                            : await chrome.tabs.create({ url: tab.url }).then(res => res.id);
+
+                          const newGroupId = await chrome.tabs.group({
+                            tabIds: [newTabId],
+                            groupId: space.groupId ? space.groupId : undefined,
+                          });
+
+                          if (!space.groupId) {
+                            useStore.setState(old => {
+                              return produce(old, draft => {
+                                draft.allSpacesMap[spaceId].groupId = newGroupId;
+                              });
+                            });
+                          }
+
+                          await chrome.tabGroups.update(newGroupId, {
+                            title: space.name,
+                          });
+                        };
+
+                        addToGroup();
+
                         if (activeTab) {
                           chrome.tabs.update(activeTab.id, { active: true });
-                        } else {
-                          // console.log('ttttttttttt', window, tab);
-                          window.open(tab.url);
-
-                          // chrome.tabs.create({ url: tab.url }).then(res => {
-                          //   chrome.tabs.group({ tabIds: [res.id] }).then(group => {
-                          //     console.log('groupgroupgroupgroupgroupgroupgroupgroupgroupgroup', group);
-                          //     // update group id
-                          //   });
-                          // });
                         }
                       }}>
                       <img src={tab.favIconUrl} className={styles.favicon} alt="" />

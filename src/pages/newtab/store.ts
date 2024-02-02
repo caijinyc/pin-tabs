@@ -33,20 +33,17 @@ export function useAllOpenedTabs() {
 
   useEffect(() => {
     getTabs();
-    window.addEventListener('visibilitychange', val => {
-      console.log('vvvvvvvvlll', val);
+    window.addEventListener('visibilitychange', () => {
       getTabs();
 
       chrome.storage.local.set({ cache_tabs_info: useStore.getState() }).then(() => {
         console.log('Value is set');
       });
     });
+
     window.addEventListener('onfocus', () => {
-      console.log('onfocus');
       getTabs();
     });
-    //     return () =>
-    // ;
   }, []);
   return tabs;
 }
@@ -57,6 +54,7 @@ export const useStore = create<{
   allSpacesMap: {
     [key: string]: {
       name: string;
+      groupId?: number;
       tabs: TabInfo[];
     };
   };
