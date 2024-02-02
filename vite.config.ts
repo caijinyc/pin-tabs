@@ -57,8 +57,9 @@ export default defineConfig({
         }
         warn(warning);
       },
+      // external: ['framer-motion', '@emotion/styled'],
       input: {
-        // devtools: resolve(pagesDir, 'devtools', 'index.html'),
+        devtools: resolve(pagesDir, 'devtools', 'index.html'),
         panel: resolve(pagesDir, 'panel', 'index.html'),
         contentInjected: resolve(pagesDir, 'content', 'injected', 'index.ts'),
         contentUI: resolve(pagesDir, 'content', 'ui', 'index.ts'),
@@ -67,7 +68,7 @@ export default defineConfig({
         popup: resolve(pagesDir, 'popup', 'index.html'),
         newtab: resolve(pagesDir, 'newtab', 'index.html'),
         options: resolve(pagesDir, 'options', 'index.html'),
-        // sidepanel: resolve(pagesDir, 'sidepanel', 'index.html'),
+        sidepanel: resolve(pagesDir, 'sidepanel', 'index.html'),
       },
       output: {
         entryFileNames: 'src/pages/[name]/index.js',

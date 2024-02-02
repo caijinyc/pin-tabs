@@ -1,0 +1,35 @@
+
+.popoverTabListItem {
+  cursor: pointer;
+  display: flex;
+  margin-bottom: 12px;
+  align-items: center;
+  font-size: 16px;
+
+  justify-content: space-between;
+
+
+  &:hover {
+    background: rgba(173, 216, 230, 0.2);
+  }
+
+  .favicon {
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+  }
+}
+
+.popoverTabListItemLeft {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.popoverTabListItemRight {
+
+}
+
+.popoverTabListItemSelected {
+
+}

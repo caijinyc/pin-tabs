@@ -3,8 +3,12 @@ import { createRoot } from 'react-dom/client';
 import Newtab from '@pages/newtab/Newtab';
 import '@pages/newtab/index.css';
 import refreshOnUpdate from 'virtual:reload-on-update-in-view';
+import { createStandaloneToast } from '@chakra-ui/react';
 
 refreshOnUpdate('pages/newtab');
+const { ToastContainer, toast } = createStandaloneToast();
+
+export { toast };
 
 function init() {
   const appContainer = document.querySelector('#app-container');
@@ -13,7 +17,12 @@ function init() {
   }
   const root = createRoot(appContainer);
 
-  root.render(<Newtab />);
+  root.render(
+    <>
+      <Newtab />
+      <ToastContainer />
+    </>,
+  );
 }
 
 init();
