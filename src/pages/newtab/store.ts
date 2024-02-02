@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
 import { create } from 'zustand';
-import { createStandaloneToast } from '@chakra-ui/react';
-import { toast } from '@pages/newtab/index';
-import { immer } from 'zustand/middleware/immer';
 import { produce } from 'immer';
-import { ReactComponent } from '*.svg';
 
 export type TabInfo = {
   id: number;
@@ -35,42 +31,61 @@ export function useAllOpenedTabs() {
     });
   };
 
-  console.log('vttttt', tabs);
-
   useEffect(() => {
     getTabs();
-    return () =>
-      window.addEventListener('focus', () => {
-        getTabs();
+    window.addEventListener('visibilitychange', val => {
+      console.log('vvvvvvvvlll', val);
+      getTabs();
+
+      chrome.storage.local.set({ cache_tabs_info: useStore.getState() }).then(() => {
+        console.log('Value is set');
       });
+    });
+    window.addEventListener('onfocus', () => {
+      console.log('onfocus');
+      getTabs();
+    });
+    //     return () =>
+    // ;
   }, []);
   return tabs;
 }
 
 export const useStore = create<{
-  orderIds: string[];
-  selectedId: string;
+  selectedIndex: number;
 
-  allSpaces: {
+  allSpacesMap: {
     [key: string]: {
       name: string;
       tabs: TabInfo[];
     };
   };
 
-  spaces: {
+  groups: {
     name: string;
     subSpacesIds: string[];
   }[];
 }>(() => ({
-  orderIds: ['1', '2', '3'],
-  selectedId: '1',
-  allSpaces: {},
+  selectedIndex: 0,
+  allSpacesMap: {
+    1: {
+      name: 'Monorepo',
+      tabs: [],
+    },
+  },
 
-  spaces: [
+  groups: [
     {
       name: 'DEV MODE',
-      subSpacesIds: ['1', '2', '3'],
+      subSpacesIds: [],
+    },
+    {
+      name: 'REPORT',
+      subSpacesIds: [],
+    },
+    {
+      name: 'PLANNING',
+      subSpacesIds: [],
     },
   ],
 }));
@@ -82,26 +97,26 @@ export const useStore = create<{
 //   });
 // };
 
-export const addPageToCurrentSpace = (subId: string, tab: TabInfo) => {
+export const addPageToCurrentSpace = (id: string, tab: TabInfo) => {
   const state = useStore.getState();
 
-  if (state.spaces[state.selectedId].subSpaces[subId].tabs.includes(tab)) {
-    removePageFromCurrentSpace(subId, tab);
+  if (state.allSpacesMap[id].tabs.find(item => item.id === tab.id)) {
+    removePageFromCurrentSpace(id, tab);
     return;
   }
 
   useStore.setState(old => {
     return produce(old, draft => {
-      draft.spaces[old.selectedId].subSpaces[subId].tabs.push(tab);
+      draft.allSpacesMap[id].tabs.push(tab);
     });
   });
 };
 
-export const removePageFromCurrentSpace = (subId: string, tab: TabInfo) => {
+export const removePageFromCurrentSpace = (id: string, tab: TabInfo) => {
   useStore.setState(old => {
     return produce(old, draft => {
-      const oldTabs = draft.spaces[old.selectedId].subSpaces[subId].tabs;
-      draft.spaces[old.selectedId].subSpaces[subId].tabs = oldTabs.filter(t => t.id !== tab.id);
+      const oldTabs = draft.allSpacesMap[id].tabs;
+      draft.allSpacesMap[id].tabs = oldTabs.filter(t => t.id !== tab.id);
     });
   });
 };

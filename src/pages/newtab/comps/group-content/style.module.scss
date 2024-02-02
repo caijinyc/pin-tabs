@@ -1,0 +1,68 @@
+.spaceItem {
+  margin-bottom: 24px;
+}
+.tabListItem {
+  display: flex;
+
+  margin-bottom: 4px;
+  padding: 4px;
+
+  .tabActions {
+    display: none;
+  }
+
+  &:hover {
+    background: rgba(173, 216, 230, 0.2);
+
+    .tabActions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+  }
+}
+
+.tabItemWrapper {
+  flex-basis: 500px;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 16px;
+
+
+  .favicon {
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+  }
+
+  .tabTitle {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+
+.title {
+  font-size: 18px;
+}
+
+.tabsWrapper {
+  //padding: 16px 0;
+}
+
+.delTab {
+  cursor: pointer;
+  :hover {
+    color: #ff4d4f;
+  }
+}

@@ -14,14 +14,18 @@ import { Icon } from '@iconify-icon/react';
 import React from 'react';
 import { cls } from '@src/shared/kits';
 
-export const AddTabToGetPopoverCurrentSpace = () => {
+export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   const tabs = useAllOpenedTabs();
-  const currentSpaceTabs = useStore(state => state.spaces[state.selectedId].tabs);
+  const currentSpaceTabs = useStore(state => state.allSpacesMap[props.spaceId].tabs);
 
   return (
     <Popover placement={'right-end'}>
       <PopoverTrigger>
-        <Button size={'sm'}>Add Tab</Button>
+        <div className={styles.addIconWrapper}>
+          {/*<Icon icon="material-symbols:add-rounded" inline width="24" height="24" />*/}
+          <Icon icon="material-symbols:push-pin" rotate={'30deg'} inline width="18" height="18" />
+        </div>
+        {/*<Button size="xs">Add</Button>*/}
       </PopoverTrigger>
 
       <Portal>
@@ -45,13 +49,8 @@ export const AddTabToGetPopoverCurrentSpace = () => {
                   className={styles.popoverTabListItem}
                   key={tab.id}
                   onClick={() => {
-                    addPageToCurrentSpace(tab);
+                    addPageToCurrentSpace(props.spaceId, tab);
                   }}>
-                  <div className={styles.popoverTabListItemLeft}>
-                    <img src={tab.favIconUrl} className={styles.favicon} alt="" />
-                    {tab.title}
-                  </div>
-
                   <div
                     className={cls(styles.popoverTabListItemRight, {
                       [styles.popoverTabListItemSelected]: isSelect,
@@ -61,6 +60,11 @@ export const AddTabToGetPopoverCurrentSpace = () => {
                     ) : (
                       <Icon inline icon="mdi:tag-outline" />
                     )}
+                  </div>
+
+                  <div className={styles.popoverTabListItemLeft}>
+                    <img src={tab.favIconUrl} className={styles.favicon} alt="" />
+                    {tab.title}
                   </div>
                 </div>
               );
