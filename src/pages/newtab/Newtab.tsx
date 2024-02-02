@@ -8,17 +8,41 @@ import { useStore } from '@pages/newtab/store';
 import { GroupContent } from '@pages/newtab/comps/group-content';
 import { produce } from 'immer';
 
-const NewTab = () => {
-  const groups = useStore(state => state.groups);
-  const selectedIndex = useStore(state => state.selectedIndex);
-
+function useCacheData() {
   useEffect(() => {
     chrome.storage.local.get(['cache_tabs_info']).then(val => {
       if (val['cache_tabs_info']) {
         useStore.setState(() => val['cache_tabs_info'] || {});
       }
     });
+
+    // every ten minutes save data as a backup version,
+    const interval = setInterval(
+      () => {
+        // get last backup data
+        chrome.storage.local.get(['cache_tabs_info_backup']).then(val => {
+          if (val['cache_tabs_info_backup']) {
+            const newBackup = [...val['cache_tabs_info_backup'], useStore.getState()];
+            chrome.storage.local.set({ cache_tabs_info_backup: newBackup });
+          } else {
+            chrome.storage.local.set({ cache_tabs_info_backup: [useStore.getState()] });
+          }
+        });
+      },
+      1000 * 60 * 10,
+    );
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
+}
+
+const NewTab = () => {
+  const groups = useStore(state => state.groups);
+  const selectedIndex = useStore(state => state.selectedIndex);
+
+  useCacheData();
 
   return (
     <div className="App">

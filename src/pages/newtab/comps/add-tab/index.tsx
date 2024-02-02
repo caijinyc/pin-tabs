@@ -19,7 +19,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   const currentSpaceTabs = useStore(state => state.allSpacesMap[props.spaceId].tabs);
 
   return (
-    <Popover placement={'right-end'}>
+    <Popover placement={'bottom-start'}>
       <PopoverTrigger>
         <div className={styles.addIconWrapper}>
           {/*<Icon icon="material-symbols:add-rounded" inline width="24" height="24" />*/}

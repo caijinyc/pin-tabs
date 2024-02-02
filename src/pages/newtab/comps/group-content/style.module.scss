@@ -19,7 +19,6 @@
       align-items: center;
       gap: 8px;
     }
-
   }
 }
 
@@ -30,7 +29,6 @@
   gap: 8px;
   align-items: center;
   font-size: 16px;
-
 
   .favicon {
     width: 18px;
@@ -64,5 +62,41 @@
   cursor: pointer;
   :hover {
     color: #ff4d4f;
+  }
+}
+
+
+.spaceMoreActionWrapper {
+  padding: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  width: 50px;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    &:hover {
+     color: #da74e1;
+    }
+  }
+}
+
+.moreActionIcon {
+  height: 24px;
+  width: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #da74e1;
+
+  &:hover {
+    background: #ffdbfa;
   }
 }
