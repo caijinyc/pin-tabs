@@ -61,9 +61,15 @@ export const GroupContent = () => {
                         if (activeTab) {
                           chrome.tabs.update(activeTab.id, { active: true });
                         } else {
-                          console.log('ttttttttttt', window, tab);
-                          window.open(tab.url);
-                          // chrome.tabs.create({ url: tab.url });
+                          // console.log('ttttttttttt', window, tab);
+                          // window.open(tab.url);
+
+                          chrome.tabs.create({ url: tab.url }).then(res => {
+                            chrome.tabs.group({ tabIds: [res.id] }).then(group => {
+                              console.log('groupgroupgroupgroupgroupgroupgroupgroupgroupgroup', group);
+                              // update group id
+                            });
+                          });
                         }
                       }}>
                       <img src={tab.favIconUrl} className={styles.favicon} alt="" />

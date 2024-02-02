@@ -63,6 +63,7 @@ export const useStore = create<{
 
   groups: {
     name: string;
+    // TODO 数据结构变更，这里需要支持 Map，可以存储其他数据，例如 group id
     subSpacesIds: string[];
   }[];
 }>(() => ({
