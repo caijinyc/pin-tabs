@@ -18,6 +18,7 @@
 }
 
 .leftSpaceItem {
+  position: relative;
   font-size: 16px;
   //font-weight: 500;
   cursor: pointer;
@@ -32,6 +33,10 @@
 }
 
 .leftPanel {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
   width: 150px;
   padding: 16px 8px;
   border-right: 1px solid #e0e0e0;
@@ -39,6 +44,7 @@
 }
 
 .rightPanel {
+  margin-left: 150px;
   padding: 16px;
   flex: 1;
 }

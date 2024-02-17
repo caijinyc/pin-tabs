@@ -2,20 +2,14 @@ import React, { useEffect } from 'react';
 import styles from './style.module.scss';
 import withSuspense from '@src/shared/hoc/withSuspense';
 import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
-import { Button, ChakraProvider } from '@chakra-ui/react';
-import { cls, uuid } from '@src/shared/kits';
-import { useStore } from '@pages/newtab/store';
-import { GroupContent } from '@pages/newtab/comps/group-content';
-import { produce } from 'immer';
+import { ChakraProvider } from '@chakra-ui/react';
+import { useIsPopupStore, useStore } from '@pages/newtab/store';
+import { LeftPanel } from '@pages/newtab/panel/left-group-side';
+import { RightContentPanel } from '@pages/newtab/panel/right';
+import { GlobalDialog } from '@pages/newtab/comps/global-dialog';
 
-function useCacheData() {
+const useCacheData = () => {
   useEffect(() => {
-    chrome.storage.local.get(['cache_tabs_info']).then(val => {
-      if (val['cache_tabs_info']) {
-        useStore.setState(() => val['cache_tabs_info'] || {});
-      }
-    });
-
     // every ten minutes save data as a backup version,
     const interval = setInterval(
       () => {
@@ -36,67 +30,52 @@ function useCacheData() {
       clearInterval(interval);
     };
   }, []);
-}
+};
 
-const NewTab = () => {
-  const groups = useStore(state => state.groups);
+const NewTab = (props: { isPopup?: boolean }) => {
   const selectedIndex = useStore(state => state.selectedIndex);
 
+  if (props.isPopup && !useIsPopupStore.getState()) {
+    useIsPopupStore.setState(true);
+  }
+
+  useEffect(() => {
+    console.log('useStore.getState()', useStore.getState());
+
+    useStore.subscribe(() => {
+      console.log('state change');
+      chrome.storage.local.set({ cache_tabs_info: useStore.getState() }).then(() => {});
+    });
+  }, []);
+
   useCacheData();
+
+  // useEffect(() => {
+  //   let oneDayAgo = new Date().getTime() - 24 * 60 * 60 * 1000;
+  //
+  //   chrome.history.search(
+  //     {
+  //       text: '', // 空字符串表示不过滤，获取所有历史记录
+  //       startTime: oneDayAgo,
+  //     },
+  //     function (historyItems) {
+  //       // historyItems是一个包含历史记录的数组
+  //       for (var i = 0; i < historyItems.length; ++i) {
+  //         console.log(historyItems[i]); // 输出历史记录的URL
+  //       }
+  //     },
+  //   );
+  // }, []);
 
   return (
     <div className="App">
       <ChakraProvider>
+        <GlobalDialog />
+
         <div className={styles.wrapper}>
           {/*left groups list*/}
-          <div className={styles.leftPanel}>
-            {/*<h1 className={styles.leftTitle}>SAVING TABS</h1>*/}
-            {/*<div className={styles.search}></div>*/}
-            <div className={styles.leftSpaceWrapper}>
-              {groups.map((item, index) => {
-                return (
-                  <div
-                    className={cls(styles.leftSpaceItem, { [styles.leftSpaceItemActive]: selectedIndex === index })}
-                    key={item.name}
-                    style={{
-                      marginBottom: 8,
-                    }}
-                    onClick={() => {
-                      useStore.setState(() => {
-                        return {
-                          selectedIndex: index,
-                        };
-                      });
-                    }}>
-                    {groups[index].name}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className={styles.rightPanel}>
-            <GroupContent />
-
-            <div>
-              <Button
-                size={'sm'}
-                onClick={() => {
-                  useStore.setState(old => {
-                    return produce(old, draft => {
-                      const id = uuid();
-                      draft.groups[selectedIndex].subSpacesIds.push(id);
-                      draft.allSpacesMap[id] = {
-                        name: 'Untitled Sub Space',
-                        tabs: [],
-                      };
-                    });
-                  });
-                }}>
-                Add Sub Space
-              </Button>
-            </div>
-          </div>
+          <LeftPanel />
+          <RightContentPanel />
         </div>
       </ChakraProvider>
     </div>

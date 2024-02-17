@@ -7,14 +7,49 @@ export type TabInfo = {
   title: string;
   url: string;
   favIconUrl: string;
+
+  customTitle?: string;
+  active?: boolean;
+  groupId?: number;
 };
 
-export function useAllOpenedTabs() {
-  const [tabs, setActiveTabs] = React.useState<TabInfo[]>([]);
+export const useAllGroups = () => {
+  const [groupsMap, setGroupsMap] = React.useState<Record<string, { name: string; id: number; color: string }>>({});
 
-  const getTabs = () => {
+  function updateGroups() {
+    chrome.tabGroups.query({}, function (groups) {
+      setGroupsMap(
+        groups
+          .map(group => {
+            return {
+              name: group.title,
+              id: group.id,
+              color: group.color,
+            };
+          })
+          .reduce((acc, item) => {
+            acc[item.id] = item;
+            return acc;
+          }, {}),
+      );
+    });
+  }
+
+  useEffect(() => {
+    updateGroups();
+
+    window.addEventListener('visibilitychange', () => {
+      updateGroups();
+    });
+  }, []);
+
+  return groupsMap;
+};
+
+export const getAllOpenedTabs = async () => {
+  return new Promise<TabInfo[]>((resolve, reject) => {
     chrome.tabs.query({}, function (tabs) {
-      setActiveTabs(
+      resolve(
         tabs
           .map(tab => {
             return {
@@ -22,6 +57,8 @@ export function useAllOpenedTabs() {
               title: tab.title,
               url: tab.url,
               favIconUrl: tab.favIconUrl,
+              active: tab.active,
+              groupId: tab.groupId > 0 ? tab.groupId : undefined,
             };
           })
           .filter(item => {
@@ -29,34 +66,75 @@ export function useAllOpenedTabs() {
           }),
       );
     });
+  });
+};
+
+export function useAllOpenedTabs() {
+  const [tabs, setActiveTabs] = React.useState<TabInfo[]>([]);
+
+  const getTabs = () => {
+    getAllOpenedTabs().then(setActiveTabs);
   };
 
   useEffect(() => {
     getTabs();
     window.addEventListener('visibilitychange', () => {
       getTabs();
-
-      chrome.storage.local.set({ cache_tabs_info: useStore.getState() }).then(() => {
-        console.log('Value is set');
-      });
     });
 
     window.addEventListener('onfocus', () => {
       getTabs();
     });
   }, []);
+
   return tabs;
 }
+
+// <script src="https://gist.github.com/caijinyc/c86f6619e8066cd20de9f27ad791d9f0.js"></script>
+
+export const useHistoryTabsFromHistoryApi = () => {
+  const [historyTabs, setHistoryTabs] = React.useState<TabInfo[]>([]);
+
+  useEffect(() => {
+    chrome.history.search(
+      {
+        text: '',
+        maxResults: 10,
+      },
+      function (historyItems) {
+        // setHistoryTabs(
+        //   historyItems
+        //     .map(item => {
+        //       return {
+        //         id: item.id,
+        //         title: item.title,
+        //         url: item.url,
+        //         favIconUrl: '',
+        //       };
+        //     })
+        //     .filter(item => {
+        //       return item.url && item.url.startsWith('http');
+        //     }),
+        // );
+      },
+    );
+  }, []);
+
+  return historyTabs;
+};
+
+export type SpaceInfo = {
+  name: string;
+  groupId?: number;
+  tabs: TabInfo[];
+  uuid: string;
+};
 
 export const useStore = create<{
   selectedIndex: number;
 
   allSpacesMap: {
-    [key: string]: {
-      name: string;
-      groupId?: number;
-      tabs: TabInfo[];
-    };
+    [key: string]: SpaceInfo;
   };
 
   groups: {
@@ -66,12 +144,7 @@ export const useStore = create<{
   }[];
 }>(() => ({
   selectedIndex: 0,
-  allSpacesMap: {
-    1: {
-      name: 'Monorepo',
-      tabs: [],
-    },
-  },
+  allSpacesMap: {},
 
   groups: [
     {
@@ -88,6 +161,24 @@ export const useStore = create<{
     },
   ],
 }));
+
+chrome.storage.local.get(['cache_tabs_info']).then(val => {
+  if (val['cache_tabs_info']) {
+    useStore.setState(() => val['cache_tabs_info'] || {});
+
+    // setTimeout(() => {
+    //   useStore.setState(old => {
+    //     const newVal = produce(old, draft => {
+    //       Object.keys(draft.allSpacesMap).forEach(key => {
+    //         console.log('key', key);
+    //         draft.allSpacesMap[key].uuid = key;
+    //       });
+    //     });
+    //     return newVal;
+    //   });
+    // });
+  }
+});
 
 // export const addPageToSpace = (spaceId: string, tab: TabInfo) => {
 //   useStore.setState(old => {
@@ -119,3 +210,7 @@ export const removePageFromCurrentSpace = (id: string, tab: TabInfo) => {
     });
   });
 };
+
+export const useIsPopupStore = create<boolean>(() => false);
+
+export const isPopupStore = useIsPopupStore.getState();

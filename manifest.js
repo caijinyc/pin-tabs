@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+
 const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
 
 /**
@@ -15,10 +16,11 @@ const manifest = {
   name: '__MSG_extensionName__',
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
-  permissions: ['storage', 'sidePanel', 'tabs', '<all_urls>', 'tabGroups'],
-  side_panel: {
-    default_path: 'src/pages/sidepanel/index.html',
-  },
+  permissions: ['storage', 'sidePanel', 'tabs', 'tabGroups', 'history', 'alarms'],
+  key: `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwon6UimSqj2ZXePAF5x+3UkAi7GFkPnfZkNKyocQb0RcEyVqle6EtzEN5nxokqW5gQQwjqlNyxsZ5jgwNYilgBWNpAR45Qj/d5d/ip9U8+7zpitYom7cbXX1u6EoeTT/BzrLukXOOkHH6CnEMLAEiSQhtf8tKjCkl3+ar0BhP9YEV/HkDmKih84IHjnyjClHhJIctNevCAFt/9YdHtncd0Bp+mmHGCbAjSJ68lKiJ4bNHz6MDpQXcRRTESC+DucCf4gfagIjGb1LTm4D/w78lL1E6gtxjySGBaByaUKFMlFsILX8AApAaZI1OoZvucFzYwkIJX0EVK+oz82xOOlNgwIDAQAB`,
+  // side_panel: {
+  //   default_path: 'src/pages/sidepanel/index.html',
+  // },
   options_page: 'src/pages/options/index.html',
   background: {
     service_worker: 'src/pages/background/index.js',
@@ -28,25 +30,41 @@ const manifest = {
     default_popup: 'src/pages/popup/index.html',
     default_icon: 'icon-34.png',
   },
-  chrome_url_overrides: {
-    newtab: 'src/pages/newtab/index.html',
-  },
+  // chrome_url_overrides: {
+  //   newtab: 'src/pages/newtab/index.html',
+  // },
   icons: {
     128: 'icon-128.png',
   },
+  commands: {
+    command1: {
+      suggested_key: {
+        default: 'Ctrl+Shift+Y',
+        mac: 'Command+Shift+Y',
+      },
+      description: 'Trigger Command 1',
+    },
+    command2: {
+      suggested_key: {
+        default: 'Ctrl+Shift+E',
+        mac: 'Command+Shift+E',
+      },
+      description: 'Open bookmarks manage page',
+    },
+  },
   content_scripts: [
-    {
-      matches: ['http://*/*', 'https://*/*', '<all_urls>'],
-      js: ['src/pages/contentInjected/index.js'],
-      // KEY for cache invalidation
-      css: ['assets/css/contentStyle<KEY>.chunk.css'],
-    },
-    {
-      matches: ['http://*/*', 'https://*/*', '<all_urls>'],
-      js: ['src/pages/contentUI/index.js'],
-    },
+    // {
+    //   matches: ['http://*/*', 'https://*/*', '<all_urls>'],
+    //   js: ['src/pages/contentInjected/index.js'],
+    //   // KEY for cache invalidation
+    //   css: ['assets/css/contentStyle<KEY>.chunk.css'],
+    // },
+    // {
+    //   matches: ['http://*/*', 'https://*/*', '<all_urls>'],
+    //   js: ['src/pages/contentUI/index.js'],
+    // },
   ],
-  devtools_page: 'src/pages/devtools/index.html',
+  // devtools_page: 'src/pages/devtools/index.html',
   web_accessible_resources: [
     {
       resources: ['assets/js/*.js', 'assets/css/*.css', 'icon-128.png', 'icon-34.png'],

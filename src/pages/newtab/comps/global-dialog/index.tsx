@@ -33,7 +33,7 @@ export const dialog = {
   },
 };
 
-export function TransitionExample() {
+export function GlobalDialog() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
   const { title, content, onOk, onCancel } = useDialogStore();

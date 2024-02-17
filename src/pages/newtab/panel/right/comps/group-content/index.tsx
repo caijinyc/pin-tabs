@@ -1,0 +1,228 @@
+import { getAllOpenedTabs, SpaceInfo, TabInfo, useAllOpenedTabs, useStore } from '@pages/newtab/store';
+import { AddTabToGetPopoverCurrentSpace } from '@pages/newtab/panel/right/comps/add-tab';
+import styles from './style.module.scss';
+import React from 'react';
+import { Input } from '@chakra-ui/react';
+import { produce } from 'immer';
+import { Icon } from '@iconify-icon/react';
+import { SpaceMoreActions } from './space-actions';
+import { al } from 'vitest/dist/reporters-5f784f42';
+
+function updateSpaceName(spaceId: string, val: string) {
+  useStore.setState(old => {
+    return produce(old, draft => {
+      draft.allSpacesMap[spaceId].name = val || '';
+    });
+  });
+}
+
+export const openTab = async ({
+  tab,
+  space,
+  autoActiveOpenedTab = false,
+}: {
+  tab: TabInfo;
+  space: SpaceInfo;
+  autoActiveOpenedTab?: boolean;
+}) => {
+  const allOpenedTabs = await getAllOpenedTabs();
+  let activeTab = allOpenedTabs.find(t => t.url === tab.url);
+  const spaceId = space.uuid;
+
+  // let activeTab: TabInfo;
+
+  const addToGroup = async () => {
+    const newTab = activeTab
+      ? activeTab
+      : await chrome.tabs.create({ url: tab.url, active: false }).then(res => {
+          return {
+            id: res.id,
+            url: res.url,
+            title: res.title,
+            favIconUrl: res.favIconUrl,
+          } as TabInfo;
+        });
+
+    const newTabId = newTab.id;
+
+    activeTab = newTab;
+
+    console.log('newTabId', newTabId);
+
+    let groupId: number | undefined = undefined;
+
+    if (space.groupId) {
+      await chrome.tabGroups
+        .get(space.groupId)
+        .then(res => {
+          console.log('ggggggggg', res);
+          if (res) {
+            groupId = res.id;
+          }
+        })
+        .catch(e => {
+          console.error('no group', e);
+        });
+    }
+
+    console.log('space.groupIdll', space.groupId);
+
+    const newGroupId = await chrome.tabs.group({
+      tabIds: [newTabId],
+      groupId: groupId ? groupId : undefined,
+    });
+
+    console.log('newGroupId 111', newGroupId);
+
+    if (space.groupId !== newGroupId) {
+      useStore.setState(old => {
+        return produce(old, draft => {
+          draft.allSpacesMap[spaceId].groupId = newGroupId;
+        });
+      });
+    }
+
+    console.log('newGroupId 222', newGroupId);
+
+    await chrome.tabGroups.update(newGroupId, {
+      title: space.name,
+    });
+  };
+
+  addToGroup()
+    .catch(e => {
+      console.error(e);
+    })
+    .then(() => {
+      console.log('___________activxxxxxxxeTab', activeTab);
+      if (activeTab && autoActiveOpenedTab) {
+        // console.log('activeTab', activeTab);
+        chrome.tabs.update(activeTab.id, { active: true });
+      }
+    });
+};
+
+const TabItem = ({ tab, space }: { tab: TabInfo; space: SpaceInfo }) => {
+  const spaceId = space.uuid;
+  const [isEdit, setIsEdit] = React.useState(false);
+
+  return (
+    <div className={styles.tabListItem} key={tab.id}>
+      <div
+        className={styles.tabItemWrapper}
+        onMouseDown={e => {
+          const isMiddleClick = e.button === 1;
+          const isLeftClick = e.button === 0;
+
+          if (![isLeftClick, isMiddleClick].some(Boolean)) return;
+
+          if (isEdit) return;
+
+          // get tab active status from tab url
+          openTab({ tab, space, autoActiveOpenedTab: isLeftClick });
+        }}>
+        <img src={tab.favIconUrl} className={styles.favicon} alt="" />
+
+        {isEdit ? (
+          <Input
+            size={'sm'}
+            autoFocus
+            // variant="unstyled"
+            placeholder="Unstyled"
+            defaultValue={tab.title}
+            onBlur={e => {
+              setIsEdit(false);
+              if (e.target.value) {
+                useStore.setState(old => {
+                  return produce(old, draft => {
+                    draft.allSpacesMap[spaceId].tabs = draft.allSpacesMap[spaceId].tabs.map(t => {
+                      if (t.id === tab.id) {
+                        t.title = e.target.value;
+                      }
+                      return t;
+                    });
+                  });
+                });
+              }
+            }}
+          />
+        ) : (
+          <div className={styles.tabTitle}>{tab.title}</div>
+        )}
+      </div>
+
+      <div className={styles.tabActions}>
+        <Icon
+          onClick={() => {
+            setIsEdit(true);
+          }}
+          inline
+          icon="lets-icons:edit-duotone-line"
+          width={'20px'}
+          height={'20px'}
+          className={styles.delTab}
+        />
+        <Icon
+          onClick={() => {
+            useStore.setState(old => {
+              return produce(old, draft => {
+                draft.allSpacesMap[spaceId].tabs = draft.allSpacesMap[spaceId].tabs.filter(t => t.id !== tab.id);
+              });
+            });
+          }}
+          inline
+          icon="lets-icons:dell-duotone"
+          width={'20px'}
+          height={'20px'}
+          className={styles.delTab}
+        />
+      </div>
+    </div>
+  );
+};
+
+export const GroupContent = () => {
+  const allSpacesMap = useStore(state => state.allSpacesMap);
+  const currentSpaceTabs = useStore(state => state.groups[state.selectedIndex]) || { subSpacesIds: [] };
+  const allTabs = useAllOpenedTabs();
+
+  return (
+    <>
+      <div className={styles.tabsWrapper}>
+        {currentSpaceTabs.subSpacesIds.map(spaceId => {
+          const space = allSpacesMap[spaceId];
+          const tabs = space.tabs;
+
+          return (
+            <div key={spaceId} className={styles.spaceItem}>
+              <div className={styles.titleWrapper}>
+                <Input
+                  style={{
+                    width: 200,
+                  }}
+                  variant="unstyled"
+                  placeholder="Unstyled"
+                  value={space.name}
+                  onBlur={() => {
+                    if (!space.name) {
+                      updateSpaceName(spaceId, 'New Space');
+                    }
+                  }}
+                  onChange={e => {
+                    updateSpaceName(spaceId, e.target.value);
+                  }}
+                />
+
+                <AddTabToGetPopoverCurrentSpace spaceId={spaceId} />
+
+                {<SpaceMoreActions space={space} />}
+              </div>
+
+              {tabs.length ? tabs.map(tab => <TabItem {...{ tab, allTabs, space }} />) : <div>No Pinned Tabs</div>}
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+};
