@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { create } from 'zustand';
 import { produce } from 'immer';
+import { storeLocalStorage, storeSyncStorage } from '@src/shared/storages/storeSyncStorage';
+import { DEFAULT_STORE_STATE } from '@src/constant';
+import { dialog } from '@pages/newtab/comps/global-dialog';
 
 export type TabInfo = {
   id: number;
@@ -62,7 +65,10 @@ export const getAllOpenedTabs = async () => {
             };
           })
           .filter(item => {
-            return item.url && item.url.startsWith('http');
+            return (
+              item.url &&
+              (item.url.startsWith('http') || item.url.startsWith('chrome-extension') || item.url.startsWith('edge'))
+            );
           }),
       );
     });
@@ -92,36 +98,36 @@ export function useAllOpenedTabs() {
 
 // <script src="https://gist.github.com/caijinyc/c86f6619e8066cd20de9f27ad791d9f0.js"></script>
 
-export const useHistoryTabsFromHistoryApi = () => {
-  const [historyTabs, setHistoryTabs] = React.useState<TabInfo[]>([]);
-
-  useEffect(() => {
-    chrome.history.search(
-      {
-        text: '',
-        maxResults: 10,
-      },
-      function (historyItems) {
-        // setHistoryTabs(
-        //   historyItems
-        //     .map(item => {
-        //       return {
-        //         id: item.id,
-        //         title: item.title,
-        //         url: item.url,
-        //         favIconUrl: '',
-        //       };
-        //     })
-        //     .filter(item => {
-        //       return item.url && item.url.startsWith('http');
-        //     }),
-        // );
-      },
-    );
-  }, []);
-
-  return historyTabs;
-};
+// export const useHistoryTabsFromHistoryApi = () => {
+//   const [historyTabs, setHistoryTabs] = React.useState<TabInfo[]>([]);
+//
+//   useEffect(() => {
+//     chrome.history.search(
+//       {
+//         text: '',
+//         maxResults: 10,
+//       },
+//       function (historyItems) {
+//         // setHistoryTabs(
+//         //   historyItems
+//         //     .map(item => {
+//         //       return {
+//         //         id: item.id,
+//         //         title: item.title,
+//         //         url: item.url,
+//         //         favIconUrl: '',
+//         //       };
+//         //     })
+//         //     .filter(item => {
+//         //       return item.url && item.url.startsWith('http');
+//         //     }),
+//         // );
+//       },
+//     );
+//   }, []);
+//
+//   return historyTabs;
+// };
 
 export type SpaceInfo = {
   name: string;
@@ -130,7 +136,7 @@ export type SpaceInfo = {
   uuid: string;
 };
 
-export const useStore = create<{
+export type StoreType = {
   selectedIndex: number;
 
   allSpacesMap: {
@@ -142,50 +148,29 @@ export const useStore = create<{
     // TODO 数据结构变更，这里需要支持 Map，可以存储其他数据，例如 group id
     subSpacesIds: string[];
   }[];
-}>(() => ({
-  selectedIndex: 0,
-  allSpacesMap: {},
 
-  groups: [
-    {
-      name: 'DEV MODE',
-      subSpacesIds: [],
-    },
-    {
-      name: 'REPORT',
-      subSpacesIds: [],
-    },
-    {
-      name: 'PLANNING',
-      subSpacesIds: [],
-    },
-  ],
-}));
+  lastSyncTime: number;
+  alreadySyncedToGist?: boolean;
+};
 
-chrome.storage.local.get(['cache_tabs_info']).then(val => {
-  if (val['cache_tabs_info']) {
-    useStore.setState(() => val['cache_tabs_info'] || {});
+export const useStore = create<StoreType>(() => produce(DEFAULT_STORE_STATE, draft => {}));
 
-    // setTimeout(() => {
-    //   useStore.setState(old => {
-    //     const newVal = produce(old, draft => {
-    //       Object.keys(draft.allSpacesMap).forEach(key => {
-    //         console.log('key', key);
-    //         draft.allSpacesMap[key].uuid = key;
-    //       });
-    //     });
-    //     return newVal;
-    //   });
-    // });
-  }
-});
+export const loadStoreFromStorage = () => {
+  return Promise.all([storeLocalStorage.get(), storeSyncStorage.get()]).then(([localData, cloudData]) => {
+    // console.log('localData', localData);
+    // console.log('cloudData', cloudData);
 
-// export const addPageToSpace = (spaceId: string, tab: TabInfo) => {
-//   useStore.setState(old => {
-//     old.spaces[spaceId].tabs.push(tab);
-//     return old;
-//   });
-// };
+    if (localData.lastSyncTime > cloudData.lastSyncTime) {
+      console.log('init local data');
+      return useStore.setState(localData);
+    } else {
+      console.log('init cloud data');
+      return useStore.setState(cloudData);
+    }
+  });
+};
+
+loadStoreFromStorage();
 
 export const addPageToCurrentSpace = (id: string, tab: TabInfo) => {
   const state = useStore.getState();

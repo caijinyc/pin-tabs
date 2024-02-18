@@ -26,7 +26,7 @@ export const openTab = async ({
   autoActiveOpenedTab?: boolean;
 }) => {
   const allOpenedTabs = await getAllOpenedTabs();
-  let activeTab = allOpenedTabs.find(t => t.url === tab.url);
+  let activeTab = allOpenedTabs.find(t => t.url === tab.url || t.title === tab.title || t.id === tab.id);
   const spaceId = space.uuid;
 
   // let activeTab: TabInfo;
@@ -55,13 +55,18 @@ export const openTab = async ({
       await chrome.tabGroups
         .get(space.groupId)
         .then(res => {
-          console.log('ggggggggg', res);
           if (res) {
             groupId = res.id;
           }
         })
-        .catch(e => {
+        .catch(async e => {
           console.error('no group', e);
+          const allGroups = await chrome.tabGroups.query({ windowId: chrome.windows.WINDOW_ID_CURRENT });
+
+          // 这里是用来处理游览器关闭后（游览器更新 / 崩溃 / 其他情况挂掉），再次打开时，groupId 会变更的问题
+          if (activeTab.groupId && allGroups.find(g => g.id === activeTab.groupId && g.title === space.name)) {
+            groupId = activeTab.groupId;
+          }
         });
     }
 
@@ -94,7 +99,6 @@ export const openTab = async ({
       console.error(e);
     })
     .then(() => {
-      console.log('___________activxxxxxxxeTab', activeTab);
       if (activeTab && autoActiveOpenedTab) {
         // console.log('activeTab', activeTab);
         chrome.tabs.update(activeTab.id, { active: true });

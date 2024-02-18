@@ -3,34 +3,41 @@ import styles from './style.module.scss';
 import withSuspense from '@src/shared/hoc/withSuspense';
 import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
 import { ChakraProvider } from '@chakra-ui/react';
-import { useIsPopupStore, useStore } from '@pages/newtab/store';
+import { loadStoreFromStorage, useIsPopupStore, useStore } from '@pages/newtab/store';
 import { LeftPanel } from '@pages/newtab/panel/left-group-side';
 import { RightContentPanel } from '@pages/newtab/panel/right';
 import { GlobalDialog } from '@pages/newtab/comps/global-dialog';
+import { storeLocalStorage } from '@src/shared/storages/storeSyncStorage';
 
-const useCacheData = () => {
+const useSaveStoreDataToStorage = () => {
   useEffect(() => {
-    // every ten minutes save data as a backup version,
-    const interval = setInterval(
-      () => {
-        // get last backup data
-        chrome.storage.local.get(['cache_tabs_info_backup']).then(val => {
-          if (val['cache_tabs_info_backup']) {
-            const newBackup = [...val['cache_tabs_info_backup'], useStore.getState()];
-            chrome.storage.local.set({ cache_tabs_info_backup: newBackup });
-          } else {
-            chrome.storage.local.set({ cache_tabs_info_backup: [useStore.getState()] });
-          }
-        });
-      },
-      1000 * 60 * 10,
-    );
-
-    return () => {
-      clearInterval(interval);
-    };
+    useStore.subscribe(() => {
+      console.log('store changed & local storage updated');
+      storeLocalStorage.set({
+        ...useStore.getState(),
+        alreadySyncedToGist: false,
+        lastSyncTime: Date.now(),
+      });
+    });
   }, []);
 };
+
+// 每次切换到前台时，都尝试从 storage 中加载数据（防止 cloud 更新，但是本地被未同步到 store 中）
+function useLoadStoreData() {
+  useEffect(() => {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        loadStoreFromStorage();
+      }
+    });
+
+    window.addEventListener('focus', function () {
+      console.log('窗口获得焦点');
+      // 执行窗口获得焦点时的操作
+      loadStoreFromStorage();
+    });
+  }, []);
+}
 
 const NewTab = (props: { isPopup?: boolean }) => {
   const selectedIndex = useStore(state => state.selectedIndex);
@@ -39,33 +46,8 @@ const NewTab = (props: { isPopup?: boolean }) => {
     useIsPopupStore.setState(true);
   }
 
-  useEffect(() => {
-    console.log('useStore.getState()', useStore.getState());
-
-    useStore.subscribe(() => {
-      console.log('state change');
-      chrome.storage.local.set({ cache_tabs_info: useStore.getState() }).then(() => {});
-    });
-  }, []);
-
-  useCacheData();
-
-  // useEffect(() => {
-  //   let oneDayAgo = new Date().getTime() - 24 * 60 * 60 * 1000;
-  //
-  //   chrome.history.search(
-  //     {
-  //       text: '', // 空字符串表示不过滤，获取所有历史记录
-  //       startTime: oneDayAgo,
-  //     },
-  //     function (historyItems) {
-  //       // historyItems是一个包含历史记录的数组
-  //       for (var i = 0; i < historyItems.length; ++i) {
-  //         console.log(historyItems[i]); // 输出历史记录的URL
-  //       }
-  //     },
-  //   );
-  // }, []);
+  useSaveStoreDataToStorage();
+  useLoadStoreData();
 
   return (
     <div className="App">
@@ -73,7 +55,6 @@ const NewTab = (props: { isPopup?: boolean }) => {
         <GlobalDialog />
 
         <div className={styles.wrapper}>
-          {/*left groups list*/}
           <LeftPanel />
           <RightContentPanel />
         </div>
