@@ -7,3 +7,7 @@ export const uuid = () => {
     return Math.floor(Math.random() * 16).toString(16);
   });
 };
+
+export const removeUrlHash = (url: string) => {
+  return url.split('#')[0];
+};

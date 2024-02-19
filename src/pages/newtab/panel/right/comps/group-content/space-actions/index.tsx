@@ -6,6 +6,7 @@ import styles from '@pages/newtab/panel/right/comps/group-content/style.module.s
 import { Icon } from '@iconify-icon/react';
 import React from 'react';
 import { openTab } from '@pages/newtab/panel/right/comps/group-content';
+import { cls } from '@src/shared/kits';
 
 export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   const spaceId = space.uuid;
@@ -105,7 +106,7 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   return (
     <Popover placement={'bottom-start'} matchWidth={true}>
       <PopoverTrigger>
-        <div className={styles.moreActionIcon}>
+        <div className={cls(styles.moreActionIcon, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}>
           <Icon icon="material-symbols:more-horiz" width="18" height="18" inline />
         </div>
       </PopoverTrigger>

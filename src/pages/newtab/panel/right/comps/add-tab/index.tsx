@@ -18,8 +18,6 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   const currentSpaceTabs = useStore(state => state.allSpacesMap[props.spaceId].tabs);
   const isPopup = useIsPopupStore(state => state);
 
-  console.log(groups);
-
   const data: Array<
     | TabInfo
     | {
@@ -44,20 +42,6 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
     return acc;
   }, []);
 
-  console.log('data', data);
-
-  // // 按照 group id 分组
-  // const tabsGroupByGroupId = tabs.reduce(
-  //   (acc, tab) => {
-  //     if (!acc[tab.groupId]) {
-  //       acc[tab.groupId] = [];
-  //     }
-  //     acc[tab.groupId].push(tab);
-  //     return acc;
-  //   },
-  //   {} as Record<string, TabInfo[]>,
-  // );
-
   if (isPopup) {
     // popup 模式下，直接添加当前激活的 tab
     return (
@@ -69,7 +53,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
             addPageToCurrentSpace(props.spaceId, currentActiveTab);
           }
         }}>
-        <Icon icon="material-symbols:push-pin" rotate={'30deg'} inline width="18" height="18" />
+        <Icon icon="fluent:pin-12-filled" inline width="18" height="18" />
       </div>
     );
   }
@@ -77,8 +61,8 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   return (
     <Popover placement={'bottom-start'}>
       <PopoverTrigger>
-        <div className={styles.addIconWrapper}>
-          <Icon icon="material-symbols:push-pin" rotate={'30deg'} inline width="18" height="18" />
+        <div className={cls(styles.addIconWrapper, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}>
+          <Icon icon="fluent:pin-12-filled" className={''} inline width="18" height="18" />
         </div>
       </PopoverTrigger>
 

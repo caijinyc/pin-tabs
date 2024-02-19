@@ -66,7 +66,8 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
       const localStorageData = await storeLocalStorage.get();
       if (localStorageData.alreadySyncedToGist) return;
 
-      useStore.setState({
+      storeLocalStorage.set({
+        ...localStorageData,
         alreadySyncedToGist: true,
       });
 

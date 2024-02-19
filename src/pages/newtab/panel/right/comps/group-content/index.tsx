@@ -6,7 +6,7 @@ import { Input } from '@chakra-ui/react';
 import { produce } from 'immer';
 import { Icon } from '@iconify-icon/react';
 import { SpaceMoreActions } from './space-actions';
-import { al } from 'vitest/dist/reporters-5f784f42';
+import { removeUrlHash } from '@src/shared/kits';
 
 function updateSpaceName(spaceId: string, val: string) {
   useStore.setState(old => {
@@ -26,7 +26,13 @@ export const openTab = async ({
   autoActiveOpenedTab?: boolean;
 }) => {
   const allOpenedTabs = await getAllOpenedTabs();
-  let activeTab = allOpenedTabs.find(t => t.url === tab.url || t.title === tab.title || t.id === tab.id);
+  let activeTab = allOpenedTabs.find(t => {
+    if (removeUrlHash(t.url) === removeUrlHash(tab.url)) {
+      return true;
+    }
+    return t.url === tab.url || t.title === tab.title || t.id === tab.id;
+  });
+  console.log('allOpenedTabs', allOpenedTabs);
   const spaceId = space.uuid;
 
   // let activeTab: TabInfo;
@@ -125,7 +131,11 @@ const TabItem = ({ tab, space }: { tab: TabInfo; space: SpaceInfo }) => {
           // get tab active status from tab url
           openTab({ tab, space, autoActiveOpenedTab: isLeftClick });
         }}>
-        <img src={tab.favIconUrl} className={styles.favicon} alt="" />
+        {tab.url.startsWith('chrome://') || tab.url.startsWith('edge://extensions') ? (
+          <Icon inline icon="fluent:extension-16-filled" width={18} height={18} />
+        ) : (
+          <img src={tab.favIconUrl} className={styles.favicon} alt="" />
+        )}
 
         {isEdit ? (
           <Input
