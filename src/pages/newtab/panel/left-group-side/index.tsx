@@ -27,14 +27,8 @@ const UploadLocalHistory = () => {
               const content = e.target?.result;
               if (content) {
                 const data = JSON.parse(content as string);
-                console.log('data', data);
-
-                if (
-                  Object.keys(data)
-                    .sort()
-                    .join('')
-                    .includes(['groups', 'selectedIndex', 'allSpacesMap'].sort().join(''))
-                ) {
+                const keys = Object.keys(data).sort();
+                if (keys.includes('groups') && keys.includes('selectedIndex') && keys.includes('allSpacesMap')) {
                   useStore.setState(old => ({
                     ...old,
                     ...data,

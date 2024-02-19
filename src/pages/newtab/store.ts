@@ -3,7 +3,6 @@ import { create } from 'zustand';
 import { produce } from 'immer';
 import { storeLocalStorage, storeSyncStorage } from '@src/shared/storages/storeSyncStorage';
 import { DEFAULT_STORE_STATE } from '@src/constant';
-import { dialog } from '@pages/newtab/comps/global-dialog';
 
 export type TabInfo = {
   id: number;
@@ -14,6 +13,7 @@ export type TabInfo = {
   customTitle?: string;
   active?: boolean;
   groupId?: number;
+  pinned?: boolean;
 };
 
 export const useAllGroups = () => {
@@ -62,9 +62,12 @@ export const getAllOpenedTabs = async () => {
               favIconUrl: tab.favIconUrl,
               active: tab.active,
               groupId: tab.groupId > 0 ? tab.groupId : undefined,
+              pinned: tab.pinned,
             };
           })
           .filter(item => {
+            if (item?.url.startsWith('edge://newtab')) return false;
+
             return (
               item.url &&
               (item.url.startsWith('http') || item.url.startsWith('chrome-extension') || item.url.startsWith('edge'))
@@ -160,13 +163,15 @@ export const loadStoreFromStorage = () => {
     // console.log('localData', localData);
     // console.log('cloudData', cloudData);
 
-    if (localData.lastSyncTime > cloudData.lastSyncTime) {
-      console.log('init local data');
-      return useStore.setState(localData);
-    } else {
-      console.log('init cloud data');
-      return useStore.setState(cloudData);
-    }
+    return useStore.setState(localData);
+
+    // if (localData.lastSyncTime > cloudData.lastSyncTime) {
+    //   console.log('init local data');
+    //   return useStore.setState(localData);
+    // } else {
+    //   console.log('init cloud data');
+    //   return useStore.setState(cloudData);
+    // }
   });
 };
 

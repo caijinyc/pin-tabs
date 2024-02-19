@@ -7,6 +7,7 @@ import { produce } from 'immer';
 import { Icon } from '@iconify-icon/react';
 import { SpaceMoreActions } from './space-actions';
 import { removeUrlHash } from '@src/shared/kits';
+import { globalToast } from '@pages/newtab/Newtab';
 
 function updateSpaceName(spaceId: string, val: string) {
   useStore.setState(old => {
@@ -34,6 +35,18 @@ export const openTab = async ({
   });
   console.log('allOpenedTabs', allOpenedTabs);
   const spaceId = space.uuid;
+
+  if (activeTab && activeTab.pinned) {
+    globalToast({
+      title: 'Tab already opened & pinned',
+      description: 'The tab is already opened',
+      status: 'info',
+      duration: 2000,
+      isClosable: true,
+    });
+
+    return;
+  }
 
   // let activeTab: TabInfo;
 
@@ -232,7 +245,11 @@ export const GroupContent = () => {
                 {<SpaceMoreActions space={space} />}
               </div>
 
-              {tabs.length ? tabs.map(tab => <TabItem {...{ tab, allTabs, space }} />) : <div>No Pinned Tabs</div>}
+              {tabs.length ? (
+                tabs.map(tab => <TabItem {...{ tab, allTabs, space }} key={tab.id} />)
+              ) : (
+                <div>No Pinned Tabs</div>
+              )}
             </div>
           );
         })}

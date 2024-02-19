@@ -4,7 +4,7 @@ import { storeLocalStorage, storeSyncStorage } from '@src/shared/storages/storeS
 import { StoreType, useStore } from '@pages/newtab/store';
 
 chrome.alarms
-  .create('backupData', { periodInMinutes: 10 })
+  .create('backupData', { periodInMinutes: 5 })
   .then(() => {
     console.log('create backupData alarm success');
   })
