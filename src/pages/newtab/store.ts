@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { produce } from 'immer';
 import { storeLocalStorage, storeSyncStorage } from '@src/shared/storages/storeSyncStorage';
 import { DEFAULT_STORE_STATE } from '@src/constant';
+import { cacheImgBase64ToDB, getCacheImgBase64Map } from '@pages/newtab/util/cache-images';
 
 export type TabInfo = {
   id: number;
@@ -16,26 +17,30 @@ export type TabInfo = {
   pinned?: boolean;
 };
 
+type GroupItem = { name: string; id: number; color: string };
+type GroupMap = Record<string, GroupItem>;
+
+export const getAllGroups: () => Promise<GroupMap> = () =>
+  new Promise((resolve, reject) => {
+    chrome.tabGroups.query({}, function (groups) {
+      const res = groups.reduce((acc, item) => {
+        acc[item.id] = {
+          name: item.title,
+          id: item.id,
+          color: item.color,
+        };
+        return acc;
+      }, {} as GroupMap);
+
+      resolve(res);
+    });
+  });
+
 export const useAllGroups = () => {
-  const [groupsMap, setGroupsMap] = React.useState<Record<string, { name: string; id: number; color: string }>>({});
+  const [groupsMap, setGroupsMap] = React.useState<GroupMap>({});
 
   function updateGroups() {
-    chrome.tabGroups.query({}, function (groups) {
-      setGroupsMap(
-        groups
-          .map(group => {
-            return {
-              name: group.title,
-              id: group.id,
-              color: group.color,
-            };
-          })
-          .reduce((acc, item) => {
-            acc[item.id] = item;
-            return acc;
-          }, {}),
-      );
-    });
+    getAllGroups().then(val => setGroupsMap(val));
   }
 
   useEffect(() => {
@@ -204,3 +209,26 @@ export const removePageFromCurrentSpace = (id: string, tab: TabInfo) => {
 export const useIsPopupStore = create<boolean>(() => false);
 
 export const isPopupStore = useIsPopupStore.getState();
+
+export const useCacheImgBase64 = create<{
+  value: Record<string, string>;
+  init: boolean;
+}>(() => ({
+  init: false,
+  value: {},
+}));
+
+getCacheImgBase64Map().then(val => {
+  useCacheImgBase64.setState({
+    value: val,
+    init: true,
+  });
+});
+
+useCacheImgBase64.subscribe(data => {
+  cacheImgBase64ToDB(data.value)
+    .then(() => {})
+    .catch(() => {
+      console.error('cacheImgBase64ToDB error');
+    });
+});

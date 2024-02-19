@@ -5,6 +5,7 @@ import '@pages/newtab/index.css';
 import refreshOnUpdate from 'virtual:reload-on-update-in-view';
 import { createStandaloneToast } from '@chakra-ui/react';
 import { GlobalDialog } from '@pages/newtab/comps/global-dialog';
+import { useStore } from '@pages/newtab/store';
 
 refreshOnUpdate('pages/newtab');
 const { ToastContainer, toast } = createStandaloneToast();

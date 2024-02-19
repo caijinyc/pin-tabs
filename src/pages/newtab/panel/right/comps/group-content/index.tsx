@@ -1,13 +1,21 @@
-import { getAllOpenedTabs, SpaceInfo, TabInfo, useAllOpenedTabs, useStore } from '@pages/newtab/store';
+import {
+  getAllOpenedTabs,
+  SpaceInfo,
+  TabInfo,
+  useAllOpenedTabs,
+  useCacheImgBase64,
+  useStore,
+} from '@pages/newtab/store';
 import { AddTabToGetPopoverCurrentSpace } from '@pages/newtab/panel/right/comps/add-tab';
 import styles from './style.module.scss';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Input } from '@chakra-ui/react';
 import { produce } from 'immer';
 import { Icon } from '@iconify-icon/react';
 import { SpaceMoreActions } from './space-actions';
 import { removeUrlHash } from '@src/shared/kits';
 import { globalToast } from '@pages/newtab/Newtab';
+import { getImageBase64 } from '@pages/newtab/util/cache-images';
 
 function updateSpaceName(spaceId: string, val: string) {
   useStore.setState(old => {
@@ -125,6 +133,37 @@ export const openTab = async ({
     });
 };
 
+function RenderIcon({ tab }: { tab: TabInfo }) {
+  const initIconCacheData = useCacheImgBase64(state => state.init);
+
+  const favIconBase64 = useCacheImgBase64(state => {
+    if (!tab.favIconUrl?.startsWith('http')) return;
+
+    return state.value[tab.favIconUrl];
+  });
+
+  useEffect(() => {
+    if (initIconCacheData && tab.favIconUrl?.startsWith('http') && !favIconBase64) {
+      getImageBase64(tab.favIconUrl)
+        .then(val => {
+          useCacheImgBase64.setState(old => {
+            return {
+              value: {
+                ...old.value,
+                [tab.favIconUrl]: val,
+              },
+            };
+          });
+        })
+        .catch(e => {
+          console.error('getImageBase64', tab.favIconUrl, e);
+        });
+    }
+  }, [initIconCacheData]);
+
+  return <img src={favIconBase64 || tab.favIconUrl} className={styles.favicon} alt="" />;
+}
+
 const TabItem = ({ tab, space }: { tab: TabInfo; space: SpaceInfo }) => {
   const spaceId = space.uuid;
   const [isEdit, setIsEdit] = React.useState(false);
@@ -147,7 +186,7 @@ const TabItem = ({ tab, space }: { tab: TabInfo; space: SpaceInfo }) => {
         {tab.url.startsWith('chrome://') || tab.url.startsWith('edge://extensions') ? (
           <Icon inline icon="fluent:extension-16-filled" width={18} height={18} />
         ) : (
-          <img src={tab.favIconUrl} className={styles.favicon} alt="" />
+          <RenderIcon tab={tab} />
         )}
 
         {isEdit ? (

@@ -27,7 +27,6 @@ import { dialog } from '@pages/newtab/comps/global-dialog';
 function GroupSetting() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const selectedIndex = useStore(state => state.selectedIndex);
-  console.log('selectedIndex', useStore.getState());
   const toast = useToast();
 
   const { register, handleSubmit, watch, setValue } = useForm<{
