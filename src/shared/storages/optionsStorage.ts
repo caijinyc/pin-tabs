@@ -6,13 +6,13 @@ type OptionsType = {
 };
 
 const storage = createStorage<OptionsType>(
-  'theme-storage-key',
+  'options-storage-key',
   {
     gistId: '',
     token: '',
   },
   {
-    storageType: StorageType.Local,
+    storageType: StorageType.Sync,
     liveUpdate: true,
   },
 );
