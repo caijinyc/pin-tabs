@@ -8,6 +8,7 @@ import { LeftPanel } from '@pages/newtab/panel/left-group-side';
 import { RightContentPanel } from '@pages/newtab/panel/right';
 import { GlobalDialog } from '@pages/newtab/comps/global-dialog';
 import { storeLocalStorage } from '@src/shared/storages/storeSyncStorage';
+import { diffMapPickKeys } from '@src/shared/kits';
 
 const { ToastContainer, toast } = createStandaloneToast();
 export const globalToast = toast;
@@ -19,10 +20,7 @@ const useSaveStoreDataToStorage = () => {
         let alreadySyncedToGist = data.alreadySyncedToGist;
 
         // 只有allSpacesMap和groups发生变化时，才需要同步到gist
-        if (
-          JSON.stringify([state.allSpacesMap, state.groups]) !==
-          JSON.stringify([prevState.allSpacesMap, prevState.groups])
-        ) {
+        if (diffMapPickKeys(state, prevState, ['allSpacesMap', 'groups'])) {
           console.log('need to sync to gist: true');
           alreadySyncedToGist = false;
         }

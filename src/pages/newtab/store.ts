@@ -5,6 +5,7 @@ import { storeLocalStorage, storeSyncStorage } from '@src/shared/storages/storeS
 import { DEFAULT_STORE_STATE } from '@src/constant';
 import { cacheImgBase64ToDB, getCacheImgBase64Map } from '@pages/newtab/util/cache-images';
 import { getGistData } from '@pages/newtab/api';
+import { diffMapPickKeys } from '@src/shared/kits';
 
 export type TabInfo = {
   id: number;
@@ -179,7 +180,9 @@ export const loadStoreFromStorage = () => {
     // console.log('localData', localData);
     // console.log('cloudData', cloudData);
 
-    if (localData.lastSyncTime === useStore.getState().lastSyncTime) {
+    const storeData = useStore.getState();
+
+    if (!diffMapPickKeys(localData, storeData, ['groups', 'selectedIndex', 'allSpacesMap'])) {
       return;
     }
 
