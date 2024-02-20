@@ -16,7 +16,7 @@ const manifest = {
   name: '__MSG_extensionName__',
   version: packageJson.version,
   description: '__MSG_extensionDescription__',
-  permissions: ['storage', 'sidePanel', 'tabs', 'tabGroups', 'history', 'alarms'],
+  permissions: ['storage', 'sidePanel', 'tabs', 'tabGroups', 'history', 'alarms', 'unlimitedStorage'],
   host_permissions: ['<all_urls>'],
   key: `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwon6UimSqj2ZXePAF5x+3UkAi7GFkPnfZkNKyocQb0RcEyVqle6EtzEN5nxokqW5gQQwjqlNyxsZ5jgwNYilgBWNpAR45Qj/d5d/ip9U8+7zpitYom7cbXX1u6EoeTT/BzrLukXOOkHH6CnEMLAEiSQhtf8tKjCkl3+ar0BhP9YEV/HkDmKih84IHjnyjClHhJIctNevCAFt/9YdHtncd0Bp+mmHGCbAjSJ68lKiJ4bNHz6MDpQXcRRTESC+DucCf4gfagIjGb1LTm4D/w78lL1E6gtxjySGBaByaUKFMlFsILX8AApAaZI1OoZvucFzYwkIJX0EVK+oz82xOOlNgwIDAQAB`,
   // side_panel: {

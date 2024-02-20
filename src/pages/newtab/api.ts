@@ -12,4 +12,6 @@ export const getGistData = async () => {
       'X-GitHub-Api-Version': '2022-11-28',
     },
   });
+
+  return data;
 };

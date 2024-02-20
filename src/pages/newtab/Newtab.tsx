@@ -14,12 +14,26 @@ export const globalToast = toast;
 
 const useSaveStoreDataToStorage = () => {
   useEffect(() => {
-    useStore.subscribe(() => {
-      console.log('store changed & local storage updated');
-      storeLocalStorage.set({
-        ...useStore.getState(),
-        alreadySyncedToGist: false,
-        lastSyncTime: Date.now(),
+    useStore.subscribe((state, prevState) => {
+      storeLocalStorage.get().then(data => {
+        let alreadySyncedToGist = data.alreadySyncedToGist;
+
+        // 只有allSpacesMap和groups发生变化时，才需要同步到gist
+        if (
+          JSON.stringify([state.allSpacesMap, state.groups]) !==
+          JSON.stringify([prevState.allSpacesMap, prevState.groups])
+        ) {
+          console.log('need to sync to gist: true');
+          alreadySyncedToGist = false;
+        }
+
+        console.log('store changed & local storage updated');
+        console.log('alreadySyncedToGist:', alreadySyncedToGist);
+        storeLocalStorage.set({
+          ...useStore.getState(),
+          alreadySyncedToGist,
+          lastSyncTime: Date.now(),
+        });
       });
     });
   }, []);

@@ -4,6 +4,7 @@ import { produce } from 'immer';
 import { storeLocalStorage, storeSyncStorage } from '@src/shared/storages/storeSyncStorage';
 import { DEFAULT_STORE_STATE } from '@src/constant';
 import { cacheImgBase64ToDB, getCacheImgBase64Map } from '@pages/newtab/util/cache-images';
+import { getGistData } from '@pages/newtab/api';
 
 export type TabInfo = {
   id: number;
@@ -163,10 +164,24 @@ export type StoreType = {
 
 export const useStore = create<StoreType>(() => produce(DEFAULT_STORE_STATE, draft => {}));
 
+// getGistData().then(res => {
+//   console.log('getGistData', JSON.parse(res.data.files['backup_data.json'].content));
+//   // console.log('getGistData', data.files['backup_data.json'].content);
+// });
+
+console.log(
+  'chrome.permissions',
+  chrome.permissions.getAll().then(res => console.log(res)),
+);
+
 export const loadStoreFromStorage = () => {
   return Promise.all([storeLocalStorage.get(), storeSyncStorage.get()]).then(([localData, cloudData]) => {
     // console.log('localData', localData);
     // console.log('cloudData', cloudData);
+
+    if (localData.lastSyncTime === useStore.getState().lastSyncTime) {
+      return;
+    }
 
     return useStore.setState(localData);
 
@@ -208,8 +223,6 @@ export const removePageFromCurrentSpace = (id: string, tab: TabInfo) => {
 
 export const useIsPopupStore = create<boolean>(() => false);
 
-export const isPopupStore = useIsPopupStore.getState();
-
 export const useCacheImgBase64 = create<{
   value: Record<string, string>;
   init: boolean;
@@ -218,7 +231,9 @@ export const useCacheImgBase64 = create<{
   value: {},
 }));
 
+const startTimestamp = Date.now();
 getCacheImgBase64Map().then(val => {
+  console.log('init cached img time', Date.now() - startTimestamp);
   useCacheImgBase64.setState({
     value: val,
     init: true,

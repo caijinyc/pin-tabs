@@ -3,8 +3,9 @@ import { Octokit } from 'octokit';
 import { storeLocalStorage, storeSyncStorage } from '@src/shared/storages/storeSyncStorage';
 import { StoreType, useStore } from '@pages/newtab/store';
 
+const BACKUP_DATA = 'backupData';
 chrome.alarms
-  .create('backupData', { periodInMinutes: 5 })
+  .create(BACKUP_DATA, { periodInMinutes: 1 })
   .then(() => {
     console.log('create backupData alarm success');
   })
@@ -12,14 +13,22 @@ chrome.alarms
     console.log('create alarm fail', e);
   });
 
-chrome.alarms
-  .create('saveStoreToSyncStorage', { periodInMinutes: 1 })
-  .then(() => {
-    console.log('create saveStoreToSyncStorage alarm success');
-  })
-  .catch(e => {
-    console.log('create saveStoreToSyncStorage alarm fail', e);
-  });
+// chrome.alarms
+//   .create('saveStoreToSyncStorage', { periodInMinutes: 1 })
+//   .then(() => {
+//     console.log('create saveStoreToSyncStorage alarm success');
+//   })
+//   .catch(e => {
+//     console.log('create saveStoreToSyncStorage alarm fail', e);
+//   });
+
+chrome.alarms.getAll().then(alarms => {
+  if (alarms.find(alarm => alarm.name === 'saveStoreToSyncStorage')) {
+    chrome.alarms.clear('saveStoreToSyncStorage').then(() => {
+      console.log('clear saveStoreToSyncStorage alarm success');
+    });
+  }
+});
 
 setTimeout(() => {
   chrome.alarms.getAll().then(alarms => {
@@ -60,7 +69,7 @@ const syncToGist = async (data: StoreType) => {
 chrome.alarms.onAlarm.addListener(function (alarm) {
   console.log('onAlarm', alarm, alarm.name, alarm.scheduledTime, alarm.periodInMinutes);
 
-  if (alarm.name === 'backupData') {
+  if (alarm.name === BACKUP_DATA) {
     console.log('执行备份操作');
     const startBackup = async () => {
       const localStorageData = await storeLocalStorage.get();
@@ -75,6 +84,7 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
 
       return syncToGist({
         ...localStorageData,
+        selectedIndex: 0,
         lastSyncTime: Date.now(),
       });
     };
