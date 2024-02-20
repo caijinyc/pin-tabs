@@ -31,6 +31,7 @@
     "@emotion/styled": "^11.11.0",
     "classnames": "^2.5.1",
     "construct-style-sheets-polyfill": "3.1.0",
+    "dayjs": "^1.11.10",
     "framer-motion": "^11.0.3",
     "immer": "^10.0.3",
     "octokit": "^3.1.2",

@@ -2,6 +2,7 @@ import { commonLocalStorage, optionsStorage } from '@src/shared/storages/options
 import { Octokit } from 'octokit';
 import { storeLocalStorage, storeSyncStorage } from '@src/shared/storages/storeSyncStorage';
 import { StoreType, useStore } from '@pages/newtab/store';
+import dayjs from 'dayjs';
 
 const BACKUP_DATA = 'backupData';
 chrome.alarms
@@ -79,10 +80,13 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
   console.log('onAlarm', alarm, alarm.name, alarm.scheduledTime, alarm.periodInMinutes);
 
   if (alarm.name === BACKUP_DATA) {
-    console.log('执行备份操作');
+    console.log('执行备份操作', dayjs().format('YYYY-MM-DD HH:mm:ss'));
     const startBackup = async () => {
       const localStorageData = await storeLocalStorage.get();
-      if (localStorageData.alreadySyncedToGist) return;
+      if (localStorageData.alreadySyncedToGist) {
+        console.log('already synced to gist, skip');
+        return;
+      }
 
       storeLocalStorage.set({
         ...localStorageData,
@@ -108,7 +112,7 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
   }
 
   if (alarm.name === 'saveStoreToSyncStorage') {
-    console.log('执行 saveStoreToSyncStorage 操作');
+    console.log('执行 saveStoreToSyncStorage 操作', dayjs().format('YYYY-MM-DD HH:mm:ss'));
     const startSync = async () => {
       const localStorageData = await storeLocalStorage.get();
       return storeSyncStorage.set({
