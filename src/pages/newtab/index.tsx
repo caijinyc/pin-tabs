@@ -4,8 +4,7 @@ import Newtab from '@pages/newtab/Newtab';
 import '@pages/newtab/index.css';
 import refreshOnUpdate from 'virtual:reload-on-update-in-view';
 import { createStandaloneToast } from '@chakra-ui/react';
-import { GlobalDialog } from '@pages/newtab/comps/global-dialog';
-import { useStore } from '@pages/newtab/store';
+import { initDeviceId } from '@src/shared/storages/optionsStorage';
 
 refreshOnUpdate('pages/newtab');
 const { ToastContainer, toast } = createStandaloneToast();
@@ -27,5 +26,7 @@ function init() {
     </>,
   );
 }
+
+initDeviceId();
 
 init();

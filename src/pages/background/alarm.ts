@@ -1,4 +1,4 @@
-import { optionsStorage } from '@src/shared/storages/optionsStorage';
+import { commonLocalStorage, optionsStorage } from '@src/shared/storages/optionsStorage';
 import { Octokit } from 'octokit';
 import { storeLocalStorage, storeSyncStorage } from '@src/shared/storages/storeSyncStorage';
 import { StoreType, useStore } from '@pages/newtab/store';
@@ -45,13 +45,22 @@ const syncToGist = async (data: StoreType) => {
     auth: token,
   });
 
+  const deviceId = commonLocalStorage.get().then(data => data.deviceId) || 'unknown';
+
   await octokit
     .request('PATCH /gists/{gist_id}', {
       gist_id: gistId,
       description: 'An updated gist description',
       files: {
         'backup_data.json': {
-          content: JSON.stringify(data, null, 2),
+          content: JSON.stringify(
+            {
+              ...data,
+              deviceId,
+            },
+            null,
+            2,
+          ),
         },
       },
       headers: {
