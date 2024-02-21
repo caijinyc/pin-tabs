@@ -192,7 +192,7 @@ const TabItem = ({ tab, space }: { tab: TabInfo; space: SpaceInfo }) => {
 
         {isEdit ? (
           <Input
-            size={'sm'}
+            size={'xs'}
             autoFocus
             // variant="unstyled"
             placeholder="Unstyled"
@@ -225,8 +225,8 @@ const TabItem = ({ tab, space }: { tab: TabInfo; space: SpaceInfo }) => {
           }}
           inline
           icon="lets-icons:edit-duotone-line"
-          width={'20px'}
-          height={'20px'}
+          width={'18px'}
+          height={'18px'}
           className={styles.delTab}
         />
         <Icon
@@ -239,8 +239,8 @@ const TabItem = ({ tab, space }: { tab: TabInfo; space: SpaceInfo }) => {
           }}
           inline
           icon="lets-icons:dell-duotone"
-          width={'20px'}
-          height={'20px'}
+          width={'18px'}
+          height={'18px'}
           className={styles.delTab}
         />
       </div>
@@ -267,6 +267,7 @@ export const GroupContent = () => {
                   style={{
                     width: 200,
                   }}
+                  size={'sm'}
                   variant="unstyled"
                   placeholder="Unstyled"
                   value={space.name}

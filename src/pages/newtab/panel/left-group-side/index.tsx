@@ -79,9 +79,6 @@ export const LeftPanel = () => {
                   'group',
                 )}
                 key={item.name}
-                style={{
-                  marginBottom: 8,
-                }}
                 onClick={() => {
                   useStore.setState(() => {
                     return {
@@ -111,7 +108,8 @@ export const LeftPanel = () => {
         })}
         <div>
           <Button
-            size={'sm'}
+            className={'mt-1'}
+            size={'xs'}
             onClick={() => {
               useStore.setState(old => {
                 return produce(old, draft => {
