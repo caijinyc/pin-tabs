@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import styles from './style.module.scss';
+import '@pages/newtab/index.css';
 import withSuspense from '@src/shared/hoc/withSuspense';
 import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
 import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react';
