@@ -15,9 +15,7 @@ body {
     Noto Sans CJK SC,
     Microsoft YaHei,
     微软雅黑,
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    sans-serif !important;
 }
 
 /*code {*/

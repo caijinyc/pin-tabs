@@ -44,7 +44,7 @@ function GroupSetting() {
   return (
     <>
       <IconButton
-        size={'sm'}
+        size={'xs'}
         className={'ml-2'}
         aria-label="Group Setting"
         onClick={onOpen}
@@ -129,7 +129,7 @@ export const RightContentPanel = () => {
 
       <div>
         <Button
-          size={'sm'}
+          size={'xs'}
           onClick={() => {
             useStore.setState(old => {
               return produce(old, draft => {
