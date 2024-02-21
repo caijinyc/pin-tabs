@@ -1,4 +1,4 @@
-import { SpaceInfo, useAllOpenedTabs, useStore } from '@pages/newtab/store';
+import { SpaceInfo, useAllOpenedTabs, useStore } from '@pages/newtab/store/store';
 import { produce } from 'immer';
 import { dialog } from '@pages/newtab/comps/global-dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@chakra-ui/react';

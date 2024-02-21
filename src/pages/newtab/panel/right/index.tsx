@@ -14,7 +14,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import { useStore } from '@pages/newtab/store';
+import { useStore } from '@pages/newtab/store/store';
 import styles from '@pages/newtab/style.module.scss';
 import { GroupContent } from '@pages/newtab/panel/right/comps/group-content';
 import { produce } from 'immer';

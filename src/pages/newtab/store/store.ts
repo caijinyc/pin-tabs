@@ -159,6 +159,10 @@ export type StoreType = {
     subSpacesIds: string[];
   }[];
 
+  archiveSpaces?: {
+    spaceIds: string[];
+  };
+
   lastSyncTime: number;
   alreadySyncedToGist?: boolean;
 };

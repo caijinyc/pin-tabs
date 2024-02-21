@@ -1,7 +1,7 @@
 import { commonLocalStorage, optionsStorage } from '@src/shared/storages/optionsStorage';
 import { Octokit } from 'octokit';
 import { storeLocalStorage, storeSyncStorage } from '@src/shared/storages/storeSyncStorage';
-import { StoreType, useStore } from '@pages/newtab/store';
+import { StoreType, useStore } from '@pages/newtab/store/store';
 import dayjs from 'dayjs';
 
 const BACKUP_DATA = 'backupData';

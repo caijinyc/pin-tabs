@@ -5,7 +5,7 @@ import {
   useAllOpenedTabs,
   useCacheImgBase64,
   useStore,
-} from '@pages/newtab/store';
+} from '@pages/newtab/store/store';
 import { AddTabToGetPopoverCurrentSpace } from '@pages/newtab/panel/right/comps/add-tab';
 import styles from './style.module.scss';
 import React, { useEffect } from 'react';
@@ -78,6 +78,9 @@ export const openTab = async ({
 
     let groupId: number | undefined = undefined;
 
+    const allGroups = await chrome.tabGroups.query({ windowId: chrome.windows.WINDOW_ID_CURRENT });
+
+    // 先看看当前 space 存储的 groupId 是否有效
     if (space.groupId) {
       await chrome.tabGroups
         .get(space.groupId)
@@ -86,25 +89,21 @@ export const openTab = async ({
             groupId = res.id;
           }
         })
-        .catch(async e => {
-          console.error('no group', e);
-          const allGroups = await chrome.tabGroups.query({ windowId: chrome.windows.WINDOW_ID_CURRENT });
-
-          // 这里是用来处理游览器关闭后（游览器更新 / 崩溃 / 其他情况挂掉），再次打开时，groupId 会变更的问题
-          if (activeTab.groupId && allGroups.find(g => g.id === activeTab.groupId && g.title === space.name)) {
-            groupId = activeTab.groupId;
-          }
+        .catch(e => {
+          console.log('groupId not found', e);
         });
     }
 
-    console.log('space.groupIdll', space.groupId);
+    const nameEqualGroup = allGroups.find(g => g.title === space.name);
+    // 如果当前 space 存储的 groupId 无效，再看看是否有同名的 group
+    if (nameEqualGroup) {
+      groupId = nameEqualGroup?.id;
+    }
 
     const newGroupId = await chrome.tabs.group({
       tabIds: [newTabId],
       groupId: groupId ? groupId : undefined,
     });
-
-    console.log('newGroupId 111', newGroupId);
 
     if (space.groupId !== newGroupId) {
       useStore.setState(old => {
@@ -114,11 +113,13 @@ export const openTab = async ({
       });
     }
 
-    console.log('newGroupId 222', newGroupId);
-
-    await chrome.tabGroups.update(newGroupId, {
-      title: space.name,
-    });
+    await chrome.tabGroups
+      .update(newGroupId, {
+        title: space.name,
+      })
+      .catch(e => {
+        console.log('update group title error', e);
+      });
   };
 
   addToGroup()

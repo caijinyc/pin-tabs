@@ -5,7 +5,7 @@ import {
   useAllOpenedTabs,
   useIsPopupStore,
   useStore,
-} from '@pages/newtab/store';
+} from '@pages/newtab/store/store';
 import { Popover, PopoverBody, PopoverContent, PopoverTrigger, Portal } from '@chakra-ui/react';
 import styles from './style.module.scss';
 import { Icon } from '@iconify-icon/react';

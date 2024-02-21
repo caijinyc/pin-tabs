@@ -1,4 +1,4 @@
-import { useStore } from '@pages/newtab/store';
+import { useStore } from '@pages/newtab/store/store';
 import styles from '@pages/newtab/style.module.scss';
 import { Button } from '@chakra-ui/react';
 import { produce } from 'immer';
@@ -141,11 +141,21 @@ export const LeftPanel = () => {
         {/*/>*/}
 
         <Icon
-          icon="lets-icons:setting-line-duotone"
+          icon="lets-icons:setting-fill"
           width="24"
           height="24"
           onClick={() => {
             // open options page
+            chrome.runtime.openOptionsPage();
+          }}
+          className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
+        />
+
+        <Icon
+          icon="solar:archive-minimalistic-bold-duotone"
+          width="24"
+          height="24"
+          onClick={() => {
             chrome.runtime.openOptionsPage();
           }}
           className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
