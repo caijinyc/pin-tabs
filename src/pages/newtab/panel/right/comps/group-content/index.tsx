@@ -1,21 +1,13 @@
-import {
-  getAllOpenedTabs,
-  SpaceInfo,
-  TabInfo,
-  useAllOpenedTabs,
-  useCacheImgBase64,
-  useStore,
-} from '@pages/newtab/store/store';
+import { getAllOpenedTabs, SpaceInfo, TabInfo, useAllOpenedTabs, useStore } from '@pages/newtab/store/store';
 import { AddTabToGetPopoverCurrentSpace } from '@pages/newtab/panel/right/comps/add-tab';
 import styles from './style.module.scss';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Input } from '@chakra-ui/react';
 import { produce } from 'immer';
-import { Icon } from '@iconify-icon/react';
 import { SpaceMoreActions } from './space-actions';
 import { removeUrlHash } from '@src/shared/kits';
 import { globalToast } from '@pages/newtab/Newtab';
-import { getImageBase64 } from '@pages/newtab/util/cache-images';
+import { TabItem } from '@pages/newtab/panel/right/comps/group-content/tab-item';
 
 function updateSpaceName(spaceId: string, val: string) {
   useStore.setState(old => {
@@ -132,122 +124,6 @@ export const openTab = async ({
         chrome.tabs.update(activeTab.id, { active: true });
       }
     });
-};
-
-function RenderIcon({ tab }: { tab: TabInfo }) {
-  const initIconCacheData = useCacheImgBase64(state => state.init);
-
-  const favIconBase64 = useCacheImgBase64(state => {
-    if (!tab.favIconUrl?.startsWith('http')) return;
-
-    return state.value[tab.favIconUrl];
-  });
-
-  useEffect(() => {
-    if (initIconCacheData && tab.favIconUrl?.startsWith('http') && !favIconBase64) {
-      getImageBase64(tab.favIconUrl)
-        .then(val => {
-          useCacheImgBase64.setState(old => {
-            return {
-              value: {
-                ...old.value,
-                [tab.favIconUrl]: val,
-              },
-            };
-          });
-        })
-        .catch(e => {
-          console.error('getImageBase64', tab.favIconUrl, e);
-        });
-    }
-  }, [initIconCacheData]);
-
-  return <img src={favIconBase64 || tab.favIconUrl} className={styles.favicon} alt="" />;
-}
-
-const TabItem = ({ tab, space }: { tab: TabInfo; space: SpaceInfo }) => {
-  const spaceId = space.uuid;
-  const [isEdit, setIsEdit] = React.useState(false);
-
-  return (
-    <div className={styles.tabListItem} key={tab.id}>
-      <div
-        className={styles.tabItemWrapper}
-        onMouseDown={e => {
-          const isMiddleClick = e.button === 1;
-          const isLeftClick = e.button === 0;
-
-          if (![isLeftClick, isMiddleClick].some(Boolean)) return;
-
-          if (isEdit) return;
-
-          // get tab active status from tab url
-          openTab({ tab, space, autoActiveOpenedTab: isLeftClick });
-        }}>
-        {tab.url.startsWith('chrome://') || tab.url.startsWith('edge://extensions') ? (
-          <Icon inline icon="fluent:extension-16-filled" width={18} height={18} />
-        ) : (
-          <RenderIcon tab={tab} />
-        )}
-
-        {isEdit ? (
-          <Input
-            size={'xs'}
-            autoFocus
-            // variant="unstyled"
-            placeholder="Unstyled"
-            defaultValue={tab.title}
-            onBlur={e => {
-              setIsEdit(false);
-              if (e.target.value) {
-                useStore.setState(old => {
-                  return produce(old, draft => {
-                    draft.allSpacesMap[spaceId].tabs = draft.allSpacesMap[spaceId].tabs.map(t => {
-                      if (t.id === tab.id) {
-                        t.title = e.target.value;
-                      }
-                      return t;
-                    });
-                  });
-                });
-              }
-            }}
-          />
-        ) : (
-          <div className={styles.tabTitle}>{tab.title}</div>
-        )}
-      </div>
-
-      {isEdit ? null : (
-        <div className={styles.tabActions}>
-          <Icon
-            onClick={() => {
-              setIsEdit(true);
-            }}
-            inline
-            icon="lets-icons:edit-duotone-line"
-            width={'18px'}
-            height={'18px'}
-            className={styles.delTab}
-          />
-          <Icon
-            onClick={() => {
-              useStore.setState(old => {
-                return produce(old, draft => {
-                  draft.allSpacesMap[spaceId].tabs = draft.allSpacesMap[spaceId].tabs.filter(t => t.id !== tab.id);
-                });
-              });
-            }}
-            inline
-            icon="lets-icons:dell-duotone"
-            width={'18px'}
-            height={'18px'}
-            className={styles.delTab}
-          />
-        </div>
-      )}
-    </div>
-  );
 };
 
 export const GroupContent = () => {

@@ -46,7 +46,8 @@ const syncToGist = async (data: StoreType) => {
     auth: token,
   });
 
-  const deviceId = (await commonLocalStorage.get().then(data => data.deviceId)) || 'unknown';
+  const deviceId =
+    (await commonLocalStorage.get().then(data => data.deviceId)) + '-' + dayjs().format('YYYY-MM-DD HH:mm:ss');
 
   await octokit
     .request('PATCH /gists/{gist_id}', {
