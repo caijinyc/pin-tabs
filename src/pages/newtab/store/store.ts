@@ -146,6 +146,12 @@ export type SpaceInfo = {
   uuid: string;
 };
 
+export type GroupInfo = {
+  name: string;
+  // TODO 数据结构变更，这里需要支持 Map，可以存储其他数据，例如 group id
+  subSpacesIds: string[];
+};
+
 export type StoreType = {
   selectedIndex: number;
 
@@ -153,11 +159,7 @@ export type StoreType = {
     [key: string]: SpaceInfo;
   };
 
-  groups: {
-    name: string;
-    // TODO 数据结构变更，这里需要支持 Map，可以存储其他数据，例如 group id
-    subSpacesIds: string[];
-  }[];
+  groups: GroupInfo[];
 
   archiveSpaces?: {
     spaceIds: string[];

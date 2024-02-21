@@ -1,4 +1,4 @@
-import { useStore } from '@pages/newtab/store/store';
+import { GroupInfo, useStore } from '@pages/newtab/store/store';
 import styles from '@pages/newtab/style.module.scss';
 import { Button } from '@chakra-ui/react';
 import { produce } from 'immer';
@@ -7,6 +7,9 @@ import React from 'react';
 import cls from 'classnames';
 import { getGistData } from '@pages/newtab/api';
 import { dialog } from '@pages/newtab/comps/global-dialog';
+import { useDrop } from 'react-dnd';
+import { DropItem } from '@pages/newtab/panel/right/comps/group-content';
+import { moveSpaceToOtherGroup } from '@pages/newtab/store/actions/move-space-to-other-group';
 
 const UploadLocalHistory = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -51,18 +54,54 @@ const UploadLocalHistory = () => {
         onClick={() => {
           inputRef.current?.click();
         }}
-        icon="ic:round-drive-folder-upload"
-        width="24"
-        height="24"
+        icon="material-symbols-light:drive-folder-upload"
+        width="18"
+        height="18"
         className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
       />
     </>
   );
 };
 
+export const DRAG_TYPE = 'move_space_to_other_group';
+
+const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
+  const { group, groupIndex } = props;
+  const selectedIndex = useStore(state => state.selectedIndex);
+
+  const [{ isOver, canDrop }, drop] = useDrop({
+    accept: DRAG_TYPE,
+    drop: (item: DropItem) => {
+      moveSpaceToOtherGroup(item.spaceId, groupIndex);
+    },
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  });
+
+  const isActive = isOver && canDrop;
+
+  return (
+    <div
+      ref={drop}
+      className={cls(styles.leftSpaceItem, { [styles.leftSpaceItemActive]: selectedIndex === groupIndex }, 'group', {
+        'bg-gray-200': isActive,
+      })}
+      onClick={() => {
+        useStore.setState(() => {
+          return {
+            selectedIndex: groupIndex,
+          };
+        });
+      }}>
+      <div>{group.name}</div>
+    </div>
+  );
+};
+
 export const LeftPanel = () => {
   const groups = useStore(state => state.groups);
-  const selectedIndex = useStore(state => state.selectedIndex);
 
   return (
     <div className={cls(styles.leftPanel, 'flex flex-col justify-between')}>
@@ -70,41 +109,7 @@ export const LeftPanel = () => {
       {/*<div className={styles.search}></div>*/}
       <div className={styles.leftSpaceWrapper}>
         {groups.map((item, index) => {
-          return (
-            <>
-              <div
-                className={cls(
-                  styles.leftSpaceItem,
-                  { [styles.leftSpaceItemActive]: selectedIndex === index },
-                  'group',
-                )}
-                key={item.name}
-                onClick={() => {
-                  useStore.setState(() => {
-                    return {
-                      selectedIndex: index,
-                    };
-                  });
-                }}>
-                <div>{groups[index].name}</div>
-
-                {/*<div className={'hidden group-hover:block absolute right-0 top-0 z-10 text-gray-500'}>*/}
-                {/*  <Icon icon="ri:more-2-fill" width="16" height="16" />*/}
-                {/*</div>*/}
-
-                {/*<Icon*/}
-                {/*    onClick={() => {*/}
-                {/*      // setIsEdit(true);*/}
-                {/*    }}*/}
-                {/*    inline*/}
-                {/*    icon="lets-icons:edit-duotone-line"*/}
-                {/*    width={'20px'}*/}
-                {/*    height={'20px'}*/}
-                {/*    className={styles.delTab}*/}
-                {/*/>*/}
-              </div>
-            </>
-          );
+          return <GroupItem group={item} groupIndex={index} />;
         })}
         <div>
           <Button
@@ -139,9 +144,9 @@ export const LeftPanel = () => {
         {/*/>*/}
 
         <Icon
-          icon="lets-icons:setting-fill"
-          width="24"
-          height="24"
+          icon="material-symbols-light:settings"
+          width="18"
+          height="18"
           onClick={() => {
             // open options page
             chrome.runtime.openOptionsPage();
@@ -150,9 +155,9 @@ export const LeftPanel = () => {
         />
 
         <Icon
-          icon="solar:archive-minimalistic-bold-duotone"
-          width="24"
-          height="24"
+          icon="material-symbols-light:save-rounded"
+          width="18"
+          height="18"
           onClick={() => {
             chrome.runtime.openOptionsPage();
           }}

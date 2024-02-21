@@ -12,6 +12,12 @@ import { Icon } from '@iconify-icon/react';
 import React, { useEffect } from 'react';
 import { cls } from '@src/shared/kits';
 
+const PinIcon = () => (
+  <div className={cls(styles.addIconWrapper, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}>
+    <Icon icon="fluent:pin-12-filled" className={''} inline width="18" height="18" />
+  </div>
+);
+
 export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   const tabs = useAllOpenedTabs();
   const groups = useAllGroups();
@@ -53,7 +59,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
             addPageToCurrentSpace(props.spaceId, currentActiveTab);
           }
         }}>
-        <Icon icon="fluent:pin-12-filled" inline width="18" height="18" />
+        <PinIcon />
       </div>
     );
   }
@@ -61,9 +67,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   return (
     <Popover placement={'bottom-start'}>
       <PopoverTrigger>
-        <div className={cls(styles.addIconWrapper, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}>
-          <Icon icon="fluent:pin-12-filled" className={''} inline width="18" height="18" />
-        </div>
+        <PinIcon />
       </PopoverTrigger>
 
       <Portal>

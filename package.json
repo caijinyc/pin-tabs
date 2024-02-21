@@ -36,6 +36,8 @@
     "immer": "^10.0.3",
     "octokit": "^3.1.2",
     "react": "18.2.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.50.1",
     "webextension-polyfill": "0.10.0",

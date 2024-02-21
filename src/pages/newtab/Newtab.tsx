@@ -10,6 +10,8 @@ import { RightContentPanel } from '@pages/newtab/panel/right';
 import { GlobalDialog } from '@pages/newtab/comps/global-dialog';
 import { storeLocalStorage } from '@src/shared/storages/storeSyncStorage';
 import { diffMapPickKeys } from '@src/shared/kits';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const { ToastContainer, toast } = createStandaloneToast();
 export const globalToast = toast;
@@ -71,10 +73,12 @@ const NewTab = (props: { isPopup?: boolean }) => {
         <GlobalDialog />
         <ToastContainer />
 
-        <div className={styles.wrapper}>
-          <LeftPanel />
-          <RightContentPanel />
-        </div>
+        <DndProvider backend={HTML5Backend}>
+          <div className={styles.wrapper}>
+            <LeftPanel />
+            <RightContentPanel />
+          </div>
+        </DndProvider>
       </ChakraProvider>
     </div>
   );

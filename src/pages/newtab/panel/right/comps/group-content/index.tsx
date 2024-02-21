@@ -5,9 +5,12 @@ import React from 'react';
 import { Input } from '@chakra-ui/react';
 import { produce } from 'immer';
 import { SpaceMoreActions } from './space-actions';
-import { removeUrlHash } from '@src/shared/kits';
+import { cls, removeUrlHash } from '@src/shared/kits';
 import { globalToast } from '@pages/newtab/Newtab';
 import { TabItem } from '@pages/newtab/panel/right/comps/group-content/tab-item';
+import { useDrag } from 'react-dnd';
+import { DRAG_TYPE } from '@pages/newtab/panel/left-group-side';
+import { Icon } from '@iconify-icon/react';
 
 function updateSpaceName(spaceId: string, val: string) {
   useStore.setState(old => {
@@ -126,51 +129,80 @@ export const openTab = async ({
     });
 };
 
+export type DropItem = {
+  spaceId: string;
+};
+
+const SpaceItem = ({ space }: { space: SpaceInfo }) => {
+  const spaceId = space.uuid;
+  const tabs = space.tabs;
+  const allTabs = useAllOpenedTabs();
+
+  const [{ opacity, dragging }, drag, preview] = useDrag(() => {
+    const dropProps: DropItem = {
+      spaceId,
+    };
+    return {
+      type: DRAG_TYPE,
+      item: dropProps,
+      collect: monitor => ({
+        opacity: monitor.isDragging() ? 0.4 : 1,
+        dragging: monitor.isDragging(),
+      }),
+    };
+  }, [spaceId]);
+
+  return (
+    <div key={spaceId} className={styles.spaceItem}>
+      <div className={styles.titleWrapper}>
+        <div
+          ref={preview}
+          className={cls('flex items-center', {
+            ['opacity-40']: dragging,
+          })}>
+          <div ref={drag} className={'cursor-move mr-1'}>
+            <Icon inline icon="akar-icons:drag-vertical" />
+          </div>
+
+          <Input
+            style={{
+              width: 200,
+            }}
+            size={'sm'}
+            variant="unstyled"
+            placeholder="Unstyled"
+            value={space.name}
+            onBlur={() => {
+              if (!space.name) {
+                updateSpaceName(spaceId, 'New Space');
+              }
+            }}
+            onChange={e => {
+              updateSpaceName(spaceId, e.target.value);
+            }}
+          />
+        </div>
+
+        <AddTabToGetPopoverCurrentSpace spaceId={spaceId} />
+
+        {<SpaceMoreActions space={space} />}
+      </div>
+
+      {tabs.length ? tabs.map(tab => <TabItem {...{ tab, allTabs, space }} key={tab.id} />) : <div>No Pinned Tabs</div>}
+    </div>
+  );
+};
+
 export const GroupContent = () => {
   const allSpacesMap = useStore(state => state.allSpacesMap);
   const currentSpaceTabs = useStore(state => state.groups[state.selectedIndex]) || { subSpacesIds: [] };
-  const allTabs = useAllOpenedTabs();
 
   return (
     <>
       <div className={styles.tabsWrapper}>
         {currentSpaceTabs.subSpacesIds.map(spaceId => {
           const space = allSpacesMap[spaceId];
-          const tabs = space.tabs;
-
-          return (
-            <div key={spaceId} className={styles.spaceItem}>
-              <div className={styles.titleWrapper}>
-                <Input
-                  style={{
-                    width: 200,
-                  }}
-                  size={'sm'}
-                  variant="unstyled"
-                  placeholder="Unstyled"
-                  value={space.name}
-                  onBlur={() => {
-                    if (!space.name) {
-                      updateSpaceName(spaceId, 'New Space');
-                    }
-                  }}
-                  onChange={e => {
-                    updateSpaceName(spaceId, e.target.value);
-                  }}
-                />
-
-                <AddTabToGetPopoverCurrentSpace spaceId={spaceId} />
-
-                {<SpaceMoreActions space={space} />}
-              </div>
-
-              {tabs.length ? (
-                tabs.map(tab => <TabItem {...{ tab, allTabs, space }} key={tab.id} />)
-              ) : (
-                <div>No Pinned Tabs</div>
-              )}
-            </div>
-          );
+          return <SpaceItem space={space} key={spaceId} />;
         })}
       </div>
     </>
