@@ -72,12 +72,19 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: DRAG_TYPE,
     drop: (item: DropItem) => {
+      if (group.subSpacesIds.includes(item.spaceId)) {
+        return;
+      }
       moveSpaceToOtherGroup(item.spaceId, groupIndex);
     },
-    collect: monitor => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
+    collect: monitor => {
+      const { spaceId } = (monitor.getItem() || {}) as DropItem;
+
+      return {
+        isOver: monitor.isOver(),
+        canDrop: spaceId && !group.subSpacesIds.includes(spaceId) && monitor.canDrop(),
+      };
+    },
   });
 
   const isActive = isOver && canDrop;
