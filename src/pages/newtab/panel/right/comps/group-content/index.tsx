@@ -218,32 +218,34 @@ const TabItem = ({ tab, space }: { tab: TabInfo; space: SpaceInfo }) => {
         )}
       </div>
 
-      <div className={styles.tabActions}>
-        <Icon
-          onClick={() => {
-            setIsEdit(true);
-          }}
-          inline
-          icon="lets-icons:edit-duotone-line"
-          width={'18px'}
-          height={'18px'}
-          className={styles.delTab}
-        />
-        <Icon
-          onClick={() => {
-            useStore.setState(old => {
-              return produce(old, draft => {
-                draft.allSpacesMap[spaceId].tabs = draft.allSpacesMap[spaceId].tabs.filter(t => t.id !== tab.id);
+      {isEdit ? null : (
+        <div className={styles.tabActions}>
+          <Icon
+            onClick={() => {
+              setIsEdit(true);
+            }}
+            inline
+            icon="lets-icons:edit-duotone-line"
+            width={'18px'}
+            height={'18px'}
+            className={styles.delTab}
+          />
+          <Icon
+            onClick={() => {
+              useStore.setState(old => {
+                return produce(old, draft => {
+                  draft.allSpacesMap[spaceId].tabs = draft.allSpacesMap[spaceId].tabs.filter(t => t.id !== tab.id);
+                });
               });
-            });
-          }}
-          inline
-          icon="lets-icons:dell-duotone"
-          width={'18px'}
-          height={'18px'}
-          className={styles.delTab}
-        />
-      </div>
+            }}
+            inline
+            icon="lets-icons:dell-duotone"
+            width={'18px'}
+            height={'18px'}
+            className={styles.delTab}
+          />
+        </div>
+      )}
     </div>
   );
 };
