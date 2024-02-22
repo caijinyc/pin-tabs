@@ -75,18 +75,18 @@ export const syncDataToGistFn = async () => {
   const logEnd = () => console.log('############## 🔺🔺🔺 end syncDataToGistFn ########');
   const localStorageData = await storeLocalStorage.get();
 
-  console.log('localStorageData.alreadyBackupToGist', localStorageData.alreadyBackupToGist);
-  console.log('localStorageData.version', localStorageData.version);
+  console.log('🔺localStorageData.alreadyBackupToGist', localStorageData.alreadyBackupToGist);
+  console.log('🔺localStorageData.version', localStorageData.version);
 
   if (localStorageData.alreadyBackupToGist) {
-    console.log('already synced to gist, skip');
+    console.log('🔺already synced to gist, skip');
     logEnd();
     return;
   }
 
   const newVersion = (localStorageData.version || 0) + 1;
 
-  console.log('newVersion', newVersion);
+  console.log('🔺newVersion', newVersion);
 
   try {
     await syncToGist({
@@ -102,7 +102,7 @@ export const syncDataToGistFn = async () => {
     });
     console.log('🔺🔺🔺 SYNC TO GIST SUCCESS ✅✅✅');
   } catch (e) {
-    console.log('sync TO gist fail # catch ->', e);
+    console.log('🔺sync TO gist fail # catch ->', e);
   }
 
   logEnd();
@@ -116,17 +116,17 @@ export const syncDataFromOtherDeviceFn = async () => {
 
   const { syncGistId, token } = await optionsStorage.get();
   if (!syncGistId || !token) {
-    console.log('syncGistId is empty, skip');
+    console.log('🔽syncGistId is empty, skip');
     logEnd();
     return;
   }
 
-  console.log('lastSyncVersion', lastSyncVersion);
-  console.log('localData.version', localData.version);
+  console.log('🔽lastSyncVersion', lastSyncVersion);
+  console.log('🔽localData.version', localData.version);
 
   // 如果本地数据的版本号大于云端数据的版本号，那么以本地数据为准
   if ((localData.version || 0) >= (lastSyncVersion || 0)) {
-    console.log('localData is newer than gistData, skip');
+    console.log('🔽localData is newer than gistData, skip');
     logEnd();
 
     return;
@@ -139,7 +139,7 @@ export const syncDataFromOtherDeviceFn = async () => {
     });
     console.log('🔽🔽🔽 SYNC FROM GIST SUCCESS ✅✅✅');
   } catch (e) {
-    console.log('sync FROM gist fail # catch ->', e);
+    console.log('🔽sync FROM gist fail # catch ->', e);
   }
 
   logEnd();
