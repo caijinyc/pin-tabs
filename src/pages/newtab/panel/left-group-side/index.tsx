@@ -7,6 +7,7 @@ import React from 'react';
 import cls from 'classnames';
 import { Groups } from '@pages/newtab/panel/left-group-side/group';
 import { UploadLocalHistory } from '@pages/newtab/panel/left-group-side/bottom';
+import { uuid } from '@src/shared/kits';
 
 export const LeftPanel = () => {
   return (
@@ -22,6 +23,7 @@ export const LeftPanel = () => {
                 return produce(old, draft => {
                   draft.groups.push({
                     name: 'Untitled Group',
+                    id: uuid(),
                     subSpacesIds: [],
                   });
                 });
