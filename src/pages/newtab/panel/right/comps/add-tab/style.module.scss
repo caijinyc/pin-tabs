@@ -3,24 +3,24 @@
   display: flex;
   margin-bottom: 12px;
   align-items: center;
-  font-size: 16px;
+  font-size: 12px;
+  font-weight: 500;
 
-  gap: 8px;
+  gap: 4px;
 
   &:hover {
     background: rgba(173, 216, 230, 0.2);
   }
 
   .favicon {
-    width: 18px;
-    height: 18px;
-    margin-right: 4px;
+    width: 14px;
+    height: 14px;
   }
 }
 
 .popoverTabListItemLeft {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   align-items: center;
 }
 

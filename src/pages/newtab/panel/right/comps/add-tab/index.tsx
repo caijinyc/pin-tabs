@@ -29,7 +29,6 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   const groups = useAllGroups();
   const currentSpaceTabs = useStore(state => state.allSpacesMap[props.spaceId].tabs);
   const isPopup = useIsPopupStore(state => state);
-  console.log('isPopup', isPopup);
 
   const data: Array<
     | TabInfo
