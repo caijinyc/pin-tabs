@@ -121,7 +121,7 @@ export const syncDataFromOtherDeviceFn = async () => {
     return;
   }
 
-  console.log('🔽lastSyncVersion', lastSyncVersion);
+  console.log('🔽syncData.lastSyncVersion', lastSyncVersion);
   console.log('🔽localData.version', localData.version);
 
   // 如果本地数据的版本号大于云端数据的版本号，那么以本地数据为准
