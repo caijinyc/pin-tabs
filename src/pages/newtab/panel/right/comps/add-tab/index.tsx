@@ -9,20 +9,27 @@ import {
 import { Popover, PopoverBody, PopoverContent, PopoverTrigger, Portal } from '@chakra-ui/react';
 import styles from './style.module.scss';
 import { Icon } from '@iconify-icon/react';
-import React, { useEffect } from 'react';
+import React, { HTMLProps, useEffect } from 'react';
 import { cls } from '@src/shared/kits';
 
-const PinIcon = () => (
-  <div className={cls(styles.addIconWrapper, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}>
-    <Icon icon="fluent:pin-12-filled" className={''} inline width="18" height="18" />
-  </div>
-);
+const PinIcon = (props: {} & HTMLProps<any>) => {
+  console.log('props', props);
+  return (
+    <div
+      className={cls(styles.addIconWrapper, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}
+      {...props}
+      ref={props.ref}>
+      <Icon icon="fluent:pin-12-filled" className={''} inline width="18" height="18" />
+    </div>
+  );
+};
 
 export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   const tabs = useAllOpenedTabs();
   const groups = useAllGroups();
   const currentSpaceTabs = useStore(state => state.allSpacesMap[props.spaceId].tabs);
   const isPopup = useIsPopupStore(state => state);
+  console.log('isPopup', isPopup);
 
   const data: Array<
     | TabInfo
@@ -67,12 +74,15 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   return (
     <Popover placement={'bottom-start'}>
       <PopoverTrigger>
-        <PinIcon />
+        <div className={cls(styles.addIconWrapper, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}>
+          <Icon icon="fluent:pin-12-filled" className={''} inline width="18" height="18" />
+        </div>
       </PopoverTrigger>
 
       <Portal>
         <PopoverContent
           style={{
+            boxShadow: '0 0 10px 0 rgba(0,0,0,0.1)',
             width: 700,
           }}>
           {/*<PopoverArrow />*/}
