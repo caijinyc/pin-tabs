@@ -34,20 +34,13 @@ export const syncToGist = async (data: StoreType) => {
     return;
   }
 
-  await uploadToGist(
+  return await uploadToGist(
     {
       ...data,
       syncTag,
     },
     syncGistId,
-  )
-    .then(() => {
-      console.log('🔺🔺🔺 SYNC TO GIST SUCCESS');
-    })
-    .catch(err => {
-      console.error('sync to gist fail', err);
-      throw err;
-    });
+  );
 };
 export const uploadToGist = async (data: any, gistId: string) => {
   const { token } = await optionsStorage.get();
@@ -107,6 +100,7 @@ export const syncDataToGistFn = async () => {
     await deviceSyncStorage.set({
       lastSyncVersion: newVersion,
     });
+    console.log('🔺🔺🔺 SYNC TO GIST SUCCESS ✅✅✅');
   } catch (e) {
     console.log('sync TO gist fail # catch ->', e);
   }
@@ -143,7 +137,7 @@ export const syncDataFromOtherDeviceFn = async () => {
     await storeLocalStorage.set({
       ...gistData,
     });
-    console.log('SYNC FROM GIST SUCCESS 🔽🔽🔽✅✅✅');
+    console.log('🔽🔽🔽 SYNC FROM GIST SUCCESS ✅✅✅');
   } catch (e) {
     console.log('sync FROM gist fail # catch ->', e);
   }
