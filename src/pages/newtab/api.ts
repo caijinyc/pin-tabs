@@ -1,17 +1,19 @@
 import { Octokit } from 'octokit';
 import { optionsStorage } from '@src/shared/storages/optionsStorage';
+import { StoreType } from '@pages/newtab/store/store';
 
-export const getGistData = async () => {
+export const getGistData = async (): Promise<StoreType> => {
   const { gistId, token } = await optionsStorage.get();
   const octokit = new Octokit({
     auth: token,
   });
-  const data = await octokit.request('GET /gists/{gist_id}', {
+
+  const res = await octokit.request('GET /gists/{gist_id}', {
     gist_id: gistId,
     headers: {
       'X-GitHub-Api-Version': '2022-11-28',
     },
   });
 
-  return data;
+  return JSON.parse(res.data.files['backup_data.json'].content);
 };

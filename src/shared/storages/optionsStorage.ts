@@ -3,6 +3,8 @@ import { BaseStorage, createStorage, StorageType } from '@src/shared/storages/ba
 type OptionsType = {
   gistId: string;
   token: string;
+  syncGistId: string;
+  backupGistId: string;
 };
 
 const storage = createStorage<OptionsType>(
@@ -10,6 +12,8 @@ const storage = createStorage<OptionsType>(
   {
     gistId: '',
     token: '',
+    syncGistId: '',
+    backupGistId: '',
   },
   {
     storageType: StorageType.Sync,
@@ -19,6 +23,12 @@ const storage = createStorage<OptionsType>(
 
 export const optionsStorage = {
   ...storage,
+  set: (value: Partial<OptionsType>) => {
+    return storage.set({
+      ...storage.getSnapshot(),
+      ...value,
+    });
+  },
 };
 
 export type CommonLocalType = {

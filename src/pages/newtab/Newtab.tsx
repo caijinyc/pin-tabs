@@ -8,7 +8,7 @@ import { loadStoreFromStorage, useIsPopupStore, useStore } from '@pages/newtab/s
 import { LeftPanel } from '@pages/newtab/panel/left-group-side';
 import { RightContentPanel } from '@pages/newtab/panel/right';
 import { GlobalDialog } from '@pages/newtab/comps/global-dialog';
-import { storeLocalStorage } from '@src/shared/storages/storeSyncStorage';
+import { storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
 import { diffMapPickKeys } from '@src/shared/kits';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -20,7 +20,7 @@ const useSaveStoreDataToStorage = () => {
   useEffect(() => {
     useStore.subscribe((state, prevState) => {
       storeLocalStorage.get().then(data => {
-        let alreadySyncedToGist = data.alreadySyncedToGist;
+        let alreadySyncedToGist = data.alreadyBackupToGist;
 
         // 只有allSpacesMap和groups发生变化时，才需要同步到gist
         if (diffMapPickKeys(state, prevState, ['allSpacesMap', 'groups'])) {
@@ -32,7 +32,7 @@ const useSaveStoreDataToStorage = () => {
         console.log('alreadySyncedToGist:', alreadySyncedToGist);
         storeLocalStorage.set({
           ...useStore.getState(),
-          alreadySyncedToGist,
+          alreadyBackupToGist: alreadySyncedToGist,
           lastSyncTime: Date.now(),
         });
       });

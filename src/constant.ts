@@ -7,4 +7,5 @@ export const DEFAULT_STORE_STATE: StoreType = {
   groups: [],
 
   lastSyncTime: 0,
+  version: 1,
 };
