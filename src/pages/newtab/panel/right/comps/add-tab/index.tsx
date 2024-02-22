@@ -9,7 +9,7 @@ import {
 import { Popover, PopoverBody, PopoverContent, PopoverTrigger, Portal } from '@chakra-ui/react';
 import styles from './style.module.scss';
 import { Icon } from '@iconify-icon/react';
-import React, { HTMLProps, useEffect } from 'react';
+import React, { HTMLProps } from 'react';
 import { cls } from '@src/shared/kits';
 
 const PinIcon = (props: {} & HTMLProps<any>) => {
