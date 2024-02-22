@@ -5,7 +5,7 @@ import { storeLocalStorage, storeSyncStorage } from '@src/shared/storages/storeS
 import { DEFAULT_STORE_STATE } from '@src/constant';
 import { cacheImgBase64ToDB, getCacheImgBase64Map } from '@pages/newtab/util/cache-images';
 import { getGistData } from '@pages/newtab/api';
-import { diffMapPickKeys } from '@src/shared/kits';
+import { diffMapPickKeys, uuid } from '@src/shared/kits';
 
 export type TabInfo = {
   id: number;
@@ -148,6 +148,7 @@ export type SpaceInfo = {
 
 export type GroupInfo = {
   name: string;
+  id: string;
   // TODO 数据结构变更，这里需要支持 Map，可以存储其他数据，例如 group id
   subSpacesIds: string[];
 };
@@ -192,7 +193,17 @@ export const loadStoreFromStorage = () => {
       return;
     }
 
-    return useStore.setState(localData);
+    return useStore.setState(() => {
+      return {
+        ...localData,
+        groups: localData.groups.map((group, index) => {
+          return {
+            id: group.id ? group.id : uuid(),
+            ...group,
+          };
+        }),
+      };
+    });
 
     // if (localData.lastSyncTime > cloudData.lastSyncTime) {
     //   console.log('init local data');

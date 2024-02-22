@@ -4,8 +4,8 @@ import styles from '@pages/newtab/panel/right/comps/group-content/style.module.s
 import { Icon } from '@iconify-icon/react';
 import { Input } from '@chakra-ui/react';
 import { produce } from 'immer';
-import { openTab } from '@pages/newtab/panel/right/comps/group-content/index';
 import { getImageBase64 } from '@pages/newtab/util/cache-images';
+import { openTab } from '@root/src/pages/newtab/util/open-tab';
 
 const RenderFavicon = ({ tab }: { tab: TabInfo }) => {
   const initIconCacheData = useCacheImgBase64(state => state.init);
