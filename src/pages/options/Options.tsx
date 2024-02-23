@@ -21,7 +21,7 @@ const Options: React.FC = () => {
       syncGistId: optionsStorage.getSnapshot().syncGistId,
       token: optionsStorage.getSnapshot().token,
       backupGistId: optionsStorage.getSnapshot().backupGistId,
-      deviceId: commonLocalStorage.getSnapshot().deviceId,
+      deviceId: commonLocalStorage.getSnapshot()?.deviceId,
     },
   });
 
