@@ -1,6 +1,6 @@
 import { deviceSyncStorage, storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
 import { commonLocalStorage, optionsStorage } from '@src/shared/storages/optionsStorage';
-import { getGistData } from '@pages/newtab/api';
+import { getGistData } from '@pages/background/api';
 import { StoreType } from '@pages/newtab/store/store';
 import dayjs from 'dayjs';
 import { Octokit } from 'octokit';
@@ -160,7 +160,7 @@ export const loadDataFromOtherDeviceFn = async () => {
   }
 
   try {
-    const gistData = await getGistData(SYNC_FILE_NAME);
+    const gistData = await getGistData({ filename: SYNC_FILE_NAME, gistId: syncGistId });
     await storeLocalStorage.set({
       ...gistData,
     });
