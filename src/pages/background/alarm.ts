@@ -22,8 +22,6 @@ if (process.env.NODE_ENV === 'development') {
 loadDataFromOtherDeviceFn();
 
 chrome.alarms.onAlarm.addListener(function (alarm) {
-  console.log('onAlarm', alarm, alarm.name, alarm.scheduledTime, alarm.periodInMinutes);
-
   // if (alarm.name === BACKUP_DATA) {
   //   console.log('执行备份操作', dayjs().format('YYYY-MM-DD HH:mm:ss'));
   //   const startBackup = async () => {
