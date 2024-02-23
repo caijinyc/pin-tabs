@@ -33,7 +33,6 @@ const useSaveStoreDataToStorage = () => {
         storeLocalStorage.set({
           ...useStore.getState(),
           alreadyBackupToGist: alreadySyncedToGist,
-          lastSyncTime: Date.now(),
         });
       });
     });

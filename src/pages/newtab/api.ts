@@ -2,7 +2,7 @@ import { Octokit } from 'octokit';
 import { optionsStorage } from '@src/shared/storages/optionsStorage';
 import { StoreType } from '@pages/newtab/store/store';
 
-export const getGistData = async (): Promise<StoreType> => {
+export const getGistData = async (filename: string): Promise<StoreType> => {
   const { gistId, token } = await optionsStorage.get();
   const octokit = new Octokit({
     auth: token,
@@ -15,5 +15,5 @@ export const getGistData = async (): Promise<StoreType> => {
     },
   });
 
-  return JSON.parse(res.data.files['backup_data.json'].content);
+  return JSON.parse(res.data.files[filename].content);
 };

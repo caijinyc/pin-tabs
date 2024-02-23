@@ -1,4 +1,4 @@
-import { syncDataFromOtherDevice, syncDataToGist } from './sync';
+import { loadDataFromOtherDevice, syncDataToGist } from './sync';
 import { BACKUP_DATA } from './alarm';
 
 export const createAlarm = () => {
@@ -21,7 +21,7 @@ export const createAlarm = () => {
     });
 
   chrome.alarms
-    .create(syncDataFromOtherDevice, { periodInMinutes: 0.5 })
+    .create(loadDataFromOtherDevice, { periodInMinutes: 0.5 })
     .then(() => {
       console.log('create saveStoreToSyncStorage alarm success');
     })

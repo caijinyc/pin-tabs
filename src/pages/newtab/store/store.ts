@@ -165,9 +165,9 @@ export type StoreType = {
     spaceIds: string[];
   };
 
-  lastSyncTime: number;
   // 每次同步完成后，更新版本号
   version: number;
+
   alreadyBackupToGist?: boolean;
 };
 

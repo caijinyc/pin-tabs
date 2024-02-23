@@ -5,20 +5,73 @@ import { StoreType } from '@pages/newtab/store/store';
 import dayjs from 'dayjs';
 import { Octokit } from 'octokit';
 
+/**
+ * 同步实现逻辑：
+ *
+ * 同步到远端：
+ * 1. useStore.subscribe 判断数据更新
+ * 2. 如果数据更新，判断是否需要同步
+ * 3. 如果需要同步，设置 alreadyBackupToGist 为 false
+ * 4. alarm 定时任务检查 alreadyBackupToGist，如果为 false，version + 1，然后同步到 gist
+ *    4.1 version 更新点：useStore, localStorage, cloudStore
+ *    4.2 其他设备根据 cloudStore 的 version 来判断是否需要同步
+ *
+ * 从远端下载：
+ * 1. alarm 定时任务检查 cloudStore 的 version
+ * 2. 如果 cloudStore 的 version 大于 localStorage 的 version，下载 gist 数据
+ * 3. 将下载的数据同步到 localStorage
+ * 4. 用户使用时，会先从 localStorage 加载数据到 store 中
+ * 5. localStorage 数据更新后，version 和远端对齐
+ */
+
 export const syncDataToGist = 'syncDataToGist';
-export const syncDataFromOtherDevice = 'syncDataFromOtherDevice';
+export const loadDataFromOtherDevice = 'loadDataFromOtherDeviceFn';
+
+const BACKUP_FILE_NAME = 'backup_data.json';
+const SYNC_FILE_NAME = 'sync_data.json';
+
+const uploadToGist = async ({ data, gistId, filename }: { data: any; gistId: string; filename: string }) => {
+  const { token } = await optionsStorage.get();
+
+  if (!token) return;
+
+  const octokit = new Octokit({
+    auth: token,
+  });
+
+  await octokit.request('PATCH /gists/{gist_id}', {
+    gist_id: gistId,
+    description: 'An updated gist description',
+    files: {
+      [filename]: {
+        content: JSON.stringify(
+          {
+            ...data,
+          },
+          null,
+          2,
+        ),
+      },
+    },
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
+};
+
 export const backupToGist = async (data: StoreType) => {
   const syncTag = commonLocalStorage.getSnapshot().deviceId + '-' + dayjs().format('YYYY-MM-DD HH:mm:ss');
 
   const { gistId } = await optionsStorage.get();
 
-  await uploadToGist(
-    {
+  await uploadToGist({
+    data: {
       ...data,
       syncTag,
     },
-    gistId,
-  )
+    filename: BACKUP_FILE_NAME,
+    gistId: gistId,
+  })
     .then(() => {
       console.log('backup success');
     })
@@ -34,40 +87,13 @@ export const syncToGist = async (data: StoreType) => {
     return;
   }
 
-  return await uploadToGist(
-    {
+  return await uploadToGist({
+    data: {
       ...data,
       syncTag,
     },
-    syncGistId,
-  );
-};
-export const uploadToGist = async (data: any, gistId: string) => {
-  const { token } = await optionsStorage.get();
-
-  if (!token) return;
-
-  const octokit = new Octokit({
-    auth: token,
-  });
-
-  await octokit.request('PATCH /gists/{gist_id}', {
-    gist_id: gistId,
-    description: 'An updated gist description',
-    files: {
-      'backup_data.json': {
-        content: JSON.stringify(
-          {
-            ...data,
-          },
-          null,
-          2,
-        ),
-      },
-    },
-    headers: {
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
+    filename: SYNC_FILE_NAME,
+    gistId: syncGistId,
   });
 };
 export const syncDataToGistFn = async () => {
@@ -107,9 +133,10 @@ export const syncDataToGistFn = async () => {
 
   logEnd();
 };
-export const syncDataFromOtherDeviceFn = async () => {
-  console.log('############## 🔽🔽🔽 start syncDataFromOtherDeviceFn ########');
-  const logEnd = () => console.log('############## 🔽🔽🔽 end syncDataFromOtherDeviceFn ########');
+
+export const loadDataFromOtherDeviceFn = async () => {
+  console.log('############## 🔽🔽🔽 start loadDataFromOtherDeviceFn ########');
+  const logEnd = () => console.log('############## 🔽🔽🔽 end loadDataFromOtherDeviceFn ########');
 
   const localData = await storeLocalStorage.get();
   const lastSyncVersion = await deviceSyncStorage.get().then(data => data.lastSyncVersion);
@@ -133,7 +160,7 @@ export const syncDataFromOtherDeviceFn = async () => {
   }
 
   try {
-    const gistData = await getGistData();
+    const gistData = await getGistData(SYNC_FILE_NAME);
     await storeLocalStorage.set({
       ...gistData,
     });

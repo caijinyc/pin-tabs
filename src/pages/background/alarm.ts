@@ -2,8 +2,8 @@ import { storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
 import dayjs from 'dayjs';
 import {
   backupToGist,
-  syncDataFromOtherDevice,
-  syncDataFromOtherDeviceFn,
+  loadDataFromOtherDevice,
+  loadDataFromOtherDeviceFn,
   syncDataToGist,
   syncDataToGistFn,
 } from '@pages/background/sync';
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // TODO dev mode 不执行
-syncDataFromOtherDeviceFn();
+loadDataFromOtherDeviceFn();
 
 chrome.alarms.onAlarm.addListener(function (alarm) {
   console.log('onAlarm', alarm, alarm.name, alarm.scheduledTime, alarm.periodInMinutes);
@@ -60,8 +60,8 @@ chrome.alarms.onAlarm.addListener(function (alarm) {
     syncDataToGistFn();
   }
 
-  if (alarm.name === syncDataFromOtherDevice) {
-    console.log(`执行 ${syncDataFromOtherDevice} 操作`, dayjs().format('YYYY-MM-DD HH:mm:ss'));
-    syncDataFromOtherDeviceFn();
+  if (alarm.name === loadDataFromOtherDevice) {
+    console.log(`执行 ${loadDataFromOtherDevice} 操作`, dayjs().format('YYYY-MM-DD HH:mm:ss'));
+    loadDataFromOtherDeviceFn();
   }
 });
