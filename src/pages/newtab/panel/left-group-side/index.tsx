@@ -8,6 +8,8 @@ import cls from 'classnames';
 import { Groups } from '@pages/newtab/panel/left-group-side/group';
 import { UploadLocalHistory } from '@pages/newtab/panel/left-group-side/bottom';
 import { uuid } from '@src/shared/kits';
+import { optionsStorage } from '@src/shared/storages/optionsStorage';
+import { dialog } from '@pages/newtab/comps/global-dialog';
 
 export const LeftPanel = () => {
   return (
@@ -65,6 +67,26 @@ export const LeftPanel = () => {
           onClick={() => {
             chrome.runtime.openOptionsPage();
           }}
+          className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
+        />
+
+        <Icon
+          onClick={() => {
+            const { syncGistId, githubUsername } = optionsStorage.getSnapshot();
+            if (!syncGistId || !githubUsername) {
+              dialog.confirm({
+                title: 'Upload Error',
+                content: 'Please set sync gist id and github username in options page first',
+                onOk: () => {},
+              });
+              return;
+            } else {
+              window.open(`https://gist.github.com/${githubUsername}/${syncGistId}`, '_blank');
+            }
+          }}
+          icon="mdi:github"
+          width="18"
+          height="18"
           className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
         />
       </div>

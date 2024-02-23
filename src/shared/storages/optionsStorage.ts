@@ -5,6 +5,7 @@ type OptionsType = {
   token: string;
   syncGistId: string;
   backupGistId: string;
+  githubUsername: string;
 };
 
 const storage = createStorage<OptionsType>(
@@ -14,6 +15,7 @@ const storage = createStorage<OptionsType>(
     token: '',
     syncGistId: '',
     backupGistId: '',
+    githubUsername: '',
   },
   {
     storageType: StorageType.Sync,
