@@ -83,7 +83,7 @@ export const syncToGist = async (data: StoreType) => {
   const syncTag = commonLocalStorage.getSnapshot().deviceId + '-' + dayjs().format('YYYY-MM-DD HH:mm:ss');
   const { syncGistId } = await optionsStorage.get();
   if (!syncGistId) {
-    console.log('syncGistId is empty, skip');
+    console.log('syncGistId is empty, skip⏭️⏭️⏭️');
     return;
   }
 
@@ -105,7 +105,7 @@ export const syncDataToGistFn = async () => {
   console.log('🔺localStorageData.version', localStorageData.version);
 
   if (localStorageData.alreadyBackupToGist) {
-    console.log('🔺already synced to gist, skip');
+    console.log('🔺already synced to gist, skip⏭️⏭️⏭️');
     logEnd();
     return;
   }
@@ -143,7 +143,7 @@ export const loadDataFromOtherDeviceFn = async () => {
 
   const { syncGistId, token } = await optionsStorage.get();
   if (!syncGistId || !token) {
-    console.log('🔽syncGistId is empty, skip');
+    console.log('🔽syncGistId is empty, skip⏭️⏭️⏭️');
     logEnd();
     return;
   }
@@ -153,7 +153,7 @@ export const loadDataFromOtherDeviceFn = async () => {
 
   // 如果本地数据的版本号大于云端数据的版本号，那么以本地数据为准
   if ((localData.version || 0) >= (lastSyncVersion || 0)) {
-    console.log('🔽localData is newer than gistData, skip');
+    console.log('🔽localData is newer than gistData, skip⏭️⏭️⏭️');
     logEnd();
 
     return;
