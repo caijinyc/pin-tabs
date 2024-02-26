@@ -28,6 +28,7 @@ export const LeftPanel = () => {
                     id: uuid(),
                     subSpacesIds: [],
                   });
+                  draft.selectedIndex = draft.groups.length - 1;
                 });
               });
             }}>

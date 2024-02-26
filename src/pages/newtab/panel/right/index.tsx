@@ -23,6 +23,7 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify-icon/react';
 import { dialog } from '@pages/newtab/comps/global-dialog';
+import { commonLocalStorage } from '@src/shared/storages/commonStorage';
 
 function GroupSetting() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -38,7 +39,23 @@ function GroupSetting() {
   });
 
   useEffect(() => {
+    const selectedGroupData = useStore.getState().groups[selectedIndex];
     setValue('name', useStore.getState().groups[selectedIndex]?.name);
+
+    if (selectedGroupData) {
+      if (
+        selectedGroupData.name === 'Untitled Group' &&
+        selectedGroupData.subSpacesIds.length === 0 &&
+        !commonLocalStorage.getSnapshot().alreadyAutoOpenSettingModalGroupIdMap[selectedGroupData.id]
+      ) {
+        onOpen();
+        commonLocalStorage.set(old => {
+          return produce(old, draft => {
+            draft.alreadyAutoOpenSettingModalGroupIdMap[selectedGroupData.id] = true;
+          });
+        });
+      }
+    }
   }, [selectedIndex]);
 
   return (
