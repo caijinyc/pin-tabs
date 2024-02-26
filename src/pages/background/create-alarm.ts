@@ -11,14 +11,16 @@ export const createAlarm = () => {
       console.log('create alarm fail', e);
     });
 
-  chrome.alarms
-    .create(syncDataToGist, { periodInMinutes: 2 })
-    .then(() => {
-      console.log(`create ${syncDataToGist} alarm success`);
-    })
-    .catch(e => {
-      console.log(`create ${syncDataToGist} alarm fail`, e);
-    });
+  setTimeout(() => {
+    chrome.alarms
+      .create(syncDataToGist, { periodInMinutes: 2 })
+      .then(() => {
+        console.log(`create ${syncDataToGist} alarm success`);
+      })
+      .catch(e => {
+        console.log(`create ${syncDataToGist} alarm fail`, e);
+      });
+  }, 10000);
 
   chrome.alarms
     .create(loadDataFromOtherDevice, { periodInMinutes: 0.5 })
