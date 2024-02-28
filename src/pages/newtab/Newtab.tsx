@@ -58,6 +58,7 @@ function useLoadStoreData() {
 
 const NewTab = (props: { isPopup?: boolean }) => {
   const selectedIndex = useStore(state => state.selectedIndex);
+  const redirectMode = useStore(state => state.redirect);
 
   if (props.isPopup && !useIsPopupStore.getState()) {
     useIsPopupStore.setState(true);
@@ -68,17 +69,19 @@ const NewTab = (props: { isPopup?: boolean }) => {
 
   return (
     <div className="App">
-      <ChakraProvider>
-        <GlobalDialog />
-        <ToastContainer />
+      {redirectMode ? null : (
+        <ChakraProvider>
+          <GlobalDialog />
+          <ToastContainer />
 
-        <DndProvider backend={HTML5Backend}>
-          <div className={styles.wrapper}>
-            <LeftPanel />
-            <RightContentPanel />
-          </div>
-        </DndProvider>
-      </ChakraProvider>
+          <DndProvider backend={HTML5Backend}>
+            <div className={styles.wrapper}>
+              <LeftPanel />
+              <RightContentPanel />
+            </div>
+          </DndProvider>
+        </ChakraProvider>
+      )}
     </div>
   );
 };

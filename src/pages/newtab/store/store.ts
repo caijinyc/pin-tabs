@@ -5,6 +5,7 @@ import { storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
 import { DEFAULT_STORE_STATE } from '@src/constant';
 import { cacheImgBase64ToDB, getCacheImgBase64Map } from '@pages/newtab/util/cache-images';
 import { diffMapPickKeys, uuid } from '@src/shared/kits';
+import { openTab } from '@pages/newtab/util/open-tab';
 
 export type TabInfo = {
   id: number;
@@ -169,19 +170,11 @@ export type StoreType = {
   version: number;
 
   alreadyBackupToGist?: boolean;
+
+  redirect?: boolean;
 };
 
 export const useStore = create<StoreType>(() => produce(DEFAULT_STORE_STATE, draft => {}));
-
-// getGistData().then(res => {
-//   console.log('getGistData', JSON.parse(res.data.files['backup_data.json'].content));
-//   // console.log('getGistData', data.files['backup_data.json'].content);
-// });
-
-console.log(
-  'chrome.permissions',
-  chrome.permissions.getAll().then(res => console.log(res)),
-);
 
 export const loadStoreFromStorage = () => {
   return Promise.all([storeLocalStorage.get()]).then(([localData]) => {
@@ -194,9 +187,15 @@ export const loadStoreFromStorage = () => {
       return;
     }
 
-    return useStore.setState(() => {
+    // get url query params
+    const url = new URL(window.location.href);
+    const tabId = url.searchParams.get('tabId');
+    const spaceId = url.searchParams.get('spaceId');
+
+    useStore.setState(() => {
       return {
         ...localData,
+        redirect: Boolean(tabId && spaceId),
         groups: localData.groups.map((group, index) => {
           return {
             id: group.id ? group.id : uuid(),
@@ -206,13 +205,26 @@ export const loadStoreFromStorage = () => {
       };
     });
 
-    // if (localData.lastSyncTime > cloudData.lastSyncTime) {
-    //   console.log('init local data');
-    //   return useStore.setState(localData);
-    // } else {
-    //   console.log('init cloud data');
-    //   return useStore.setState(cloudData);
-    // }
+    if (tabId && spaceId && localData) {
+      const tab = localData.allSpacesMap[spaceId].tabs.find(item => item.id === Number(tabId));
+      const space = localData.allSpacesMap[spaceId];
+
+      chrome.tabs.getCurrent().then(currentTab => {
+        openTab({
+          tab,
+          space,
+          autoActiveOpenedTab: true,
+        });
+
+        if (currentTab) {
+          console.log('close current tab');
+
+          setTimeout(() => {
+            chrome.tabs.remove(currentTab.id);
+          }, 100);
+        }
+      });
+    }
   });
 };
 
