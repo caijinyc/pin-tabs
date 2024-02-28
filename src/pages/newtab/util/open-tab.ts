@@ -83,6 +83,17 @@ export const openTab = async ({
       groupId: groupId ? groupId : undefined,
     });
 
+    try {
+      // move all tabs without group to the last
+      allOpenedTabs.forEach(t => {
+        if (!t.groupId) {
+          chrome.tabs.move(t.id, { index: -1 });
+        }
+      });
+    } catch (e) {
+      console.error('move tab error', e);
+    }
+
     if (space.groupId !== newGroupId) {
       useStore.setState(old => {
         return produce(old, draft => {
