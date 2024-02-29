@@ -13,7 +13,7 @@ export const createAlarm = () => {
 
   setTimeout(() => {
     chrome.alarms
-      .create(syncDataToGist, { periodInMinutes: 2 })
+      .create(syncDataToGist, { periodInMinutes: 1 })
       .then(() => {
         console.log(`create ${syncDataToGist} alarm success`);
       })
