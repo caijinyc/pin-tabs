@@ -32,6 +32,9 @@ const useSaveStoreDataToStorage = () => {
         console.log('alreadySyncedToGist:', alreadySyncedToGist);
         storeLocalStorage.set({
           ...useStore.getState(),
+          // 因为本地数据的 version 只有 localStorage 的是最准的，所以这里直接取 localStorage 的 version
+          // 否则可能出现 store 中的低版本 覆盖 localStorage 中的高版本 version 问题
+          version: storeLocalStorage.getSnapshot().version,
           alreadyBackupToGist: alreadySyncedToGist,
         });
       });
