@@ -8,6 +8,7 @@ import React from 'react';
 import { cls } from '@src/shared/kits';
 import { openTab } from '@root/src/pages/newtab/util/open-tab';
 import { Actions } from '@pages/newtab/store/actions';
+import { ARCHIVE_GROUP_ID } from '@src/constant';
 
 export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   const spaceId = space.uuid;
@@ -103,6 +104,14 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
             draft.groupsMap[draft.selectedGroupId].subSpacesIds = draft.groupsMap[
               draft.selectedGroupId
             ].subSpacesIds.filter(id => id !== spaceId);
+            if (!draft.groupsMap[ARCHIVE_GROUP_ID]) {
+              draft.groupsMap[ARCHIVE_GROUP_ID] = {
+                id: ARCHIVE_GROUP_ID,
+                name: 'Archive',
+                subSpacesIds: [],
+              };
+            }
+            draft.groupsMap[ARCHIVE_GROUP_ID].subSpacesIds.push(spaceId);
           });
         });
       },
