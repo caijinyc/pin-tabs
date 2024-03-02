@@ -2,6 +2,7 @@ import React from 'react';
 import { useStore } from '@pages/newtab/store/store';
 import { dialog } from '@pages/newtab/comps/global-dialog';
 import { Icon } from '@iconify-icon/react';
+import { IconButton, Tooltip } from '@chakra-ui/react';
 
 export const UploadLocalHistory = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -42,15 +43,15 @@ export const UploadLocalHistory = () => {
         }}
       />
 
-      <Icon
-        onClick={() => {
-          inputRef.current?.click();
-        }}
-        icon="material-symbols-light:drive-folder-upload"
-        width="18"
-        height="18"
-        className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
-      />
+      <Tooltip label={'上传备份文件'}>
+        <IconButton
+          aria-label={'Save'}
+          icon={<Icon icon="ic:round-upload-file" width="24" height="24" />}
+          onClick={() => {
+            inputRef.current?.click();
+          }}
+        />
+      </Tooltip>
     </>
   );
 };

@@ -6,7 +6,7 @@ import { Icon } from '@iconify-icon/react';
 import React from 'react';
 import cls from 'classnames';
 import { Groups } from '@pages/newtab/panel/left-group-side/group';
-import { UploadLocalHistory } from '@pages/newtab/panel/left-group-side/bottom';
+import { UploadLocalHistory } from '@pages/options/upload-local-history';
 import { uuid } from '@src/shared/kits';
 import { optionsStorage } from '@src/shared/storages/optionsStorage';
 import { dialog } from '@pages/newtab/comps/global-dialog';
@@ -38,18 +38,6 @@ export const LeftPanel = () => {
       </div>
 
       <div>
-        <UploadLocalHistory />
-
-        {/*<Icon*/}
-        {/*  icon="uim:history"*/}
-        {/*  width="24"*/}
-        {/*  height="24"*/}
-        {/*  onClick={() => {*/}
-        {/*    getGistData();*/}
-        {/*  }}*/}
-        {/*  className={'text-gray-400 hover:text-gray-900 cursor-pointer'}*/}
-        {/*/>*/}
-
         <Icon
           icon="material-symbols-light:settings"
           width="18"

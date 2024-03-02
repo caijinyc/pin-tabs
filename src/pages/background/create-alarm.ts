@@ -1,16 +1,6 @@
 import { loadDataFromOtherDevice, syncDataToGist } from './sync';
-import { BACKUP_DATA } from './alarm';
 
 export const createAlarm = () => {
-  chrome.alarms
-    .create(BACKUP_DATA, { periodInMinutes: 5 })
-    .then(() => {
-      console.log('create backupData alarm success');
-    })
-    .catch(e => {
-      console.log('create alarm fail', e);
-    });
-
   setTimeout(() => {
     chrome.alarms
       .create(syncDataToGist, { periodInMinutes: 1 })

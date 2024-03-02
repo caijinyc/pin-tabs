@@ -1,19 +1,16 @@
 import React from 'react';
 import '@pages/options/Options.css';
-import { ChakraProvider, FormLabel, Input } from '@chakra-ui/react';
+import { ChakraProvider, FormLabel, IconButton, Input, Popover, Tooltip } from '@chakra-ui/react';
 import { commonLocalStorage, optionsStorage } from '@src/shared/storages/optionsStorage';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify-icon/react';
+import { UploadLocalHistory } from "@pages/options/upload-local-history";
 
 const GithubAppendIcon = (props: { onClick: () => void }) => (
   <Icon inline icon="mdi:github" width="20" height="20" className={'cursor-pointer'} onClick={props.onClick} />
 );
 
 const Options: React.FC = () => {
-  const [gistId, setGistId] = React.useState('');
-  const [gistToken, setGistToken] = React.useState('');
-  const [deviceId, setDeviceId] = React.useState('');
-
   const { register, handleSubmit, watch, setValue } = useForm<{
     name: string;
     syncGistId: string;
@@ -65,23 +62,15 @@ const Options: React.FC = () => {
         </FormLabel>
         <Input {...register('syncGistId')} className={'mb-6'} />
 
-        <FormLabel>
-          <div className={'flex items-center gap-2'}>
-            <div>Backup Gist ID</div>
-            <GithubAppendIcon
-              onClick={() => {
-                window.open(`https://gist.github.com/${watch('githubUsername')}/${watch('backupGistId')}`, '_blank');
-              }}
-            />
-          </div>
-        </FormLabel>
-        <Input {...register('backupGistId')} className={'mb-6'} />
-
         <FormLabel>Gist Token</FormLabel>
         <Input {...register('token')} className={'mb-6'} />
 
         <FormLabel>Device Id</FormLabel>
         <Input {...register('deviceId')} className={'mb-6'} />
+
+        <FormLabel>Other Actions</FormLabel>
+
+        <UploadLocalHistory/>
       </div>
     </ChakraProvider>
   );
