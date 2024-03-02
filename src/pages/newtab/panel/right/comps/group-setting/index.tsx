@@ -12,7 +12,6 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
-  useToast,
 } from '@chakra-ui/react';
 import { StoreHooks } from '@pages/newtab/store/hooks';
 import { useForm } from 'react-hook-form';
@@ -21,13 +20,10 @@ import { commonLocalStorage } from '@src/shared/storages/commonStorage';
 import { produce } from 'immer';
 import { Icon } from '@iconify-icon/react';
 import { useStore } from '@pages/newtab/store/store';
-import { dialog } from '@pages/newtab/comps/global-dialog';
-import { Actions } from '@pages/newtab/store/actions/normal';
 
 export function GroupSetting() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const currentGroup = StoreHooks.useCurrentGroup();
-  const toast = useToast();
 
   const { register, handleSubmit, watch, setValue } = useForm<{
     name: string;
@@ -80,32 +76,6 @@ export function GroupSetting() {
           </ModalBody>
 
           <ModalFooter>
-            <Button
-              colorScheme="red"
-              mr={3}
-              onClick={() => {
-                if (useStore.getState().groups.length === 1) {
-                  toast({
-                    title: 'Must have at least one group.',
-                    status: 'error',
-                    isClosable: true,
-                  });
-
-                  return;
-                }
-
-                dialog.confirm({
-                  title: 'Delete Group',
-                  content: 'Are you sure to delete this group?',
-                  onOk: () => {
-                    onClose();
-                    Actions.removeGroup(currentGroup.id);
-                  },
-                });
-              }}>
-              DELETE
-            </Button>
-
             <Button
               colorScheme="blue"
               mr={3}

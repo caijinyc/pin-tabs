@@ -15,12 +15,13 @@ export const Actions = {
     useStore.setState(old => {
       return produce(old, draft => {
         const newGroupId = uuid();
-        draft.groups.push({
+        draft.groupsMap[newGroupId] = {
           name: 'Untitled Group',
           id: newGroupId,
           subSpacesIds: [],
-        });
-        draft.selectedGroupId = draft.groups[draft.groups.length - 1].id;
+        };
+        draft.groupsSort.push(newGroupId);
+        draft.selectedGroupId = newGroupId;
       });
     });
   },
@@ -90,6 +91,15 @@ export const Actions = {
           tabs: [],
           uuid: id,
         };
+      });
+    });
+  },
+  moveSpaceToOtherGroup: (spaceId: string, newGroupId: string) => {
+    useStore.setState(old => {
+      return produce(old, draft => {
+        const oldGroup = Object.values(draft.groupsMap).find(group => group.subSpacesIds.includes(spaceId));
+        oldGroup.subSpacesIds = oldGroup.subSpacesIds.filter(id => id !== spaceId);
+        draft.groupsMap[newGroupId].subSpacesIds.push(spaceId);
       });
     });
   },

@@ -2,10 +2,10 @@ import { GroupInfo, useStore } from '@pages/newtab/store/store';
 import React, { useRef } from 'react';
 import { useDrag, useDrop, XYCoord } from 'react-dnd';
 import { DropItem } from '@pages/newtab/panel/right/comps/group-content';
-import { moveSpaceToOtherGroup } from '@pages/newtab/store/actions/move-space-to-other-group';
 import cls from 'classnames';
 import styles from '@pages/newtab/style.module.scss';
 import { produce } from 'immer';
+import { Actions } from '@pages/newtab/store/actions';
 
 export const SPACE_TO_GROUP_DRAG_TYPE = 'move_space_to_other_group';
 const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
@@ -18,7 +18,7 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
       if (group.subSpacesIds.includes(item.spaceId)) {
         return;
       }
-      moveSpaceToOtherGroup(item.spaceId, group.id);
+      Actions.moveSpaceToOtherGroup(item.spaceId, group.id);
     },
     collect: monitor => {
       const { spaceId } = (monitor.getItem() || {}) as DropItem;
@@ -150,11 +150,11 @@ const GroupSortItemTypes = {
 };
 
 export const Groups = () => {
-  const groups = useStore(state => {
+  const allGroups = useStore(state => {
     return state.groupsSort.map(id => state.groupsMap[id]);
   });
 
-  return groups.map((item, index) => {
+  return allGroups.map((item, index) => {
     return <GroupItem group={item} groupIndex={index} key={item.id} />;
   });
 };

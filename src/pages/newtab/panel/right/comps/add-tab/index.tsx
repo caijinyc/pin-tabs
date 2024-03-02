@@ -4,7 +4,7 @@ import styles from './style.module.scss';
 import { Icon } from '@iconify-icon/react';
 import React, { HTMLProps } from 'react';
 import { cls } from '@src/shared/kits';
-import { Actions } from '@pages/newtab/store/actions/normal';
+import { Actions } from '@pages/newtab/store/actions';
 import { useAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
 
 const PinIcon = (props: {} & HTMLProps<any>) => {
@@ -21,7 +21,7 @@ const PinIcon = (props: {} & HTMLProps<any>) => {
 
 export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   const tabs = useAllOpenedTabs();
-  const groups = useAllBrowserGroups();
+  const allBrowserGroups = useAllBrowserGroups();
   const currentSpaceTabs = useStore(state => state.allSpacesMap[props.spaceId].tabs);
   const isPopup = useIsPopupStore(state => state);
 
@@ -130,9 +130,9 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
                   <div
                     className={'border-l-2 pt-0 pl-2 pr-2 mb-2'}
                     style={{
-                      borderColor: groups[item.groupId]?.color,
+                      borderColor: allBrowserGroups[item.groupId]?.color,
                     }}>
-                    <div className={'mb-2 font-bold'}>{groups[item.groupId]?.name}</div>
+                    <div className={'mb-2 font-bold'}>{allBrowserGroups[item.groupId]?.name}</div>
                     {(
                       item as {
                         groupId: string;

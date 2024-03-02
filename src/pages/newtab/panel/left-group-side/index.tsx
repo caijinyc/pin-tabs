@@ -7,7 +7,7 @@ import { Groups } from '@pages/newtab/panel/left-group-side/group';
 import { optionsStorage } from '@src/shared/storages/optionsStorage';
 import { dialog } from '@pages/newtab/comps/global-dialog';
 import { useStorageData } from '@src/shared/storages/base';
-import { Actions } from '@pages/newtab/store/actions/normal';
+import { Actions } from '@pages/newtab/store/actions';
 
 export const LeftPanel = () => {
   const { syncGistId, githubUsername } = useStorageData(optionsStorage);

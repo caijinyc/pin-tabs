@@ -7,8 +7,7 @@ import { Icon } from '@iconify-icon/react';
 import React from 'react';
 import { cls } from '@src/shared/kits';
 import { openTab } from '@root/src/pages/newtab/util/open-tab';
-import { Actions } from '@pages/newtab/store/actions/normal';
-import { useAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
+import { Actions } from '@pages/newtab/store/actions';
 
 export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   const spaceId = space.uuid;
@@ -68,7 +67,7 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
 
         useStore.setState(old => {
           return produce(old, draft => {
-            const currentGroup = draft.groups.find(group => group.id === draft.selectedGroupId);
+            const currentGroup = draft.groupsMap[draft.selectedGroupId];
             const index = currentGroup.subSpacesIds.findIndex(id => id === spaceId);
             const temp = currentGroup.subSpacesIds[index];
             currentGroup.subSpacesIds[index] = currentGroup.subSpacesIds[index - 1];
@@ -86,7 +85,7 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
         }
         useStore.setState(old => {
           return produce(old, draft => {
-            const currentGroup = draft.groups.find(group => group.id === draft.selectedGroupId);
+            const currentGroup = draft.groupsMap[draft.selectedGroupId];
             const index = currentGroup.subSpacesIds.findIndex(id => id === spaceId);
             const temp = currentGroup.subSpacesIds[index];
             currentGroup.subSpacesIds[index] = currentGroup.subSpacesIds[index + 1];

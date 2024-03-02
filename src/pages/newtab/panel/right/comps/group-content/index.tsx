@@ -9,7 +9,7 @@ export type DropItem = {
 
 export const GroupContent = () => {
   const allSpacesMap = useStore(state => state.allSpacesMap);
-  const currentSpaceTabs = useStore(state => state.groups.find(item => item.id === state.selectedGroupId)) || {
+  const currentSpaceTabs = useStore(state => state.groupsMap[state.selectedGroupId]) || {
     subSpacesIds: [],
   };
 
