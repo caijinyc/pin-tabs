@@ -12,7 +12,7 @@ export const removeUrlHash = (url: string) => {
   return url.split('#')[0];
 };
 
-export const diffMapPickKeys = <T extends Record<string, any>>(a: T, b: T, keys: (keyof T)[]) => {
+export const diffMapPickKeys = <T extends Record<string, unknown>>(a: T, b: T, keys: (keyof T)[]) => {
   return Boolean(
     keys.find(key => {
       if (JSON.stringify(a[key]) !== JSON.stringify(b[key])) {

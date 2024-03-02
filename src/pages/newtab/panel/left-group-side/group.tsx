@@ -10,7 +10,7 @@ import { produce } from 'immer';
 export const SPACE_TO_GROUP_DRAG_TYPE = 'move_space_to_other_group';
 const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
   const { group, groupIndex } = props;
-  const selectedIndex = useStore(state => state.selectedIndex);
+  const selectedGroupId = useStore(state => state.selectedGroupId);
 
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: SPACE_TO_GROUP_DRAG_TYPE,
@@ -18,7 +18,7 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
       if (group.subSpacesIds.includes(item.spaceId)) {
         return;
       }
-      moveSpaceToOtherGroup(item.spaceId, groupIndex);
+      moveSpaceToOtherGroup(item.spaceId, group.id);
     },
     collect: monitor => {
       const { spaceId } = (monitor.getItem() || {}) as DropItem;
@@ -119,7 +119,7 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
       ref={ref}
       className={cls(
         styles.leftSpaceItem,
-        { [styles.leftSpaceItemActive]: selectedIndex === groupIndex },
+        { [styles.leftSpaceItemActive]: selectedGroupId === group.id },
         'group',
         {
           'bg-gray-200': isActive,
@@ -130,7 +130,8 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
       onClick={() => {
         useStore.setState(() => {
           return {
-            selectedIndex: groupIndex,
+            // selectedIndex: groupIndex,
+            selectedGroupId: group.id,
           };
         });
       }}>

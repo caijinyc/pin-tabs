@@ -1,17 +1,17 @@
-import { useStore } from '@pages/newtab/store/store';
 import styles from '@pages/newtab/style.module.scss';
-import { Button } from '@chakra-ui/react';
-import { produce } from 'immer';
+import { Button, Tooltip } from '@chakra-ui/react';
 import { Icon } from '@iconify-icon/react';
 import React from 'react';
 import cls from 'classnames';
 import { Groups } from '@pages/newtab/panel/left-group-side/group';
-import { UploadLocalHistory } from '@pages/options/upload-local-history';
-import { uuid } from '@src/shared/kits';
 import { optionsStorage } from '@src/shared/storages/optionsStorage';
 import { dialog } from '@pages/newtab/comps/global-dialog';
+import { useStorageData } from '@src/shared/storages/base';
+import { Actions } from '@pages/newtab/store/actions/normal';
 
 export const LeftPanel = () => {
+  const { syncGistId, githubUsername } = useStorageData(optionsStorage);
+
   return (
     <div className={cls(styles.leftPanel, 'flex flex-col justify-between')}>
       <div className={styles.leftSpaceWrapper}>
@@ -21,16 +21,7 @@ export const LeftPanel = () => {
             className={'mt-1'}
             size={'xs'}
             onClick={() => {
-              useStore.setState(old => {
-                return produce(old, draft => {
-                  draft.groups.push({
-                    name: 'Untitled Group',
-                    id: uuid(),
-                    subSpacesIds: [],
-                  });
-                  draft.selectedIndex = draft.groups.length - 1;
-                });
-              });
+              Actions.addNewGroup();
             }}>
             Add Group
           </Button>
@@ -49,35 +40,41 @@ export const LeftPanel = () => {
           className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
         />
 
-        <Icon
-          icon="material-symbols-light:save-rounded"
-          width="18"
-          height="18"
-          onClick={() => {
-            chrome.runtime.openOptionsPage();
-          }}
-          className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
-        />
+        <Tooltip label={'Archive projects'}>
+          <Icon
+            icon="material-symbols:archive"
+            width="18"
+            height="18"
+            onClick={() => {
+              Actions.openArchive();
+            }}
+            className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
+          />
+        </Tooltip>
 
-        <Icon
-          onClick={() => {
-            const { syncGistId, githubUsername } = optionsStorage.getSnapshot();
-            if (!syncGistId || !githubUsername) {
-              dialog.confirm({
-                title: 'Upload Error',
-                content: 'Please set sync gist id and github username in options page first',
-                onOk: () => {},
-              });
-              return;
-            } else {
-              window.open(`https://gist.github.com/${githubUsername}/${syncGistId}`, '_blank');
-            }
-          }}
-          icon="mdi:github"
-          width="18"
-          height="18"
-          className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
-        />
+        {githubUsername && syncGistId ? (
+          <Tooltip label={'Gist backup data'}>
+            <Icon
+              onClick={() => {
+                const { syncGistId, githubUsername } = optionsStorage.getSnapshot();
+                if (!syncGistId || !githubUsername) {
+                  dialog.confirm({
+                    title: 'Upload Error',
+                    content: 'Please set sync gist id and github username in options page first',
+                    onOk: () => {},
+                  });
+                  return;
+                } else {
+                  window.open(`https://gist.github.com/${githubUsername}/${syncGistId}`, '_blank');
+                }
+              }}
+              icon="mdi:github"
+              width="18"
+              height="18"
+              className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
+            />
+          </Tooltip>
+        ) : null}
       </div>
     </div>
   );

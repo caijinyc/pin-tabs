@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { create } from 'zustand';
 import { produce } from 'immer';
 import { storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
-import { DEFAULT_STORE_STATE } from '@src/constant';
+import { DEFAULT_STORE_STATE, NEED_SYNC_KEYS } from '@src/constant';
 import { cacheImgBase64ToDB, getCacheImgBase64Map } from '@pages/newtab/util/cache-images';
 import { diffMapPickKeys, uuid } from '@src/shared/kits';
 import { openTab } from '@pages/newtab/util/open-tab';
@@ -19,8 +19,7 @@ export type TabInfo = {
   pinned?: boolean;
 };
 
-type GroupItem = { name: string; id: number; color: string };
-type GroupMap = Record<string, GroupItem>;
+type GroupMap = Record<string, GroupInfo>;
 
 export const getAllGroups: () => Promise<GroupMap> = () =>
   new Promise((resolve, reject) => {
@@ -155,6 +154,7 @@ export type GroupInfo = {
 
 export type StoreType = {
   selectedIndex: number;
+  selectedGroupId: string;
 
   allSpacesMap: {
     [key: string]: SpaceInfo;
@@ -162,9 +162,10 @@ export type StoreType = {
 
   groups: GroupInfo[];
 
-  archiveSpaces?: {
-    spaceIds: string[];
-  };
+  groupsSort: string[];
+  groupsMap: GroupMap;
+
+  archiveSpaces?: GroupInfo;
 
   // 每次同步完成后，更新版本号
   version: number;
@@ -183,7 +184,7 @@ export const loadStoreFromStorage = () => {
 
     const storeData = useStore.getState();
 
-    if (!diffMapPickKeys(localData, storeData, ['groups', 'selectedIndex', 'allSpacesMap'])) {
+    if (!diffMapPickKeys(localData, storeData, [...NEED_SYNC_KEYS, 'selectedIndex', 'selectedGroupId'])) {
       return;
     }
 
@@ -196,6 +197,15 @@ export const loadStoreFromStorage = () => {
       return {
         ...localData,
         redirect: Boolean(tabId && spaceId),
+        groupsSort: localData.groupsSort ? localData.groupsSort : localData.groups.map(item => item.id),
+        groupsMap: localData.groupsMap
+          ? localData.groupsMap
+          : localData.groups.reduce((acc, item) => {
+              return {
+                ...acc,
+                [item.id]: item,
+              };
+            }, {} as GroupMap),
         groups: localData.groups.map((group, index) => {
           return {
             id: group.id ? group.id : uuid(),

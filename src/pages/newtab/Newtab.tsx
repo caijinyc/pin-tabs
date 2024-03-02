@@ -12,6 +12,7 @@ import { storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
 import { diffMapPickKeys } from '@src/shared/kits';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { NEED_SYNC_KEYS } from "@src/constant";
 
 const { ToastContainer, toast } = createStandaloneToast();
 export const globalToast = toast;
@@ -23,7 +24,7 @@ const useSaveStoreDataToStorage = () => {
         let alreadySyncedToGist = data.alreadyBackupToGist;
 
         // 只有allSpacesMap和groups发生变化时，才需要同步到gist
-        if (diffMapPickKeys(state, prevState, ['allSpacesMap', 'groups'])) {
+        if (diffMapPickKeys(state, prevState, NEED_SYNC_KEYS)) {
           console.log('need to sync to gist: true');
           alreadySyncedToGist = false;
         }
@@ -60,7 +61,6 @@ function useLoadStoreData() {
 }
 
 const NewTab = (props: { isPopup?: boolean }) => {
-  const selectedIndex = useStore(state => state.selectedIndex);
   const redirectMode = useStore(state => state.redirect);
 
   if (props.isPopup && !useIsPopupStore.getState()) {

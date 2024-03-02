@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 /**
  * Storage area type for persisting and exchanging data.
  * @see https://developer.chrome.com/docs/extensions/reference/storage/#overview
@@ -194,4 +196,16 @@ export function createStorage<D>(key: string, fallback: D, config?: StorageConfi
     getSnapshot,
     subscribe,
   };
+}
+
+export const useStorageData = <T>(storage: BaseStorage<T>): T => {
+  const [data, setData] = useState(storage.getSnapshot());
+
+  useState(() => {
+    return storage.subscribe(() => {
+      setData(storage.getSnapshot());
+    });
+  });
+
+  return data;
 }

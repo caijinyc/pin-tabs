@@ -7,12 +7,12 @@ import { Icon } from '@iconify-icon/react';
 import React from 'react';
 import { cls } from '@src/shared/kits';
 import { openTab } from '@root/src/pages/newtab/util/open-tab';
+import { Actions } from '@pages/newtab/store/actions/normal';
 
 export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   const spaceId = space.uuid;
   const currentGroupSpaces = useStore(state => state.groups[state.selectedIndex]);
   const currentSpace = useStore(state => state.allSpacesMap[spaceId]);
-  const allOpenedTabs = useAllOpenedTabs();
 
   const actionsList = [
     {
@@ -41,14 +41,7 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
       icon: 'lets-icons:del-alt-duotone-line',
       action: () => {
         const fn = () => {
-          useStore.setState(old => {
-            return produce(old, draft => {
-              draft.groups[draft.selectedIndex].subSpacesIds = draft.groups[draft.selectedIndex].subSpacesIds.filter(
-                id => id !== spaceId,
-              );
-              delete draft.allSpacesMap[spaceId];
-            });
-          });
+          Actions.deleteSpace(spaceId);
         };
 
         if (currentSpace.tabs.length) {
@@ -74,11 +67,11 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
 
         useStore.setState(old => {
           return produce(old, draft => {
-            const index = draft.groups[draft.selectedIndex].subSpacesIds.findIndex(id => id === spaceId);
-            const temp = draft.groups[draft.selectedIndex].subSpacesIds[index];
-            draft.groups[draft.selectedIndex].subSpacesIds[index] =
-              draft.groups[draft.selectedIndex].subSpacesIds[index - 1];
-            draft.groups[draft.selectedIndex].subSpacesIds[index - 1] = temp;
+            const currentGroup = draft.groups.find(group => group.id === draft.selectedGroupId);
+            const index = currentGroup.subSpacesIds.findIndex(id => id === spaceId);
+            const temp = currentGroup.subSpacesIds[index];
+            currentGroup.subSpacesIds[index] = currentGroup.subSpacesIds[index - 1];
+            currentGroup.subSpacesIds[index - 1] = temp;
           });
         });
       },
@@ -92,11 +85,30 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
         }
         useStore.setState(old => {
           return produce(old, draft => {
-            const index = draft.groups[draft.selectedIndex].subSpacesIds.findIndex(id => id === spaceId);
-            const temp = draft.groups[draft.selectedIndex].subSpacesIds[index];
-            draft.groups[draft.selectedIndex].subSpacesIds[index] =
-              draft.groups[draft.selectedIndex].subSpacesIds[index + 1];
-            draft.groups[draft.selectedIndex].subSpacesIds[index + 1] = temp;
+            const currentGroup = draft.groups.find(group => group.id === draft.selectedGroupId);
+            const index = currentGroup.subSpacesIds.findIndex(id => id === spaceId);
+            const temp = currentGroup.subSpacesIds[index];
+            currentGroup.subSpacesIds[index] = currentGroup.subSpacesIds[index + 1];
+            currentGroup.subSpacesIds[index + 1] = temp;
+          });
+        });
+      },
+    },
+    {
+      name: 'ARCHIVE',
+      icon: 'material-symbols:archive',
+      action: () => {
+        useStore.setState(old => {
+          return produce(old, draft => {
+            draft.groups[draft.selectedIndex].subSpacesIds = draft.groups[draft.selectedIndex].subSpacesIds.filter(
+              id => id !== spaceId,
+            );
+            // if (!draft.archiveSpaces) {
+            //   draft.archiveSpaces = {
+            //     spaceIds: [],
+            //   };
+            // }
+            // draft.archiveSpaces.spaceIds.push(spaceId);
           });
         });
       },
