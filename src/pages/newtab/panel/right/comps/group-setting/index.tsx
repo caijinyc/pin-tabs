@@ -26,7 +26,6 @@ import { Actions } from '@pages/newtab/store/actions/normal';
 
 export function GroupSetting() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  // const selectedIndex = useStore(state => state.selectedIndex);
   const currentGroup = StoreHooks.useCurrentGroup();
   const toast = useToast();
 

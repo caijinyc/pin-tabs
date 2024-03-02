@@ -80,4 +80,17 @@ export const Actions = {
       });
     });
   },
+  addSubSpace: (groupId: string) => {
+    useStore.setState(old => {
+      return produce(old, draft => {
+        const id = uuid();
+        draft.groupsMap[groupId].subSpacesIds.push(id);
+        draft.allSpacesMap[id] = {
+          name: 'Untitled Sub Space',
+          tabs: [],
+          uuid: id,
+        };
+      });
+    });
+  },
 };

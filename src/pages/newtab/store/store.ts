@@ -80,7 +80,6 @@ export type BrowserGroupInfo = {
 };
 
 export type StoreType = {
-  selectedIndex: number;
   selectedGroupId: string;
 
   allSpacesMap: {
@@ -108,7 +107,7 @@ export const loadStoreFromStorage = () => {
   return Promise.all([storeLocalStorage.get()]).then(([localData]) => {
     const storeData = useStore.getState();
 
-    if (!diffMapPickKeys(localData, storeData, [...NEED_SYNC_KEYS, 'selectedIndex', 'selectedGroupId'])) {
+    if (!diffMapPickKeys(localData, storeData, [...NEED_SYNC_KEYS, 'selectedGroupId'])) {
       return;
     }
 

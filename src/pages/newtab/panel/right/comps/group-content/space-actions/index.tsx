@@ -8,7 +8,7 @@ import React from 'react';
 import { cls } from '@src/shared/kits';
 import { openTab } from '@root/src/pages/newtab/util/open-tab';
 import { Actions } from '@pages/newtab/store/actions/normal';
-import { useAllOpenedTabs } from "@pages/newtab/util/get-all-opened-tabs";
+import { useAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
 
 export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   const spaceId = space.uuid;
@@ -101,15 +101,9 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
       action: () => {
         useStore.setState(old => {
           return produce(old, draft => {
-            draft.groups[draft.selectedIndex].subSpacesIds = draft.groups[draft.selectedIndex].subSpacesIds.filter(
-              id => id !== spaceId,
-            );
-            // if (!draft.archiveSpaces) {
-            //   draft.archiveSpaces = {
-            //     spaceIds: [],
-            //   };
-            // }
-            // draft.archiveSpaces.spaceIds.push(spaceId);
+            draft.groupsMap[draft.selectedGroupId].subSpacesIds = draft.groupsMap[
+              draft.selectedGroupId
+            ].subSpacesIds.filter(id => id !== spaceId);
           });
         });
       },

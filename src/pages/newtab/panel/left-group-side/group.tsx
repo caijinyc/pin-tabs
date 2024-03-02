@@ -130,7 +130,6 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
       onClick={() => {
         useStore.setState(() => {
           return {
-            // selectedIndex: groupIndex,
             selectedGroupId: group.id,
           };
         });

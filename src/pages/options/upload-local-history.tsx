@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStore } from '@pages/newtab/store/store';
+import { StoreType, useStore } from '@pages/newtab/store/store';
 import { dialog } from '@pages/newtab/comps/global-dialog';
 import { Icon } from '@iconify-icon/react';
 import { IconButton, Tooltip } from '@chakra-ui/react';
@@ -24,7 +24,15 @@ export const UploadLocalHistory = () => {
               if (content) {
                 const data = JSON.parse(content as string);
                 const keys = Object.keys(data).sort();
-                if (keys.includes('groups') && keys.includes('selectedIndex') && keys.includes('allSpacesMap')) {
+
+                const mustNeedKeys: (keyof StoreType)[] = [
+                  'groupsMap',
+                  'groupsSort',
+                  'selectedGroupId',
+                  'allSpacesMap',
+                ];
+
+                if (keys.filter(k => mustNeedKeys.includes(k as any)).length === mustNeedKeys.length) {
                   useStore.setState(old => ({
                     ...old,
                     ...data,
