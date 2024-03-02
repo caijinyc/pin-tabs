@@ -1,13 +1,13 @@
-import { useStore } from '@pages/newtab/store/store';
+import { TabInfo, useStore } from '@pages/newtab/store/store';
 import { produce } from 'immer';
-import { SELECTED_INDEX_IS_ARCHIVE } from '@src/constant';
+import { ARCHIVE_GROUP_ID } from '@src/constant';
 import { uuid } from '@src/shared/kits';
 
 export const Actions = {
   openArchive: () => {
     useStore.setState(old => {
       return produce(old, draft => {
-        draft.selectedIndex = SELECTED_INDEX_IS_ARCHIVE;
+        draft.selectedGroupId = ARCHIVE_GROUP_ID;
       });
     });
   },
@@ -40,5 +40,44 @@ export const Actions = {
   getCurrentSelectedGroup: () => {
     const state = useStore.getState();
     return state.groups.find(group => group.id === state.selectedGroupId);
-  }
+  },
+  addTabToSpace: (spaceId: string, tab: TabInfo) => {
+    const state = useStore.getState();
+
+    if (state.allSpacesMap[spaceId].tabs.find(item => item.id === tab.id)) {
+      Actions.removeTabFromSpace(spaceId, tab);
+      return;
+    }
+
+    useStore.setState(old => {
+      return produce(old, draft => {
+        draft.allSpacesMap[spaceId].tabs.push(tab);
+      });
+    });
+  },
+  removeTabFromSpace: (id: string, tab: TabInfo) => {
+    useStore.setState(old => {
+      return produce(old, draft => {
+        const oldTabs = draft.allSpacesMap[id].tabs;
+        draft.allSpacesMap[id].tabs = oldTabs.filter(t => t.id !== tab.id);
+      });
+    });
+  },
+  removeGroup: (groupId: string) => {
+    useStore.setState(old => {
+      return produce(old, draft => {
+        // remove space
+        const group = draft.groupsMap[groupId];
+        group.subSpacesIds.forEach(spaceId => {
+          delete draft.allSpacesMap[spaceId];
+        });
+        delete draft.groupsMap[groupId];
+        draft.groupsSort = draft.groupsSort.filter(id => id !== groupId);
+
+        if (draft.selectedGroupId === groupId) {
+          draft.selectedGroupId = draft.groupsSort[0];
+        }
+      });
+    });
+  },
 };

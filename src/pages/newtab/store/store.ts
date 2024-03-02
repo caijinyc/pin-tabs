@@ -21,8 +21,10 @@ export type TabInfo = {
 
 type GroupMap = Record<string, GroupInfo>;
 
-export const getAllGroups: () => Promise<GroupMap> = () =>
-  new Promise((resolve, reject) => {
+type BrowsersGroupMap = Record<string, BrowserGroupInfo>;
+
+export const getAllGroups: () => Promise<BrowsersGroupMap> = () =>
+  new Promise(resolve => {
     chrome.tabGroups.query({}, function (groups) {
       const res = groups.reduce((acc, item) => {
         acc[item.id] = {
@@ -31,14 +33,14 @@ export const getAllGroups: () => Promise<GroupMap> = () =>
           color: item.color,
         };
         return acc;
-      }, {} as GroupMap);
+      }, {} as BrowsersGroupMap);
 
       resolve(res);
     });
   });
 
-export const useAllGroups = () => {
-  const [groupsMap, setGroupsMap] = React.useState<GroupMap>({});
+export const useAllBrowserGroups = () => {
+  const [groupsMap, setGroupsMap] = React.useState<BrowsersGroupMap>({});
 
   function updateGroups() {
     getAllGroups().then(val => setGroupsMap(val));
@@ -55,88 +57,7 @@ export const useAllGroups = () => {
   return groupsMap;
 };
 
-export const getAllOpenedTabs = async () => {
-  return new Promise<TabInfo[]>((resolve, reject) => {
-    chrome.tabs.query({}, function (tabs) {
-      resolve(
-        tabs
-          .map(tab => {
-            return {
-              id: tab.id,
-              title: tab.title,
-              url: tab.url,
-              favIconUrl: tab.favIconUrl,
-              active: tab.active,
-              groupId: tab.groupId > 0 ? tab.groupId : undefined,
-              pinned: tab.pinned,
-            };
-          })
-          .filter(item => {
-            if (item?.url.startsWith('edge://newtab')) return false;
-
-            return (
-              item.url &&
-              (item.url.startsWith('http') || item.url.startsWith('chrome-extension') || item.url.startsWith('edge'))
-            );
-          }),
-      );
-    });
-  });
-};
-
-export function useAllOpenedTabs() {
-  const [tabs, setActiveTabs] = React.useState<TabInfo[]>([]);
-
-  const getTabs = () => {
-    getAllOpenedTabs().then(setActiveTabs);
-  };
-
-  useEffect(() => {
-    getTabs();
-    window.addEventListener('visibilitychange', () => {
-      getTabs();
-    });
-
-    window.addEventListener('onfocus', () => {
-      getTabs();
-    });
-  }, []);
-
-  return tabs;
-}
-
 // <script src="https://gist.github.com/caijinyc/c86f6619e8066cd20de9f27ad791d9f0.js"></script>
-
-// export const useHistoryTabsFromHistoryApi = () => {
-//   const [historyTabs, setHistoryTabs] = React.useState<TabInfo[]>([]);
-//
-//   useEffect(() => {
-//     chrome.history.search(
-//       {
-//         text: '',
-//         maxResults: 10,
-//       },
-//       function (historyItems) {
-//         // setHistoryTabs(
-//         //   historyItems
-//         //     .map(item => {
-//         //       return {
-//         //         id: item.id,
-//         //         title: item.title,
-//         //         url: item.url,
-//         //         favIconUrl: '',
-//         //       };
-//         //     })
-//         //     .filter(item => {
-//         //       return item.url && item.url.startsWith('http');
-//         //     }),
-//         // );
-//       },
-//     );
-//   }, []);
-//
-//   return historyTabs;
-// };
 
 export type SpaceInfo = {
   name: string;
@@ -150,6 +71,12 @@ export type GroupInfo = {
   id: string;
   // TODO 数据结构变更，这里需要支持 Map，可以存储其他数据，例如 group id
   subSpacesIds: string[];
+};
+
+export type BrowserGroupInfo = {
+  name: string;
+  id: number;
+  color: string;
 };
 
 export type StoreType = {
@@ -179,9 +106,6 @@ export const useStore = create<StoreType>(() => produce(DEFAULT_STORE_STATE, dra
 
 export const loadStoreFromStorage = () => {
   return Promise.all([storeLocalStorage.get()]).then(([localData]) => {
-    // console.log('localData', localData);
-    // console.log('cloudData', cloudData);
-
     const storeData = useStore.getState();
 
     if (!diffMapPickKeys(localData, storeData, [...NEED_SYNC_KEYS, 'selectedIndex', 'selectedGroupId'])) {
@@ -197,16 +121,20 @@ export const loadStoreFromStorage = () => {
       return {
         ...localData,
         redirect: Boolean(tabId && spaceId),
-        groupsSort: localData.groupsSort ? localData.groupsSort : localData.groups.map(item => item.id),
-        groupsMap: localData.groupsMap
-          ? localData.groupsMap
-          : localData.groups.reduce((acc, item) => {
-              return {
-                ...acc,
-                [item.id]: item,
-              };
-            }, {} as GroupMap),
-        groups: localData.groups.map((group, index) => {
+        groupsSort:
+          localData.groupsSort && localData.groupsSort.length
+            ? localData.groupsSort
+            : localData.groups.map(item => item.id),
+        groupsMap:
+          localData.groupsMap && Object.values(localData.groupsMap).length
+            ? localData.groupsMap
+            : localData.groups.reduce((acc, item) => {
+                return {
+                  ...acc,
+                  [item.id]: item,
+                };
+              }, {} as GroupMap),
+        groups: localData.groups.map(group => {
           return {
             id: group.id ? group.id : uuid(),
             ...group,
@@ -239,30 +167,6 @@ export const loadStoreFromStorage = () => {
 };
 
 loadStoreFromStorage();
-
-export const addPageToCurrentSpace = (id: string, tab: TabInfo) => {
-  const state = useStore.getState();
-
-  if (state.allSpacesMap[id].tabs.find(item => item.id === tab.id)) {
-    removePageFromCurrentSpace(id, tab);
-    return;
-  }
-
-  useStore.setState(old => {
-    return produce(old, draft => {
-      draft.allSpacesMap[id].tabs.push(tab);
-    });
-  });
-};
-
-export const removePageFromCurrentSpace = (id: string, tab: TabInfo) => {
-  useStore.setState(old => {
-    return produce(old, draft => {
-      const oldTabs = draft.allSpacesMap[id].tabs;
-      draft.allSpacesMap[id].tabs = oldTabs.filter(t => t.id !== tab.id);
-    });
-  });
-};
 
 export const useIsPopupStore = create<boolean>(() => false);
 

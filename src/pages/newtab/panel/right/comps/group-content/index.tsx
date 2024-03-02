@@ -2,7 +2,6 @@ import { useStore } from '@pages/newtab/store/store';
 import styles from './style.module.scss';
 import React from 'react';
 import { SpaceItem } from '@pages/newtab/panel/right/comps/group-content/space-item';
-import { SELECTED_INDEX_IS_ARCHIVE } from '@src/constant';
 
 export type DropItem = {
   spaceId: string;

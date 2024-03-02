@@ -80,12 +80,12 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
 
       // Time to actually perform the action
       useStore.setState(old => {
-        const newGroups = [...old.groups];
-        const [removed] = newGroups.splice(dragIndex, 1);
-        newGroups.splice(hoverIndex, 0, removed);
+        const newGroupsSort = [...old.groupsSort];
+        const [removed] = newGroupsSort.splice(dragIndex, 1);
+        newGroupsSort.splice(hoverIndex, 0, removed);
 
         return produce(old, draft => {
-          draft.groups = newGroups;
+          draft.groupsSort = newGroupsSort;
         });
       });
 
@@ -151,7 +151,9 @@ const GroupSortItemTypes = {
 };
 
 export const Groups = () => {
-  const groups = useStore(state => state.groups);
+  const groups = useStore(state => {
+    return state.groupsSort.map(id => state.groupsMap[id]);
+  });
 
   return groups.map((item, index) => {
     return <GroupItem group={item} groupIndex={index} key={item.id} />;

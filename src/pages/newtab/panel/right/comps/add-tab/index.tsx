@@ -1,16 +1,11 @@
-import {
-  addPageToCurrentSpace,
-  TabInfo,
-  useAllGroups,
-  useAllOpenedTabs,
-  useIsPopupStore,
-  useStore,
-} from '@pages/newtab/store/store';
+import { TabInfo, useAllBrowserGroups, useIsPopupStore, useStore } from '@pages/newtab/store/store';
 import { Popover, PopoverBody, PopoverContent, PopoverTrigger, Portal } from '@chakra-ui/react';
 import styles from './style.module.scss';
 import { Icon } from '@iconify-icon/react';
 import React, { HTMLProps } from 'react';
 import { cls } from '@src/shared/kits';
+import { Actions } from '@pages/newtab/store/actions/normal';
+import { useAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
 
 const PinIcon = (props: {} & HTMLProps<any>) => {
   console.log('props', props);
@@ -26,7 +21,7 @@ const PinIcon = (props: {} & HTMLProps<any>) => {
 
 export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   const tabs = useAllOpenedTabs();
-  const groups = useAllGroups();
+  const groups = useAllBrowserGroups();
   const currentSpaceTabs = useStore(state => state.allSpacesMap[props.spaceId].tabs);
   const isPopup = useIsPopupStore(state => state);
 
@@ -62,7 +57,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
         onClick={() => {
           const currentActiveTab = tabs.find(tab => tab.active);
           if (currentActiveTab) {
-            addPageToCurrentSpace(props.spaceId, currentActiveTab);
+            Actions.addTabToSpace(props.spaceId, currentActiveTab);
           }
         }}>
         <PinIcon />
@@ -108,7 +103,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
                       // }}
                       key={tab.id}
                       onClick={() => {
-                        addPageToCurrentSpace(props.spaceId, tab);
+                        Actions.addTabToSpace(props.spaceId, tab);
                       }}>
                       <div
                         className={cls(styles.popoverTabListItemRight, {

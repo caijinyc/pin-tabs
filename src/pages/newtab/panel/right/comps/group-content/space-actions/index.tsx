@@ -1,4 +1,4 @@
-import { SpaceInfo, useAllOpenedTabs, useStore } from '@pages/newtab/store/store';
+import { SpaceInfo, useStore } from '@pages/newtab/store/store';
 import { produce } from 'immer';
 import { dialog } from '@pages/newtab/comps/global-dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@chakra-ui/react';
@@ -8,10 +8,11 @@ import React from 'react';
 import { cls } from '@src/shared/kits';
 import { openTab } from '@root/src/pages/newtab/util/open-tab';
 import { Actions } from '@pages/newtab/store/actions/normal';
+import { useAllOpenedTabs } from "@pages/newtab/util/get-all-opened-tabs";
 
 export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   const spaceId = space.uuid;
-  const currentGroupSpaces = useStore(state => state.groups[state.selectedIndex]);
+  const currentGroupSpaces = useStore(state => state.groupsMap[state.selectedGroupId]);
   const currentSpace = useStore(state => state.allSpacesMap[spaceId]);
 
   const actionsList = [

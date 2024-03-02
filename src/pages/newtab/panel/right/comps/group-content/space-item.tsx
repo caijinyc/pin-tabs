@@ -1,4 +1,4 @@
-import { SpaceInfo, useAllOpenedTabs, useStore } from '@pages/newtab/store/store';
+import { SpaceInfo, useStore } from '@pages/newtab/store/store';
 import { useDrag } from 'react-dnd';
 import { SPACE_TO_GROUP_DRAG_TYPE } from '@pages/newtab/panel/left-group-side/group';
 import styles from '@pages/newtab/panel/right/comps/group-content/style.module.scss';
@@ -11,6 +11,7 @@ import React from 'react';
 import { DropItem } from '@pages/newtab/panel/right/comps/group-content/index';
 import { cls } from '@src/shared/kits';
 import { produce } from 'immer';
+import { useAllOpenedTabs } from "@pages/newtab/util/get-all-opened-tabs";
 
 function updateSpaceName(spaceId: string, val: string) {
   useStore.setState(old => {
