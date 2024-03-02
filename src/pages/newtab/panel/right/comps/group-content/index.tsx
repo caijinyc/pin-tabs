@@ -12,19 +12,10 @@ export const GroupContent = () => {
   const currentSpaceTabs = useStore(state => state.groups.find(item => item.id === state.selectedGroupId)) || {
     subSpacesIds: [],
   };
-  // const selectArchive = useStore(state => state.selectedIndex === SELECTED_INDEX_IS_ARCHIVE);
-  // const archiveSpaces = useStore(state => state.archiveSpaces);
 
   return (
     <>
       <div className={styles.tabsWrapper}>
-        {/*{selectArchive &&*/}
-        {/*  archiveSpaces &&*/}
-        {/*  archiveSpaces.subSpacesIds.map(spaceId => {*/}
-        {/*    const space = allSpacesMap[spaceId];*/}
-        {/*    return <SpaceItem space={space} key={spaceId} />;*/}
-        {/*  })}*/}
-
         {currentSpaceTabs.subSpacesIds.map(spaceId => {
           const space = allSpacesMap[spaceId];
           return <SpaceItem space={space} key={spaceId} />;
