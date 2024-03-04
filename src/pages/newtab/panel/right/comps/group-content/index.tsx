@@ -18,6 +18,9 @@ export const GroupContent = () => {
       <div className={styles.tabsWrapper}>
         {currentSpaceTabs.subSpacesIds.map(spaceId => {
           const space = allSpacesMap[spaceId];
+          if (!space) {
+            return null;
+          }
           return <SpaceItem space={space} key={spaceId} />;
         })}
       </div>

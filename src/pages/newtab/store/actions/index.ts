@@ -28,19 +28,14 @@ export const Actions = {
   deleteSpace: (spaceId: string) => {
     useStore.setState(old => {
       return produce(old, draft => {
-        draft.groups.find(group => {
+        Object.values(draft.groupsMap).forEach(group => {
           if (group.subSpacesIds.includes(spaceId)) {
             group.subSpacesIds = group.subSpacesIds.filter(id => id !== spaceId);
-            return true;
           }
         });
         delete draft.allSpacesMap[spaceId];
       });
     });
-  },
-  getCurrentSelectedGroup: () => {
-    const state = useStore.getState();
-    return state.groups.find(group => group.id === state.selectedGroupId);
   },
   addTabToSpace: (spaceId: string, tab: TabInfo) => {
     const state = useStore.getState();
