@@ -112,6 +112,8 @@ export const openTab = async ({
       .catch(e => {
         console.log('update group title error', e);
       });
+
+    await chrome.tabs.group({ tabIds: newTab.id, groupId: newGroupId });
   };
 
   addToGroup()
@@ -121,6 +123,7 @@ export const openTab = async ({
     .then(() => {
       if (activeTab && autoActiveOpenedTab) {
         // console.log('activeTab', activeTab);
+
         chrome.tabs.update(activeTab.id, { active: true });
       }
     });
