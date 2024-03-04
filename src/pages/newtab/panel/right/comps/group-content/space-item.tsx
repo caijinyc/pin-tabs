@@ -55,6 +55,7 @@ export const SpaceItem = ({ space }: { space: SpaceInfo }) => {
             style={{
               width: 200,
             }}
+            className={'font-bold'}
             size={'sm'}
             variant="unstyled"
             placeholder="Unstyled"
