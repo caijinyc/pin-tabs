@@ -1,6 +1,7 @@
 import reloadOnUpdate from 'virtual:reload-on-update-in-background-script';
 import 'webextension-polyfill';
 import './alarm';
+import { getAllGroups } from '@pages/newtab/store/store';
 
 reloadOnUpdate('pages/background');
 
@@ -14,7 +15,20 @@ console.log('background loaded 2fsxxxxf');
 
 chrome.commands.onCommand.addListener(function (command) {
   if (command === 'command1') {
-    // 执行命令1的相关操作
+    // collapse all groups, exclude the active tab's group
+    chrome.tabs.query({ currentWindow: true }, function (tabs) {
+      const activeTab = tabs.find(tab => tab.active);
+      const activeGroupId = activeTab?.groupId;
+      if (activeGroupId) {
+        chrome.tabGroups.query({}, function (groups) {
+          groups.forEach(group => {
+            if (group.id !== activeGroupId) {
+              chrome.tabGroups.update(group.id, { collapsed: true });
+            }
+          });
+        });
+      }
+    });
   } else if (command === 'command2') {
     chrome.tabs.query({ currentWindow: true }, function (tabs) {
       const newtab = tabs.find(tab => tab.url && tab.url.includes('/src/pages/newtab/index.html'));
@@ -37,7 +51,5 @@ chrome.commands.onCommand.addListener(function (command) {
         }
       }
     });
-
-    // 执行命令2的相关操作
   }
 });

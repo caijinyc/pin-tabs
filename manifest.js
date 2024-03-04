@@ -40,15 +40,15 @@ const manifest = {
   commands: {
     command1: {
       suggested_key: {
-        default: 'Ctrl+Shift+Y',
-        mac: 'Command+Shift+Y',
+        default: 'Ctrl+Shift+G',
+        mac: 'Command+Ctrl+G',
       },
-      description: 'Trigger Command 1',
+      description: 'Collapse all groups, excluding the active tab group',
     },
     command2: {
       suggested_key: {
         default: 'Ctrl+Shift+E',
-        mac: 'Command+Shift+E',
+        mac: 'Command+Ctrl+E',
       },
       description: 'Open bookmarks manage page',
     },
