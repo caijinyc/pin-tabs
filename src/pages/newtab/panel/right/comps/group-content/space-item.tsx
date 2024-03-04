@@ -11,7 +11,7 @@ import React from 'react';
 import { DropItem } from '@pages/newtab/panel/right/comps/group-content/index';
 import { cls } from '@src/shared/kits';
 import { produce } from 'immer';
-import { useAllOpenedTabs } from "@pages/newtab/util/get-all-opened-tabs";
+import { useAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
 
 function updateSpaceName(spaceId: string, val: string) {
   useStore.setState(old => {

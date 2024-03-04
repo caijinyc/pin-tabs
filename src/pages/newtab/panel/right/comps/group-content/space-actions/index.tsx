@@ -14,6 +14,9 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   const spaceId = space.uuid;
   const currentGroupSpaces = useStore(state => state.groupsMap[state.selectedGroupId]);
   const currentSpace = useStore(state => state.allSpacesMap[spaceId]);
+  const disableAutoGroup = currentSpace.disableAutoGroup;
+
+  console.log('currentSpace.disableAutoGroup', currentSpace.disableAutoGroup);
 
   const actionsList = [
     {
@@ -116,6 +119,20 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
         });
       },
     },
+    {
+      name: `${disableAutoGroup ? 'ENABLE' : 'DISABLE'} AUTO GROUP`,
+      icon: disableAutoGroup ? 'uil:layer-group-slash' : 'uim:layer-group',
+      action: () => {
+        useStore.setState(old => {
+          return produce(old, draft => {
+            draft.allSpacesMap[spaceId] = {
+              ...draft.allSpacesMap[spaceId],
+              disableAutoGroup: !disableAutoGroup,
+            };
+          });
+        });
+      },
+    },
   ];
 
   return (
@@ -126,7 +143,7 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
         </div>
       </PopoverTrigger>
 
-      <PopoverContent className={styles.spaceMoreActionWrapper} width={150}>
+      <PopoverContent className={styles.spaceMoreActionWrapper} width={200}>
         {actionsList.map(item => (
           <div
             key={item.name}

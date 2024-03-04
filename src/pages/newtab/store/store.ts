@@ -64,6 +64,7 @@ export type SpaceInfo = {
   groupId?: number;
   tabs: TabInfo[];
   uuid: string;
+  disableAutoGroup?: boolean;
 };
 
 export type GroupInfo = {

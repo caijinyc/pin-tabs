@@ -2,7 +2,7 @@ import { SpaceInfo, TabInfo, useStore } from '@pages/newtab/store/store';
 import { removeUrlHash } from '@src/shared/kits';
 import { globalToast } from '@pages/newtab/Newtab';
 import { produce } from 'immer';
-import { getAllOpenedTabs } from "@pages/newtab/util/get-all-opened-tabs";
+import { getAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
 
 export const openTab = async ({
   tab,
@@ -54,6 +54,8 @@ export const openTab = async ({
     activeTab = newTab;
 
     console.log('newTabId', newTabId);
+
+    if (space.disableAutoGroup) return;
 
     let groupId: number | undefined = undefined;
 
