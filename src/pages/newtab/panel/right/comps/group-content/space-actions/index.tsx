@@ -16,8 +16,6 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   const currentSpace = useStore(state => state.allSpacesMap[spaceId]);
   const disableAutoGroup = currentSpace.disableAutoGroup;
 
-  console.log('currentSpace.disableAutoGroup', currentSpace.disableAutoGroup);
-
   const actionsList = [
     {
       name: 'OPEN ALL',
@@ -119,42 +117,47 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
         });
       },
     },
-    {
-      name: `${disableAutoGroup ? 'ENABLE' : 'DISABLE'} AUTO GROUP`,
-      icon: disableAutoGroup ? 'uil:layer-group-slash' : 'uim:layer-group',
-      action: () => {
-        useStore.setState(old => {
-          return produce(old, draft => {
-            draft.allSpacesMap[spaceId] = {
-              ...draft.allSpacesMap[spaceId],
-              disableAutoGroup: !disableAutoGroup,
-            };
-          });
-        });
-      },
-    },
   ];
 
   return (
-    <Popover placement={'bottom-start'} matchWidth={true}>
-      <PopoverTrigger>
-        <div className={cls(styles.moreActionIcon, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}>
-          <Icon icon="material-symbols:more-horiz" width="18" height="18" inline />
-        </div>
-      </PopoverTrigger>
+    <>
+      <div
+        onClick={() => {
+          useStore.setState(old => {
+            return produce(old, draft => {
+              draft.allSpacesMap[spaceId] = {
+                ...draft.allSpacesMap[spaceId],
+                disableAutoGroup: !disableAutoGroup,
+              };
+            });
+          });
+        }}
+        className={
+          'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa] cursor-pointer rounded-full w-[24px] h-[24px] flex items-center justify-center'
+        }>
+        <Icon icon={disableAutoGroup ? 'uil:layer-group-slash' : 'uim:layer-group'} width="18" height="18" inline />
+      </div>
 
-      <PopoverContent className={styles.spaceMoreActionWrapper} width={200}>
-        {actionsList.map(item => (
-          <div
-            key={item.name}
-            onClick={() => {
-              item.action();
-            }}>
-            <Icon icon={item.icon} width="18" height="18" inline />
-            <div>{item.name}</div>
+      <Popover placement={'bottom-start'} matchWidth={true}>
+        <PopoverTrigger>
+          <div className={cls(styles.moreActionIcon, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}>
+            <Icon icon="material-symbols:more-horiz" width="18" height="18" inline />
           </div>
-        ))}
-      </PopoverContent>
-    </Popover>
+        </PopoverTrigger>
+
+        <PopoverContent className={styles.spaceMoreActionWrapper} width={150}>
+          {actionsList.map(item => (
+            <div
+              key={item.name}
+              onClick={() => {
+                item.action();
+              }}>
+              <Icon icon={item.icon} width="18" height="18" inline />
+              <div>{item.name}</div>
+            </div>
+          ))}
+        </PopoverContent>
+      </Popover>
+    </>
   );
 };

@@ -4,7 +4,7 @@ import { SPACE_TO_GROUP_DRAG_TYPE } from '@pages/newtab/panel/left-group-side/gr
 import styles from '@pages/newtab/panel/right/comps/group-content/style.module.scss';
 import { Icon } from '@iconify-icon/react';
 import { Input } from '@chakra-ui/react';
-import { AddTabToGetPopoverCurrentSpace } from '@pages/newtab/panel/right/comps/add-tab';
+import { AddTabToGetPopoverCurrentSpace } from './space-actions/add-tab';
 import { SpaceMoreActions } from '@pages/newtab/panel/right/comps/group-content/space-actions';
 import { TabItem } from '@pages/newtab/panel/right/comps/group-content/tab-item';
 import React from 'react';
