@@ -140,7 +140,7 @@ export const SpaceItem = ({ space, index }: { space: SpaceInfo; index: number })
             style={{
               width: 200,
             }}
-            className={'font-bold'}
+            className={'font-medium'}
             size={'sm'}
             variant="unstyled"
             placeholder="Unstyled"

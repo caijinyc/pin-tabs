@@ -1,5 +1,11 @@
 .spaceItem {
-  margin-bottom: 18px;
+  margin-bottom: 12px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #f0f0f0;
+
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .tabListItem {
