@@ -3,6 +3,7 @@ import { StoreType, useStore } from '@pages/newtab/store/store';
 import { dialog } from '@pages/newtab/comps/global-dialog';
 import { Icon } from '@iconify-icon/react';
 import { IconButton, Tooltip } from '@chakra-ui/react';
+import { storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
 
 export const UploadLocalHistory = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -37,6 +38,7 @@ export const UploadLocalHistory = () => {
                     ...old,
                     ...data,
                   }));
+                  storeLocalStorage.set(data);
                 } else {
                   dialog.confirm({
                     title: 'Upload Error',

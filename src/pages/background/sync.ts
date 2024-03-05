@@ -111,9 +111,10 @@ export const syncDataToGistFn = async () => {
     return;
   }
 
-  const newVersion = (localStorageData.version || 0) + 1;
+  const localStoreVersion = localStorageData.version || 0;
+  const lastSyncVersion = (await deviceSyncStorage.get().then(data => data.lastSyncVersion)) || 0;
 
-  console.log('🔺newVersion', newVersion);
+  const newVersion = (localStoreVersion > lastSyncVersion ? localStoreVersion : lastSyncVersion) + 1;
 
   try {
     await syncToGist({
