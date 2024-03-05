@@ -6,8 +6,8 @@ import cls from 'classnames';
 import styles from '@pages/newtab/style.module.scss';
 import { produce } from 'immer';
 import { Actions } from '@pages/newtab/store/actions';
+import { GroupSortItemTypes, SPACE_TO_GROUP_DRAG_TYPE } from '@src/constant';
 
-export const SPACE_TO_GROUP_DRAG_TYPE = 'move_space_to_other_group';
 const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
   const { group, groupIndex } = props;
   const selectedGroupId = useStore(state => state.selectedGroupId);
@@ -144,10 +144,6 @@ interface DragItem {
   id: string;
   type: string;
 }
-
-const GroupSortItemTypes = {
-  CARD: 'card',
-};
 
 export const Groups = () => {
   const allGroups = useStore(state => {

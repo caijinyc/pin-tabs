@@ -5,6 +5,7 @@ import { SpaceItem } from '@pages/newtab/panel/right/comps/group-content/space-i
 
 export type DropItem = {
   spaceId: string;
+  index: number;
 };
 
 export const GroupContent = () => {
@@ -16,12 +17,12 @@ export const GroupContent = () => {
   return (
     <>
       <div className={styles.tabsWrapper}>
-        {currentSpaceTabs.subSpacesIds.map(spaceId => {
+        {currentSpaceTabs.subSpacesIds.map((spaceId, i) => {
           const space = allSpacesMap[spaceId];
           if (!space) {
             return null;
           }
-          return <SpaceItem space={space} key={spaceId} />;
+          return <SpaceItem space={space} index={i} key={spaceId} />;
         })}
       </div>
     </>
