@@ -145,7 +145,12 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
           </div>
         </PopoverTrigger>
 
-        <PopoverContent className={styles.spaceMoreActionWrapper} width={150}>
+        <PopoverContent
+          className={styles.spaceMoreActionWrapper}
+          width={150}
+          style={{
+            boxShadow: '0 0 10px 0 rgba(0,0,0,0.1)',
+          }}>
           {actionsList.map(item => (
             <div
               key={item.name}
