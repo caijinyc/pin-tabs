@@ -18,6 +18,10 @@ body {
     sans-serif !important;
 }
 
+*:focus {
+  box-shadow: none !important;
+}
+
 /*code {*/
 /*  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;*/
 /*}*/
