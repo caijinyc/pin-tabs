@@ -1,6 +1,6 @@
 import React from 'react';
 import '@pages/options/Options.css';
-import { ChakraProvider, FormLabel, IconButton, Input, Popover, Tooltip } from '@chakra-ui/react';
+import { ChakraProvider, FormLabel, IconButton, Input, Popover, Textarea, Tooltip } from '@chakra-ui/react';
 import { commonLocalStorage, optionsStorage } from '@src/shared/storages/optionsStorage';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify-icon/react';
@@ -72,7 +72,7 @@ const Options: React.FC = () => {
         <Input {...register('deviceId')} className={'mb-6'} />
 
         <FormLabel>Favicon Sync List</FormLabel>
-        <Input {...register('faviconSyncList')} className={'mb-6'} />
+        <Textarea {...register('faviconSyncList')} className={'mb-6'} />
 
         <FormLabel>Other Actions</FormLabel>
 

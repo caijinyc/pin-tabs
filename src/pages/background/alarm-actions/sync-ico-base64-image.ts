@@ -2,6 +2,8 @@ import { cacheImgBase64ToDB, getCacheImgBase64Map } from '@pages/newtab/util/cac
 import { uploadToGist } from '@pages/background/sync';
 import { optionsStorage } from '@src/shared/storages/optionsStorage';
 import { getGistData } from '@pages/background/api';
+import { storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
+import { TabInfo } from '@pages/newtab/store/store';
 
 export const syncBase64ImageCache = 'syncBase64ImageCache';
 export const loadBase64ImageCache = 'loadBase64ImageCache';
@@ -23,13 +25,29 @@ export const syncBase64ImageCacheFn = async () => {
   const needCacheUrlsReg = optionsStorage.getSnapshot().faviconSyncList.split(',');
 
   console.log('needCacheUrlsReg', needCacheUrlsReg);
+  console.log('cacheImgBase64Map', cacheImgBase64Map);
 
-  const needUpdateData = Object.keys({
+  const allTabs = Object.values(storeLocalStorage.getSnapshot().allSpacesMap || {}).reduce((acc, space) => {
+    acc.push(...space.tabs);
+    return acc;
+  }, [] as TabInfo[]);
+
+  let needUploadFavIconUrls: string[] = allTabs
+    .filter(tab => tab.favIconUrl && needCacheUrlsReg.find(reg => tab.favIconUrl.includes(reg) || tab.url.includes(reg))).map(tab => tab.favIconUrl);
+
+  // 去重
+  needUploadFavIconUrls = Array.from(new Set(needUploadFavIconUrls));
+
+  console.log('needUploadFavIconUrls', needUploadFavIconUrls)
+
+
+  const finalNeedUploadUrls = Object.keys({
     ...cacheImgBase64Map,
     ...cloudOldData,
   }).reduce(
     (acc, key) => {
-      if (needCacheUrlsReg.find(reg => key.includes(reg))) {
+      // favicon / tab.url 匹配成功则缓存
+      if (needCacheUrlsReg.find(reg => key.includes(reg)) || needUploadFavIconUrls.includes(key)) {
         acc[key] = cacheImgBase64Map[key];
       }
       return acc;
@@ -37,9 +55,11 @@ export const syncBase64ImageCacheFn = async () => {
     {} as Record<string, string>,
   );
 
+  console.log('needUpdateData', finalNeedUploadUrls);
+
   await uploadToGist({
     data: {
-      ...needUpdateData,
+      ...finalNeedUploadUrls,
     },
     gistId: syncGistId,
     filename: 'cacheImgBase64Map.json',
