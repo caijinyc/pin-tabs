@@ -24,6 +24,14 @@ export const syncBase64ImageCacheFn = async () => {
 
   console.log('needCacheUrlsReg', needCacheUrlsReg);
 
+  if (
+    Object.keys(cloudOldData).length &&
+    Object.keys(cloudOldData).sort().join(',') === Object.keys(cacheImgBase64Map).sort().join(',')
+  ) {
+    console.log('no need to upload cacheImgBase64Map');
+    return;
+  }
+
   const needUpdateData = Object.keys({
     ...cacheImgBase64Map,
     ...cloudOldData,
