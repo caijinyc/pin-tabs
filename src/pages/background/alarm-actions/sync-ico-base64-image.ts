@@ -33,13 +33,15 @@ export const syncBase64ImageCacheFn = async () => {
   }, [] as TabInfo[]);
 
   let needUploadFavIconUrls: string[] = allTabs
-    .filter(tab => tab.favIconUrl && needCacheUrlsReg.find(reg => tab.favIconUrl.includes(reg) || tab.url.includes(reg))).map(tab => tab.favIconUrl);
+    .filter(
+      tab => tab.favIconUrl && needCacheUrlsReg.find(reg => tab.favIconUrl.includes(reg) || tab.url.includes(reg)),
+    )
+    .map(tab => tab.favIconUrl);
 
   // 去重
   needUploadFavIconUrls = Array.from(new Set(needUploadFavIconUrls));
 
-  console.log('needUploadFavIconUrls', needUploadFavIconUrls)
-
+  console.log('needUploadFavIconUrls', needUploadFavIconUrls);
 
   const finalNeedUploadUrls = Object.keys({
     ...cacheImgBase64Map,
@@ -56,6 +58,14 @@ export const syncBase64ImageCacheFn = async () => {
   );
 
   console.log('needUpdateData', finalNeedUploadUrls);
+
+  if (
+    Object.keys(cloudOldData).length &&
+    Object.keys(cloudOldData).sort().join(',') === Object.keys(finalNeedUploadUrls).sort().join(',')
+  ) {
+    console.log('no need to upload cacheImgBase64Map');
+    return;
+  }
 
   await uploadToGist({
     data: {
