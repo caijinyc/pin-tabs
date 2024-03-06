@@ -97,7 +97,7 @@ export const syncToGist = async (data: StoreType) => {
     gistId: syncGistId,
   });
 };
-export const syncDataToGistFn = async () => {
+export const uploadDataToGistFn = async () => {
   console.log('############## 🔺🔺🔺 start syncDataToGistFn ########');
   const logEnd = () => console.log('############## 🔺🔺🔺 end syncDataToGistFn ########');
   const localStorageData = await storeLocalStorage.get();

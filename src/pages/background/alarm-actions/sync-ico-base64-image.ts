@@ -8,7 +8,7 @@ import { TabInfo } from '@pages/newtab/store/store';
 export const syncBase64ImageCache = 'syncBase64ImageCache';
 export const loadBase64ImageCache = 'loadBase64ImageCache';
 
-export const syncBase64ImageCacheFn = async () => {
+export const uploadBase64ImageCacheFn = async () => {
   const cacheImgBase64Map = await getCacheImgBase64Map();
 
   const { syncGistId } = await optionsStorage.get();

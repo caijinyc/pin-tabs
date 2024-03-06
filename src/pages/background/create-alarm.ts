@@ -7,7 +7,7 @@ const getSeconds = (seconds: number) => seconds * 1000;
 export const createAlarm = () => {
   setTimeout(() => {
     chrome.alarms
-      .create(syncDataToGist, { periodInMinutes: 1 })
+      .create(syncDataToGist, { periodInMinutes: 0.25 })
       .then(() => {
         console.log(`create ${syncDataToGist} alarm success`);
       })
@@ -37,7 +37,7 @@ export const createAlarm = () => {
     });
 
   chrome.alarms
-    .create(loadDataFromOtherDevice, { periodInMinutes: 0.5 })
+    .create(loadDataFromOtherDevice, { periodInMinutes: 0.25 })
     .then(() => {
       console.log('create saveStoreToSyncStorage alarm success');
     })
