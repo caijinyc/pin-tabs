@@ -27,7 +27,8 @@ if (process.env.NODE_ENV === 'development') {
 
 // TODO dev mode 不执行
 loadDataFromOtherDeviceFn();
-syncBase64ImageCacheFn();
+// syncBase64ImageCacheFn();
+loadBase64ImageCacheFn()
 
 
 chrome.alarms.onAlarm.addListener(function (alarm) {
