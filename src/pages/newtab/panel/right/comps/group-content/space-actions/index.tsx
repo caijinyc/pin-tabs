@@ -53,7 +53,7 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
           title: 'Copied',
           description: 'All URLs copied to clipboard',
           status: 'success',
-          duration: 2000,
+          duration: 1000,
           isClosable: true,
         });
       },
