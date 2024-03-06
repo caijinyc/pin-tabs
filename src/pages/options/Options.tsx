@@ -1,6 +1,6 @@
 import React from 'react';
 import '@pages/options/Options.css';
-import { ChakraProvider, FormLabel, IconButton, Input, Popover, Textarea, Tooltip } from '@chakra-ui/react';
+import { Button, ChakraProvider, FormLabel, Input, InputGroup, InputRightElement, Textarea } from '@chakra-ui/react';
 import { commonLocalStorage, optionsStorage } from '@src/shared/storages/optionsStorage';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify-icon/react';
@@ -11,6 +11,7 @@ const GithubAppendIcon = (props: { onClick: () => void }) => (
 );
 
 const Options: React.FC = () => {
+  const [showPassword, setShowPassword] = React.useState(false);
   const { register, handleSubmit, watch, setValue } = useForm<{
     name: string;
     syncGistId: string;
@@ -66,7 +67,16 @@ const Options: React.FC = () => {
         <Input {...register('syncGistId')} className={'mb-6'} />
 
         <FormLabel>Gist Token</FormLabel>
-        <Input {...register('token')} className={'mb-6'} />
+        <InputGroup>
+          <Input {...register('token')} className={'mb-6'} type={showPassword ? 'text' : 'password'}/>
+          <InputRightElement width='4.5rem'>
+            <Button h='1.75rem' size='sm' onClick={()=>{
+              setShowPassword(!showPassword);
+            }}>
+              {showPassword ? 'Hide' : 'Show'}
+            </Button>
+          </InputRightElement>
+        </InputGroup>
 
         <FormLabel>Device Id</FormLabel>
         <Input {...register('deviceId')} className={'mb-6'} />
