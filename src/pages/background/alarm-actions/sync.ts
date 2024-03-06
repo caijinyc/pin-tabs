@@ -98,8 +98,8 @@ export const syncToGist = async (data: StoreType) => {
   });
 };
 export const uploadDataToGistFn = async () => {
-  console.log('############## 🔺🔺🔺 start syncDataToGistFn ########');
-  const logEnd = () => console.log('############## 🔺🔺🔺 end syncDataToGistFn ########');
+  console.log('%c############## 🔺🔺🔺 start syncDataToGistFn ########', 'color: blue');
+  const logEnd = () => console.log('%c############## 🔺🔺🔺 end syncDataToGistFn ########', 'color: blue');
   const localStorageData = await storeLocalStorage.get();
 
   console.log('🔺localStorageData.alreadyBackupToGist', localStorageData.alreadyBackupToGist);
@@ -137,8 +137,8 @@ export const uploadDataToGistFn = async () => {
 };
 
 export const loadDataFromOtherDeviceFn = async () => {
-  console.log('############## 🔽🔽🔽 start loadDataFromOtherDeviceFn ########');
-  const logEnd = () => console.log('############## 🔽🔽🔽 end loadDataFromOtherDeviceFn ########');
+  console.log('%c############## 🔽🔽🔽 start loadDataFromOtherDeviceFn ########', 'color: red');
+  const logEnd = () => console.log('%c############## 🔽🔽🔽 end loadDataFromOtherDeviceFn ########', 'color: red');
 
   const localData = await storeLocalStorage.get();
   const lastSyncVersion = await deviceSyncStorage.get().then(data => data.lastSyncVersion);

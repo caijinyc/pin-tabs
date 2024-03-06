@@ -15,7 +15,7 @@ export const uploadBase64ImageCacheFn = async () => {
 
   if (!syncGistId) return;
 
-  console.log('syncBase64ImageCacheFn start 🌃🌃🌃');
+  console.log('%csyncBase64ImageCacheFn start 🌃🌃🌃', 'color: #1890ff');
 
   const cloudOldData = await getGistData<Record<string, string>>({
     filename: 'cacheImgBase64Map.json',
@@ -23,9 +23,6 @@ export const uploadBase64ImageCacheFn = async () => {
   });
 
   const needCacheUrlsReg = optionsStorage.getSnapshot().faviconSyncList.split(',');
-
-  console.log('needCacheUrlsReg', needCacheUrlsReg);
-  console.log('cacheImgBase64Map', cacheImgBase64Map);
 
   const allTabs = Object.values(storeLocalStorage.getSnapshot().allSpacesMap || {}).reduce((acc, space) => {
     acc.push(...space.tabs);
@@ -40,8 +37,6 @@ export const uploadBase64ImageCacheFn = async () => {
 
   // 去重
   needUploadFavIconUrls = Array.from(new Set(needUploadFavIconUrls));
-
-  console.log('needUploadFavIconUrls', needUploadFavIconUrls);
 
   const finalNeedUploadUrls = Object.keys({
     ...cacheImgBase64Map,
@@ -63,7 +58,7 @@ export const uploadBase64ImageCacheFn = async () => {
     Object.keys(cloudOldData).length &&
     Object.keys(cloudOldData).sort().join(',') === Object.keys(finalNeedUploadUrls).sort().join(',')
   ) {
-    console.log('no need to upload cacheImgBase64Map');
+    console.log('%cno need to upload cacheImgBase64Map', 'color: #1890ff');
     return;
   }
 
@@ -75,7 +70,7 @@ export const uploadBase64ImageCacheFn = async () => {
     filename: 'cacheImgBase64Map.json',
   });
 
-  console.log('syncBase64ImageCacheFn done ✅✅✅');
+  console.log('%csyncBase64ImageCacheFn done ✅✅✅', 'color: #1890ff');
 };
 
 export const loadBase64ImageCacheFn = async () => {

@@ -21,8 +21,8 @@ export const getGistData = async <T extends any = StoreType>({
     },
   });
 
-  console.log('res.data.files', res.data.files);
-  console.log('filename', filename);
+  // console.log('res.data.files', res.data.files);
+  // console.log('filename', filename);
 
   return JSON.parse(res.data.files[filename]?.content || '{}') || {};
 };

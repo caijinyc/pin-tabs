@@ -1,4 +1,5 @@
 import cls from 'classnames';
+import { isEqual } from 'lodash';
 
 export { cls };
 
@@ -15,7 +16,7 @@ export const removeUrlHash = (url: string) => {
 export const diffMapPickKeys = <T extends Record<string, unknown>>(a: T, b: T, keys: (keyof T)[]) => {
   return Boolean(
     keys.find(key => {
-      if (JSON.stringify(a[key]) !== JSON.stringify(b[key])) {
+      if (!isEqual(a[key], b[key])) {
         return true;
       }
     }),

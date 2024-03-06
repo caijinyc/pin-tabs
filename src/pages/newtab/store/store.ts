@@ -88,8 +88,6 @@ export type StoreType = {
     [key: string]: SpaceInfo;
   };
 
-  groups: GroupInfo[];
-
   groupsSort: string[];
   groupsMap: GroupMap;
 
@@ -122,25 +120,6 @@ export const loadStoreFromStorage = () => {
       return {
         ...localData,
         redirect: Boolean(tabId && spaceId),
-        groupsSort:
-          localData.groupsSort && localData.groupsSort.length
-            ? localData.groupsSort
-            : localData.groups.map(item => item.id),
-        groupsMap:
-          localData.groupsMap && Object.values(localData.groupsMap).length
-            ? localData.groupsMap
-            : localData.groups.reduce((acc, item) => {
-                return {
-                  ...acc,
-                  [item.id]: item,
-                };
-              }, {} as GroupMap),
-        groups: localData.groups.map(group => {
-          return {
-            id: group.id ? group.id : uuid(),
-            ...group,
-          };
-        }),
       };
     });
 
