@@ -181,6 +181,7 @@ export const useCacheImgBase64 = create<{
 const startTimestamp = Date.now();
 getCacheImgBase64Map().then(val => {
   console.log('init cached img time', Date.now() - startTimestamp);
+  console.log('val', val);
   useCacheImgBase64.setState({
     value: val,
     init: true,

@@ -9,6 +9,8 @@ import { cls } from '@src/shared/kits';
 import { openTab } from '@root/src/pages/newtab/util/open-tab';
 import { Actions } from '@pages/newtab/store/actions';
 import { ARCHIVE_GROUP_ID } from '@src/constant';
+import copy from 'copy-to-clipboard';
+import { globalToast } from '@pages/newtab/Newtab';
 
 export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   const spaceId = space.uuid;
@@ -35,6 +37,24 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
           } else {
             fn();
           }
+        });
+      },
+    },
+    {
+      name: 'COPY ALL URLS',
+      icon: 'icon-park-twotone:copy',
+      iconSize: {
+        width: 16,
+        height: 16,
+      },
+      action: () => {
+        copy(space.tabs.map(tab => tab.url).join('\n'));
+        globalToast({
+          title: 'Copied',
+          description: 'All URLs copied to clipboard',
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
         });
       },
     },
@@ -157,7 +177,7 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
               onClick={() => {
                 item.action();
               }}>
-              <Icon icon={item.icon} width="18" height="18" inline />
+              <Icon icon={item.icon} width="18" height="18" {...item.iconSize} inline />
               <div>{item.name}</div>
             </div>
           ))}
