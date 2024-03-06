@@ -1,5 +1,5 @@
 import { loadBase64ImageCache, syncBase64ImageCache } from './alarm-actions/sync-ico-base64-image';
-import { loadDataFromOtherDevice, syncDataToGist } from './sync';
+import { loadDataFromOtherDevice, syncDataToGist } from './alarm-actions/sync';
 
 const getMinutes = (minutes: number) => minutes * 60 * 1000;
 const getSeconds = (seconds: number) => seconds * 1000;

@@ -163,9 +163,10 @@ export const loadDataFromOtherDeviceFn = async () => {
 
   try {
     const gistData = await getGistData({ filename: SYNC_FILE_NAME, gistId: syncGistId });
+    const newVersion = lastSyncVersion > (gistData.version || -1) ? lastSyncVersion : gistData.version;
     await storeLocalStorage.set({
       ...gistData,
-      version: lastSyncVersion,
+      version: newVersion,
       alreadyBackupToGist: true,
     });
     console.log('🔽🔽🔽 SYNC FROM GIST SUCCESS ✅✅✅');

@@ -5,7 +5,7 @@ import {
   loadDataFromOtherDeviceFn,
   syncDataToGist,
   uploadDataToGistFn,
-} from '@pages/background/sync';
+} from '@pages/background/alarm-actions/sync';
 
 import { createAlarm } from '@pages/background/create-alarm';
 

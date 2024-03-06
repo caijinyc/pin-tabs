@@ -1,5 +1,5 @@
 import { cacheImgBase64ToDB, getCacheImgBase64Map } from '@pages/newtab/util/cache-images';
-import { uploadToGist } from '@pages/background/sync';
+import { uploadToGist } from '@pages/background/alarm-actions/sync';
 import { optionsStorage } from '@src/shared/storages/optionsStorage';
 import { getGistData } from '@pages/background/api';
 import { storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
