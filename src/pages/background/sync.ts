@@ -31,7 +31,7 @@ export const loadDataFromOtherDevice = 'loadDataFromOtherDeviceFn';
 const BACKUP_FILE_NAME = 'backup_data.json';
 const SYNC_FILE_NAME = 'sync_data.json';
 
-const uploadToGist = async ({ data, gistId, filename }: { data: any; gistId: string; filename: string }) => {
+export const uploadToGist = async ({ data, gistId, filename }: { data: any; gistId: string; filename: string }) => {
   const { token } = await optionsStorage.get();
 
   if (!token) return;

@@ -2,7 +2,13 @@ import { Octokit } from 'octokit';
 import { optionsStorage } from '@src/shared/storages/optionsStorage';
 import { StoreType } from '@pages/newtab/store/store';
 
-export const getGistData = async ({ filename, gistId }: { filename: string; gistId: string }): Promise<StoreType> => {
+export const getGistData = async <T extends any = StoreType>({
+  filename,
+  gistId,
+}: {
+  filename: string;
+  gistId: string;
+}): Promise<T> => {
   const { token } = await optionsStorage.get();
   const octokit = new Octokit({
     auth: token,
@@ -18,5 +24,5 @@ export const getGistData = async ({ filename, gistId }: { filename: string; gist
   console.log('res.data.files', res.data.files);
   console.log('filename', filename);
 
-  return JSON.parse(res.data.files[filename].content);
+  return JSON.parse(res.data.files[filename]?.content || '{}') || {};
 };

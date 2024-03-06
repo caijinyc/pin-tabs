@@ -4,7 +4,7 @@ import { ChakraProvider, FormLabel, IconButton, Input, Popover, Tooltip } from '
 import { commonLocalStorage, optionsStorage } from '@src/shared/storages/optionsStorage';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify-icon/react';
-import { UploadLocalHistory } from "@pages/options/upload-local-history";
+import { UploadLocalHistory } from '@pages/options/upload-local-history';
 
 const GithubAppendIcon = (props: { onClick: () => void }) => (
   <Icon inline icon="mdi:github" width="20" height="20" className={'cursor-pointer'} onClick={props.onClick} />
@@ -17,6 +17,7 @@ const Options: React.FC = () => {
     backupGistId: string;
     token: string;
     deviceId: string;
+    faviconSyncList: string;
     githubUsername: string;
   }>({
     defaultValues: {
@@ -24,6 +25,7 @@ const Options: React.FC = () => {
       token: optionsStorage.getSnapshot().token,
       backupGistId: optionsStorage.getSnapshot().backupGistId,
       githubUsername: optionsStorage.getSnapshot()?.githubUsername,
+      faviconSyncList: optionsStorage.getSnapshot()?.faviconSyncList,
       deviceId: commonLocalStorage.getSnapshot()?.deviceId,
     },
   });
@@ -37,6 +39,7 @@ const Options: React.FC = () => {
           syncGistId: value.syncGistId,
           token: value.token,
           githubUsername: value.githubUsername,
+          faviconSyncList: value.faviconSyncList,
         });
         commonLocalStorage.set({ deviceId: value.deviceId });
       }
@@ -68,9 +71,12 @@ const Options: React.FC = () => {
         <FormLabel>Device Id</FormLabel>
         <Input {...register('deviceId')} className={'mb-6'} />
 
+        <FormLabel>Favicon Sync List</FormLabel>
+        <Input {...register('faviconSyncList')} className={'mb-6'} />
+
         <FormLabel>Other Actions</FormLabel>
 
-        <UploadLocalHistory/>
+        <UploadLocalHistory />
       </div>
     </ChakraProvider>
   );
