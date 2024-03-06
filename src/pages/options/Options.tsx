@@ -50,7 +50,7 @@ const Options: React.FC = () => {
 
   return (
     <ChakraProvider>
-      <div className={'m-12'}>
+      <div className={'m-12 max-w-lg'}>
         <FormLabel>GitHub Username</FormLabel>
         <Input {...register('githubUsername')} className={'mb-6'} />
 
