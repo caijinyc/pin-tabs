@@ -4,7 +4,7 @@ import { getGistData } from '@pages/background/api';
 import { StoreType } from '@pages/newtab/store/store';
 import dayjs from 'dayjs';
 import { Octokit } from 'octokit';
-import { createAlarm } from '@pages/background/create-alarm';
+import { omit } from 'lodash';
 
 /**
  * 同步实现逻辑：
@@ -118,7 +118,7 @@ export const uploadDataToGistFn = async () => {
 
   try {
     await syncToGist({
-      ...localStorageData,
+      ...omit(localStorageData, ['redirect']),
       version: newVersion,
     });
     await storeLocalStorage.set({
