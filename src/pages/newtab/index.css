@@ -2,8 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /*--chakra-fontSizes-lg: '18px';*/
+  /*--chakra-colors-gray-100: '#fafafa';*/
+  /*--chakra-colors-gray-200: '#f7f7f7';*/
+  --chakra-modal-bg: #1E1E1E;
+  --chakra-colors-gray-700: #272727 !important;
+}
+
 body {
   margin: 0;
+  background: #1E1E1E !important;
   font-family:
     PingFang SC,
     -apple-system,

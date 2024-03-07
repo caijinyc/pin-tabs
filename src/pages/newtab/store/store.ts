@@ -4,9 +4,8 @@ import { produce } from 'immer';
 import { storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
 import { DEFAULT_STORE_STATE, NEED_SYNC_KEYS } from '@src/constant';
 import { cacheImgBase64ToDB, getCacheImgBase64Map } from '@pages/newtab/util/cache-images';
-import { diffMapPickKeys, uuid } from '@src/shared/kits';
+import { diffMapPickKeys } from '@src/shared/kits';
 import { openTab } from '@pages/newtab/util/open-tab';
-import { cacheFaviconImgStorage } from '@src/shared/storages/cacheImgStorage';
 
 export type TabInfo = {
   id: number;

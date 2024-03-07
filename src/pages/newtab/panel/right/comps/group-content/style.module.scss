@@ -1,8 +1,4 @@
 .spaceItem {
-  margin-bottom: 12px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid #f0f0f0;
-
   &:last-child {
     border-bottom: none;
   }
@@ -13,13 +9,14 @@
 
   margin-bottom: 2px;
   padding: 4px;
+  border-radius: 4px;
 
   .tabActions {
     display: none;
   }
 
   &:hover {
-    background: rgba(173, 216, 230, 0.2);
+    background: rgb(51, 51, 51);
 
     .tabActions {
       display: flex;

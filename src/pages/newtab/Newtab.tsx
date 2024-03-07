@@ -3,7 +3,7 @@ import styles from './style.module.scss';
 import '@pages/newtab/index.css';
 import withSuspense from '@src/shared/hoc/withSuspense';
 import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
-import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript, createStandaloneToast, extendTheme, ThemeConfig } from '@chakra-ui/react';
 import { loadStoreFromStorage, useIsPopupStore, useStore } from '@pages/newtab/store/store';
 import { LeftPanel } from '@pages/newtab/panel/left-group-side';
 import { RightContentPanel } from '@pages/newtab/panel/right';
@@ -11,6 +11,7 @@ import { GlobalDialog } from '@pages/newtab/comps/global-dialog';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useSaveStoreDataToStorage } from '@pages/newtab/util/use-save-store-data-to-storage';
+import theme from '@pages/newtab/theme';
 
 const { ToastContainer, toast } = createStandaloneToast();
 export const globalToast = toast;
@@ -41,11 +42,12 @@ const NewTab = (props: { isPopup?: boolean }) => {
 
   useSaveStoreDataToStorage();
   useLoadStoreData();
-
   return (
     <div className="App">
+      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+
       {redirectMode ? null : (
-        <ChakraProvider>
+        <ChakraProvider theme={theme}>
           <GlobalDialog />
           <ToastContainer />
 

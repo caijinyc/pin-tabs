@@ -15,16 +15,16 @@ export const RightContentPanel = () => {
     <div className={styles.rightPanel}>
       <GroupContent />
 
-      <div>
-        <Button
+      <div className={'pb-4'}>
+        <IconButton
+          aria-label="Add SubSpace"
+          icon={<Icon icon="material-symbols:add" width={'16'} height={'16'} />}
           size={'xs'}
           onClick={() => {
             Actions.addSubSpace(useStore.getState().selectedGroupId);
-          }}>
-          Add Sub Space
-        </Button>
+          }}></IconButton>
 
-        {<GroupSetting />}
+        {/*{<GroupSetting />}*/}
 
         <IconButton
           aria-label="Del Group"

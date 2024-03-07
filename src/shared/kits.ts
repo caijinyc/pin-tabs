@@ -1,5 +1,6 @@
 import cls from 'classnames';
 import { isEqual } from 'lodash';
+import React from 'react';
 
 export { cls };
 
@@ -21,4 +22,19 @@ export const diffMapPickKeys = <T extends Record<string, unknown>>(a: T, b: T, k
       }
     }),
   );
+};
+
+export const useComposition = () => {
+  const [onComposition, setOnComposition] = React.useState(false);
+  return {
+    isComposing: onComposition,
+    inputUpdateCompositionStatusProps: {
+      onCompositionStart: () => {
+        setOnComposition(true);
+      },
+      onCompositionEnd: () => {
+        setOnComposition(false);
+      },
+    },
+  };
 };

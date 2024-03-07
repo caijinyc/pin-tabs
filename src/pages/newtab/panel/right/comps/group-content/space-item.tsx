@@ -125,7 +125,7 @@ export const SpaceItem = ({ space, index }: { space: SpaceInfo; index: number })
   sortDrop(dropRef);
 
   return (
-    <div key={spaceId} className={styles.spaceItem}>
+    <div key={spaceId} className={cls(styles.spaceItem, 'p-2 bg-[#272727] mb-4 rounded-xl shadow-lg')}>
       <div className={styles.titleWrapper} ref={dropRef}>
         <div
           ref={preview}

@@ -6,6 +6,7 @@ import { Input } from '@chakra-ui/react';
 import { produce } from 'immer';
 import { getImageBase64 } from '@pages/newtab/util/cache-images';
 import { openTab } from '@root/src/pages/newtab/util/open-tab';
+import { useComposition } from '@src/shared/kits';
 
 const RenderFavicon = ({ tab }: { tab: TabInfo }) => {
   const initIconCacheData = useCacheImgBase64(state => state.init);
@@ -45,9 +46,11 @@ const RenderFavicon = ({ tab }: { tab: TabInfo }) => {
     </>
   );
 };
+
 export const TabItem = ({ tab, space }: { tab: TabInfo; space: SpaceInfo }) => {
   const spaceId = space.uuid;
   const [isEdit, setIsEdit] = React.useState(false);
+  const { isComposing, inputUpdateCompositionStatusProps } = useComposition();
 
   return (
     <div className={styles.tabListItem} key={tab.id}>
@@ -72,7 +75,9 @@ export const TabItem = ({ tab, space }: { tab: TabInfo; space: SpaceInfo }) => {
             autoFocus
             placeholder="Unstyled"
             defaultValue={tab.title}
-            onKeyUp={e => {
+            {...inputUpdateCompositionStatusProps}
+            onKeyDown={e => {
+              if (isComposing) return;
               if (e.key === 'Enter' || e.key === 'Escape') {
                 e.currentTarget.blur();
               }

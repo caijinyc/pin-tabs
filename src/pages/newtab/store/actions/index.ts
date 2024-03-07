@@ -12,11 +12,12 @@ export const Actions = {
     });
   },
   addNewGroup: () => {
+    const newGroupId = uuid();
     useStore.setState(old => {
       return produce(old, draft => {
-        const newGroupId = uuid();
+        // const newSpaceId = Actions.addSubSpace(newGroupId);
         draft.groupsMap[newGroupId] = {
-          name: 'Untitled Group',
+          name: 'Untitled Space',
           id: newGroupId,
           subSpacesIds: [],
         };
@@ -24,6 +25,9 @@ export const Actions = {
         draft.selectedGroupId = newGroupId;
       });
     });
+
+    // auto add a space
+    Actions.addSubSpace(newGroupId);
   },
   deleteSpace: (spaceId: string) => {
     useStore.setState(old => {
@@ -77,17 +81,18 @@ export const Actions = {
     });
   },
   addSubSpace: (groupId: string) => {
+    const id = uuid();
     useStore.setState(old => {
       return produce(old, draft => {
-        const id = uuid();
         draft.groupsMap[groupId].subSpacesIds.push(id);
         draft.allSpacesMap[id] = {
-          name: 'Untitled Sub Space',
+          name: 'Untitled Project',
           tabs: [],
           uuid: id,
         };
       });
     });
+    return id;
   },
   moveSpaceToOtherGroup: (spaceId: string, newGroupId: string) => {
     useStore.setState(old => {
@@ -95,6 +100,13 @@ export const Actions = {
         const oldGroup = Object.values(draft.groupsMap).find(group => group.subSpacesIds.includes(spaceId));
         oldGroup.subSpacesIds = oldGroup.subSpacesIds.filter(id => id !== spaceId);
         draft.groupsMap[newGroupId].subSpacesIds.push(spaceId);
+      });
+    });
+  },
+  changeGroupName: (groupId: string, name: string) => {
+    useStore.setState(old => {
+      return produce(old, draft => {
+        draft.groupsMap[groupId].name = name;
       });
     });
   },

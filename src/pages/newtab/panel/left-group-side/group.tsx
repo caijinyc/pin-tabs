@@ -1,5 +1,5 @@
 import { GroupInfo, useStore } from '@pages/newtab/store/store';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDrag, useDrop, XYCoord } from 'react-dnd';
 import { DropItem } from '@pages/newtab/panel/right/comps/group-content';
 import cls from 'classnames';
@@ -7,10 +7,25 @@ import styles from '@pages/newtab/style.module.scss';
 import { produce } from 'immer';
 import { Actions } from '@pages/newtab/store/actions';
 import { GroupSortItemTypes, SPACE_TO_GROUP_DRAG_TYPE } from '@src/constant';
+import { Input } from '@chakra-ui/react';
+import { useComposition } from '@src/shared/kits';
 
 const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
   const { group, groupIndex } = props;
   const selectedGroupId = useStore(state => state.selectedGroupId);
+  const [isInEdit, setIsInEdit] = React.useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const wrapper = ref.current;
+    if (!wrapper) {
+      return;
+    }
+    const handleDoubleClick = () => {
+      setIsInEdit(true);
+    };
+    wrapper.addEventListener('dblclick', handleDoubleClick);
+  }, []);
 
   const [{ isOver, canDrop }, drop] = useDrop({
     accept: SPACE_TO_GROUP_DRAG_TYPE,
@@ -32,7 +47,6 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
 
   const isActive = isOver && canDrop;
 
-  const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId }, sortDrop] = useDrop({
     accept: GroupSortItemTypes.CARD,
     collect(monitor) {
@@ -112,6 +126,8 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
     }),
   });
 
+  const { isComposing, inputUpdateCompositionStatusProps } = useComposition();
+
   drop(sortDrag(sortDrop(ref)));
 
   return (
@@ -134,7 +150,28 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
           };
         });
       }}>
-      <div>{group.name}</div>
+      {isInEdit ? (
+        <Input
+          {...inputUpdateCompositionStatusProps}
+          variant="flushed"
+          size={'sm'}
+          autoFocus
+          defaultValue={group.name}
+          maxLength={20}
+          onKeyDown={e => {
+            if (isComposing) return;
+            if (e.key === 'Enter' || e.key === 'Escape') {
+              e.currentTarget.blur();
+            }
+          }}
+          onBlur={e => {
+            setIsInEdit(false);
+            Actions.changeGroupName(group.id, e.target.value);
+          }}
+        />
+      ) : (
+        <div className={'truncate'}>{group.name}</div>
+      )}
     </div>
   );
 };
