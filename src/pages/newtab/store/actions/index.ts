@@ -2,6 +2,7 @@ import { TabInfo, useStore } from '@pages/newtab/store/store';
 import { produce } from 'immer';
 import { ARCHIVE_GROUP_ID } from '@src/constant';
 import { uuid } from '@src/shared/kits';
+import { globalToast } from '@pages/newtab/Newtab';
 
 export const Actions = {
   openArchive: () => {
@@ -104,6 +105,15 @@ export const Actions = {
     });
   },
   changeGroupName: (groupId: string, name: string) => {
+    if (!name) {
+      globalToast({
+        title: 'Error',
+        description: 'Name cannot be empty.',
+        status: 'error',
+        duration: 1000,
+      });
+      return;
+    }
     useStore.setState(old => {
       return produce(old, draft => {
         draft.groupsMap[groupId].name = name;
