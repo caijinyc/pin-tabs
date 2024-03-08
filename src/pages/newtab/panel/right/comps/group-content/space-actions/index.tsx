@@ -11,6 +11,7 @@ import { Actions } from '@pages/newtab/store/actions';
 import { ARCHIVE_GROUP_ID } from '@src/constant';
 import copy from 'copy-to-clipboard';
 import { globalToast } from '@pages/newtab/Newtab';
+import { spaceActionIconHoverClassNameArgs } from './add-tab';
 
 export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   const spaceId = space.uuid;
@@ -152,15 +153,13 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
             });
           });
         }}
-        className={
-          'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa] cursor-pointer rounded-full w-[24px] h-[24px] flex items-center justify-center'
-        }>
+        className={`${spaceActionIconHoverClassNameArgs} cursor-pointer rounded-full w-[24px] h-[24px] flex items-center justify-center`}>
         <Icon icon={disableAutoGroup ? 'uil:layer-group-slash' : 'uim:layer-group'} width="18" height="18" inline />
       </div>
 
       <Popover placement={'bottom-start'} matchWidth={true}>
         <PopoverTrigger>
-          <div className={cls(styles.moreActionIcon, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}>
+          <div className={cls(styles.moreActionIcon, `${spaceActionIconHoverClassNameArgs}`)}>
             <Icon icon="material-symbols:more-horiz" width="18" height="18" inline />
           </div>
         </PopoverTrigger>

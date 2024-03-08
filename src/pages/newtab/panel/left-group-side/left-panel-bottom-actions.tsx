@@ -9,6 +9,8 @@ import React from 'react';
 export const LeftPanelBottomActions = () => {
   const { syncGistId, githubUsername } = useStorageData(optionsStorage);
 
+  const iconClassName = 'text-gray-400 hover:text-gray-100 cursor-pointer';
+
   return (
     <div>
       <Icon
@@ -19,7 +21,7 @@ export const LeftPanelBottomActions = () => {
           // open options page
           chrome.runtime.openOptionsPage();
         }}
-        className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
+        className={iconClassName}
       />
 
       <Tooltip label={'Archive projects'}>
@@ -30,7 +32,7 @@ export const LeftPanelBottomActions = () => {
           onClick={() => {
             Actions.openArchive();
           }}
-          className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
+          className={iconClassName}
         />
       </Tooltip>
 
@@ -53,7 +55,7 @@ export const LeftPanelBottomActions = () => {
             icon="mdi:github"
             width="18"
             height="18"
-            className={'text-gray-400 hover:text-gray-900 cursor-pointer'}
+            className={iconClassName}
           />
         </Tooltip>
       ) : null}

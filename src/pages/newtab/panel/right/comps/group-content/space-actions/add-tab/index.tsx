@@ -7,13 +7,12 @@ import { cls } from '@src/shared/kits';
 import { Actions } from '@pages/newtab/store/actions';
 import { useAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
 
+export const spaceActionIconHoverClassNameArgs = 'text-zinc-300 hover:text-zinc-50 hover:bg-zinc-600';
+
 const PinIcon = (props: {} & HTMLProps<any>) => {
   console.log('props', props);
   return (
-    <div
-      className={cls(styles.addIconWrapper, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}
-      {...props}
-      ref={props.ref}>
+    <div className={cls(styles.addIconWrapper, spaceActionIconHoverClassNameArgs)} {...props} ref={props.ref}>
       <Icon icon="fluent:pin-12-filled" className={''} inline width="18" height="18" />
     </div>
   );
@@ -68,7 +67,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   return (
     <Popover placement={'bottom-start'}>
       <PopoverTrigger>
-        <div className={cls(styles.addIconWrapper, 'text-gray-500 hover:text-[#da74e1] hover:bg-[#ffdbfa]')}>
+        <div className={cls(styles.addIconWrapper, 'text-zinc-500 hover:text-zinc-50 hover:bg-zinc-600')}>
           <Icon icon="fluent:pin-12-filled" className={''} inline width="18" height="18" />
         </div>
       </PopoverTrigger>

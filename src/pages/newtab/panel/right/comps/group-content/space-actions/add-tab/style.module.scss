@@ -12,6 +12,10 @@
     background: rgba(173, 216, 230, 0.2);
   }
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   .favicon {
     width: 14px;
     height: 14px;
