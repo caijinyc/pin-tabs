@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import styles from './style.module.scss';
 import '@pages/newtab/index.css';
 import withSuspense from '@src/shared/hoc/withSuspense';
 import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
-import { ChakraProvider, ColorModeScript, createStandaloneToast, extendTheme, ThemeConfig } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript, createStandaloneToast } from '@chakra-ui/react';
 import { loadStoreFromStorage, useIsPopupStore, useStore } from '@pages/newtab/store/store';
 import { LeftPanel } from '@pages/newtab/panel/left-group-side';
 import { RightContentPanel } from '@pages/newtab/panel/right';

@@ -21,7 +21,8 @@
     "lint": "eslint src --ext .ts,.js,.tsx,.jsx",
     "lint:fix": "pnpm lint --fix",
     "prettier": "prettier . --write",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "i": "pnpm dlx pnpm@8.15.4 install"
   },
   "type": "module",
   "dependencies": {
