@@ -25,6 +25,10 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
       setIsInEdit(true);
     };
     wrapper.addEventListener('dblclick', handleDoubleClick);
+
+    if (group.id === selectedGroupId) {
+      wrapper.scrollIntoView({ block: 'center' });
+    }
   }, []);
 
   const [{ isOver, canDrop }, drop] = useDrop({

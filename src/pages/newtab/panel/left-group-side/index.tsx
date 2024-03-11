@@ -10,22 +10,22 @@ import { Icon } from '@iconify-icon/react';
 
 export const LeftPanel = () => {
   return (
-    <div className={cls(styles.leftPanel, 'flex flex-col justify-between')}>
-      <div className={cls(styles.leftSpaceWrapper)}>
-        <div className={'flex justify-between items-center pb-1 border-b-1 border-[#2d2d2d] mb-1'}>
-          <div className={'flex gap-2'}>
-            <img src={Favicon} alt="Logo" width="14" height="14" />
-            <span className={'text-sm font-serif font-bold'}>Spaces</span>
-          </div>
-          <div
-            className={' cursor-pointer flex items-center justify-center hover:text-gray-100 text-gray-500'}
-            onClick={() => {
-              Actions.addNewGroup();
-            }}>
-            <Icon icon="carbon:add-filled" inline width={18} height={18} />
-          </div>
+    <div className={cls(styles.leftPanel, 'flex flex-col h-screen')}>
+      <div className={'inline-flex justify-between items-center pb-1 border-b-1 border-[#2d2d2d] mb-1'}>
+        <div className={'flex gap-2'}>
+          <img src={Favicon} alt="Logo" width="14" height="14" />
+          <span className={'text-sm font-serif font-bold'}>Spaces</span>
         </div>
+        <div
+          className={' cursor-pointer flex items-center justify-center hover:text-gray-100 text-gray-500'}
+          onClick={() => {
+            Actions.addNewGroup();
+          }}>
+          <Icon icon="carbon:add-filled" inline width={18} height={18} />
+        </div>
+      </div>
 
+      <div className={cls(styles.leftSpaceWrapper, 'flex-1 overflow-y-scroll flex flex-col pb-6')}>
         <Groups />
       </div>
 

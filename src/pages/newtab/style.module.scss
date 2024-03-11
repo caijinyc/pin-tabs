@@ -10,10 +10,18 @@
 }
 
 .leftSpaceWrapper {
-  display: flex;
-  flex-direction: column;
+  //display: flex;
+  //flex-direction: column;
   //gap: 8px;
   font-size: 12px;
+
+  /* 隐藏滚动条但允许滚动 */
+  &::-webkit-scrollbar {
+    display: none; /* 对于 Chrome, Safari 和 Opera */
+  }
+
+  -ms-overflow-style: none; /* 对于 IE 和 Edge */
+  scrollbar-width: none; /* 对于 Firefox */
 }
 
 .leftSpaceItem {

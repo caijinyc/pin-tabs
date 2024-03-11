@@ -12,7 +12,7 @@ export const LeftPanelBottomActions = () => {
   const iconClassName = 'text-gray-400 hover:text-gray-100 cursor-pointer';
 
   return (
-    <div>
+    <div className={'inline-flex gap-1 pt-2'}>
       <Icon
         icon="material-symbols-light:settings"
         width="18"

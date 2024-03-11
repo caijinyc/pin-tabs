@@ -76,7 +76,7 @@ export const Actions = {
         draft.groupsSort = draft.groupsSort.filter(id => id !== groupId);
 
         if (draft.selectedGroupId === groupId) {
-          draft.selectedGroupId = draft.groupsSort[0];
+          draft.selectedGroupId = draft.groupsSort[draft.groupsSort.length - 1];
         }
       });
     });

@@ -33,7 +33,8 @@ export const RightContentPanel = () => {
           size={'xs'}
           ml={2}
           onClick={() => {
-            if (useStore.getState().groupsSort.length === 1) {
+            const state = useStore.getState();
+            if (state.groupsSort.length === 1) {
               toast({
                 title: 'Must have at least one group.',
                 status: 'error',
@@ -43,11 +44,20 @@ export const RightContentPanel = () => {
               return;
             }
 
+            if (
+              state.groupsMap[state.selectedGroupId].subSpacesIds
+                .map(id => state.allSpacesMap[id].tabs.length)
+                .filter(len => len > 0).length === 0
+            ) {
+              Actions.removeGroup(state.selectedGroupId);
+              return;
+            }
+
             dialog.confirm({
               title: 'Delete Group',
               content: 'Are you sure to delete this group?',
               onOk: () => {
-                Actions.removeGroup(useStore.getState().selectedGroupId);
+                Actions.removeGroup(state.selectedGroupId);
               },
             });
           }}>
