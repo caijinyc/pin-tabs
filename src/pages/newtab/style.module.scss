@@ -1,5 +1,5 @@
 .wrapper {
-  height: 100vh;
+  //height: 100vh;
   display: flex;
 }
 
@@ -50,6 +50,10 @@
   padding: 16px 12px;
   border-right: 1px solid #2d2d2d;
   overflow: scroll;
+
+
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .rightPanel {
