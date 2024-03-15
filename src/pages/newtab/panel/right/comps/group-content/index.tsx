@@ -16,15 +16,13 @@ export const GroupContent = () => {
 
   return (
     <>
-      <div>
-        {currentSpaceTabs.subSpacesIds.map((spaceId, i) => {
-          const space = allSpacesMap[spaceId];
-          if (!space) {
-            return null;
-          }
-          return <SpaceItem space={space} index={i} key={spaceId} />;
-        })}
-      </div>
+      {currentSpaceTabs.subSpacesIds.map((spaceId, i) => {
+        const space = allSpacesMap[spaceId];
+        if (!space) {
+          return null;
+        }
+        return <SpaceItem space={space} index={i} key={spaceId} />;
+      })}
     </>
   );
 };

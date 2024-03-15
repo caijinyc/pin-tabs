@@ -76,7 +76,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
         <PopoverContent
           style={{
             boxShadow: '0 0 10px 0 rgba(0,0,0,0.1)',
-            width: 700,
+            // width: 500,
           }}>
           {/*<PopoverArrow />*/}
           {/*<PopoverHeader>Header</PopoverHeader>*/}

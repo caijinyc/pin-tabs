@@ -3,3 +3,8 @@ body {
   height: 600px;
   position: relative;
 }
+
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none; /* IE and Edge */
+}
