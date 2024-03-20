@@ -153,6 +153,11 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
             });
           });
         }}
+        title={
+          disableAutoGroup
+            ? 'Enable Auto Group (Auto add tabs to a group)'
+            : 'Disable Auto Group (Auto add tabs to a group)'
+        }
         className={`${spaceActionIconHoverClassNameArgs} cursor-pointer rounded-full w-[24px] h-[24px] flex items-center justify-center`}>
         <Icon icon={disableAutoGroup ? 'uil:layer-group-slash' : 'uim:layer-group'} width="18" height="18" inline />
       </div>
