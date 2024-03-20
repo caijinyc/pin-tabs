@@ -7,8 +7,6 @@
 # build
 /dist
 
-release/dist
-
 
 # etc
 .DS_Store
