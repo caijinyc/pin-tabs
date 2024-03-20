@@ -56,6 +56,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
     return (
       <div
         className={styles.addIconWrapper}
+        title={'Add current active tab to current space'}
         onClick={() => {
           const currentActiveTab = currentWindowTabs.find(tab => tab.active);
           if (currentActiveTab) {
@@ -145,7 +146,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
                         onClick={() => {
                           Actions.addGroupAllTabsToSpace(tabs, props.spaceId);
                         }}
-                        title={'Add Group all tabs to current space'}
+                        title={'Add group all tabs to current space'}
                         icon="lets-icons:add-duotone"
                         className={'hover:text-gray-100 text-gray-500 cursor-pointer'}
                         width="16px"
