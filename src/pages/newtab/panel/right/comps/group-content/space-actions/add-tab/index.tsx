@@ -20,6 +20,9 @@ const PinIcon = (props: {} & HTMLProps<any>) => {
 
 export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   const tabs = useAllOpenedTabs();
+  const currentWindowTabs = useAllOpenedTabs({
+    currentWindow: true,
+  });
   const allBrowserGroups = useAllBrowserGroups();
   const currentSpaceTabs = useStore(state => state.allSpacesMap[props.spaceId].tabs);
   const isPopup = useIsPopupStore(state => state);
@@ -54,7 +57,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
       <div
         className={styles.addIconWrapper}
         onClick={() => {
-          const currentActiveTab = tabs.find(tab => tab.active);
+          const currentActiveTab = currentWindowTabs.find(tab => tab.active);
           if (currentActiveTab) {
             Actions.addTabToSpace(props.spaceId, currentActiveTab);
           }
