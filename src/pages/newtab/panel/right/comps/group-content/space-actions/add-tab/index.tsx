@@ -128,19 +128,32 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
               };
 
               if (item.groupId) {
+                const tabs = (
+                  item as {
+                    tabs: TabInfo[];
+                  }
+                ).tabs;
                 return (
                   <div
                     className={'border-l-2 pt-0 pl-2 pr-2 mb-2'}
                     style={{
                       borderColor: allBrowserGroups[item.groupId]?.color,
                     }}>
-                    <div className={'mb-2 font-bold'}>{allBrowserGroups[item.groupId]?.name}</div>
-                    {(
-                      item as {
-                        groupId: string;
-                        tabs: TabInfo[];
-                      }
-                    ).tabs.map(tab => renderTab(tab))}
+                    <div className={'mb-2 font-bold flex gap-1 items-center'}>
+                      <div>{allBrowserGroups[item.groupId]?.name}</div>
+                      <Icon
+                        onClick={() => {
+                          Actions.addGroupAllTabsToSpace(tabs, props.spaceId);
+                        }}
+                        title={'Add Group all tabs to current space'}
+                        icon="lets-icons:add-duotone"
+                        className={'hover:text-gray-100 text-gray-500 cursor-pointer'}
+                        width="16px"
+                        height="16px"
+                        inline
+                      />
+                    </div>
+                    {tabs.map(tab => renderTab(tab))}
                   </div>
                 );
               }

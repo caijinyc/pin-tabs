@@ -7,6 +7,9 @@
 # build
 /dist
 
+release/dist
+
+
 # etc
 .DS_Store
 .env.local
@@ -17,4 +20,4 @@ utils/reload/*.js
 utils/reload/injections/*.js
 public/manifest.json
 
-*.zip
+#*.zip

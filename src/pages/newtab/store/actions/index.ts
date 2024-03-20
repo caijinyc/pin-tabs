@@ -56,6 +56,20 @@ export const Actions = {
       });
     });
   },
+  addGroupAllTabsToSpace: (tabs: TabInfo[], spaceId: string) => {
+    const state = useStore.getState();
+    const thisSpaceAllTabs = state.allSpacesMap[spaceId].tabs;
+
+    const filteredTabs = tabs.filter(
+      tab => !thisSpaceAllTabs.find(item => item.id === tab.id || item.url === tab.url || item.title === tab.title),
+    );
+
+    useStore.setState(old => {
+      return produce(old, draft => {
+        draft.allSpacesMap[spaceId].tabs.push(...filteredTabs);
+      });
+    });
+  },
   removeTabFromSpace: (id: string, tab: TabInfo) => {
     useStore.setState(old => {
       return produce(old, draft => {

@@ -12,7 +12,9 @@ const rootDir = resolve(__dirname);
 const srcDir = resolve(rootDir, 'src');
 const pagesDir = resolve(srcDir, 'pages');
 const assetsDir = resolve(srcDir, 'assets');
-const outDir = resolve(rootDir, 'dist');
+// const outDir = resolve(rootDir, 'dist');
+const devOutDir = resolve(rootDir, 'dist');
+const buildOutDir = resolve(rootDir, 'release/dist');
 const publicDir = resolve(rootDir, 'public');
 
 const isDev = process.env.__DEV__ === 'true';
@@ -22,7 +24,7 @@ const isProduction = !isDev;
 const enableHmrInBackgroundScript = true;
 const cacheInvalidationKeyRef = { current: generateKey() };
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       '@root': rootDir,
@@ -43,7 +45,7 @@ export default defineConfig({
   ],
   publicDir,
   build: {
-    outDir,
+    outDir: mode === 'prod' ? buildOutDir : devOutDir,
     /** Can slow down build speed. */
     // sourcemap: isDev,
     minify: isProduction,
@@ -87,7 +89,7 @@ export default defineConfig({
     include: ['**/*.test.ts', '**/*.test.tsx'],
     setupFiles: './test-utils/vitest.setup.js',
   },
-});
+}));
 
 function getCacheInvalidationKey() {
   return cacheInvalidationKeyRef.current;
