@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { create } from 'zustand';
 import { produce } from 'immer';
 import { storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
-import { DEFAULT_STORE_STATE, NEED_SYNC_KEYS } from '@src/constant';
+import { ARCHIVE_GROUP_ID, DEFAULT_STORE_STATE, NEED_SYNC_KEYS } from '@src/constant';
 import { cacheImgBase64ToDB, getCacheImgBase64Map } from '@pages/newtab/util/cache-images';
 import { diffMapPickKeys } from '@src/shared/kits';
 import { openTab } from '@pages/newtab/util/open-tab';
@@ -90,8 +90,6 @@ export type StoreType = {
   groupsSort: string[];
   groupsMap: GroupMap;
 
-  archiveSpaces?: GroupInfo;
-
   // 每次同步完成后，更新版本号
   version: number;
 
@@ -101,6 +99,21 @@ export type StoreType = {
 };
 
 export const useStore = create<StoreType>(() => produce(DEFAULT_STORE_STATE, draft => {}));
+
+export const getArchivedSpaces = () => {
+  const state = useStore.getState();
+  const archiveGroup = state.groupsMap[ARCHIVE_GROUP_ID];
+  if (!archiveGroup) {
+    return [];
+  }
+
+  return archiveGroup.subSpacesIds.map(id => state.allSpacesMap[id]);
+};
+
+export const isSpaceArchived = (spaceId: string) => {
+  const state = useStore.getState();
+  return state.groupsMap[ARCHIVE_GROUP_ID]?.subSpacesIds.includes(spaceId);
+};
 
 export const loadStoreFromStorage = () => {
   return Promise.all([storeLocalStorage.get()]).then(([localData]) => {

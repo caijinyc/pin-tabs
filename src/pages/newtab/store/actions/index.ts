@@ -5,6 +5,13 @@ import { uuid } from '@src/shared/kits';
 import { globalToast } from '@pages/newtab/Newtab';
 
 export const Actions = {
+  selectGroup: (groupId: string) => {
+    useStore.setState(() => {
+      return {
+        selectedGroupId: groupId,
+      };
+    });
+  },
   openArchive: () => {
     useStore.setState(old => {
       return produce(old, draft => {

@@ -148,11 +148,7 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
         'transition-colors duration-300',
       )}
       onClick={() => {
-        useStore.setState(() => {
-          return {
-            selectedGroupId: group.id,
-          };
-        });
+        Actions.selectGroup(group.id);
       }}>
       {isInEdit ? (
         <Input
