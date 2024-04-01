@@ -1,4 +1,4 @@
-import { Button, IconButton, Input, useToast } from '@chakra-ui/react';
+import { Button, IconButton, Input, InputGroup, InputLeftElement, useToast } from '@chakra-ui/react';
 import {
   getAllGroups,
   getArchivedSpaces,
@@ -56,8 +56,6 @@ export const RightContentPanel = () => {
     .flat()
     .filter(tab => lowerIncludes(tab.title, searchSpaceName) || lowerIncludes(tab.space.name, searchSpaceName));
 
-  console.log('__searchedTabs', searchedTabs);
-
   // sort SpaceList by openCountSum
   // const sortedSpaceList = spaceList.sort((a, b) => {
   //   const getOpenCountSum = (space: SpaceInfo) => {
@@ -70,62 +68,67 @@ export const RightContentPanel = () => {
 
   return (
     <div className={styles.rightPanel}>
-      <Input
-        size={'xs'}
-        autoFocus={true}
-        className={'mb-2 max-w-[618px]'}
-        {...register('searchSpaceName')}
-        onKeyDown={e => {
-          // key down selectedSearchedTabIndex++
-          if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            const i = Math.min(searchedTabs.length - 1, useSelectedSearchedTabIndex.getState().index + 1);
-            useSelectedSearchedTabIndex.setState({
-              index: i,
-              tab: searchedTabs[i],
-            });
-          }
-          // key up selectedSearchedTabIndex--
-          if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            const i = Math.max(0, useSelectedSearchedTabIndex.getState().index - 1);
-            useSelectedSearchedTabIndex.setState({
-              index: i,
-              tab: searchedTabs[i],
-            });
-          }
-          // key enter open selectedSearchedTabIndex tab
-          if (e.key === 'Enter') {
-            openTab({
-              tab: useSelectedSearchedTabIndex.getState().tab,
-              space: useSelectedSearchedTabIndex.getState().tab.space,
-              autoActiveOpenedTab: !e.metaKey,
-            });
-          }
-          // key arrow right double click selected current group & tab
-          if (e.key === 'ArrowRight' && e.metaKey) {
-            Actions.selectGroup(
-              Object.values(useStore.getState().groupsMap).find(group =>
-                group.subSpacesIds.includes(useSelectedSearchedTabIndex.getState().tab.space.uuid),
-              ).id,
-            );
-            setValue('searchSpaceName', '');
-            setTimeout(() => {
-              if (useSelectedSearchedTabIndex.getState().tab.space) {
-                document.getElementById(useSelectedSearchedTabIndex.getState().tab.space.uuid).scrollIntoView({
-                  block: 'center',
-                });
-              }
-            }, 100);
-            setTimeout(() => {
+      <InputGroup size={'xs'}>
+        <InputLeftElement pointerEvents="none">
+          <Icon icon="octicon:search-16" width="12px" height="12px" className={'ml-1 text-gray-400'} />
+        </InputLeftElement>
+        <Input
+          size={'xs'}
+          autoFocus={true}
+          className={'mb-2 max-w-[618px]'}
+          {...register('searchSpaceName')}
+          onKeyDown={e => {
+            // key down selectedSearchedTabIndex++
+            if (e.key === 'ArrowDown') {
+              e.preventDefault();
+              const i = Math.min(searchedTabs.length - 1, useSelectedSearchedTabIndex.getState().index + 1);
               useSelectedSearchedTabIndex.setState({
-                index: -1,
-                tab: undefined,
+                index: i,
+                tab: searchedTabs[i],
               });
-            }, 2000);
-          }
-        }}
-      />
+            }
+            // key up selectedSearchedTabIndex--
+            if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              const i = Math.max(0, useSelectedSearchedTabIndex.getState().index - 1);
+              useSelectedSearchedTabIndex.setState({
+                index: i,
+                tab: searchedTabs[i],
+              });
+            }
+            // key enter open selectedSearchedTabIndex tab
+            if (e.key === 'Enter') {
+              openTab({
+                tab: useSelectedSearchedTabIndex.getState().tab,
+                space: useSelectedSearchedTabIndex.getState().tab.space,
+                autoActiveOpenedTab: !e.metaKey,
+              });
+            }
+            // key arrow right double click selected current group & tab
+            if (e.key === 'ArrowRight' && e.metaKey) {
+              Actions.selectGroup(
+                Object.values(useStore.getState().groupsMap).find(group =>
+                  group.subSpacesIds.includes(useSelectedSearchedTabIndex.getState().tab.space.uuid),
+                ).id,
+              );
+              setValue('searchSpaceName', '');
+              setTimeout(() => {
+                if (useSelectedSearchedTabIndex.getState().tab.space) {
+                  document.getElementById(useSelectedSearchedTabIndex.getState().tab.space.uuid).scrollIntoView({
+                    block: 'center',
+                  });
+                }
+              }, 100);
+              setTimeout(() => {
+                useSelectedSearchedTabIndex.setState({
+                  index: -1,
+                  tab: undefined,
+                });
+              }, 2000);
+            }
+          }}
+        />
+      </InputGroup>
 
       {/*<GroupContent />*/}
       {searchSpaceName ? (
