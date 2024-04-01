@@ -20,8 +20,18 @@ export const openTab = async ({
     }
     return t.url === tab.url || t.title === tab.title || t.id === tab.id;
   });
-  console.log('allOpenedTabs', allOpenedTabs);
+
   const spaceId = space.uuid;
+
+  useStore.setState(old => {
+    return produce(old, draft => {
+      draft.allSpacesMap[spaceId].tabs.forEach(t => {
+        if (t.id === tab.id) {
+          t.openCount = t.openCount ? t.openCount + 1 : 1;
+        }
+      })
+    });
+  })
 
   if (activeTab && activeTab.pinned) {
     globalToast({

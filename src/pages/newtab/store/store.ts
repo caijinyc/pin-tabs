@@ -17,6 +17,8 @@ export type TabInfo = {
   active?: boolean;
   groupId?: number;
   pinned?: boolean;
+
+  openCount?: number;
 };
 
 type GroupMap = Record<string, GroupInfo>;
