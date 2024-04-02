@@ -29,9 +29,11 @@ chrome.commands.onCommand.addListener(function (command) {
       const activeGroupId = activeTab?.groupId;
       if (activeGroupId) {
         chrome.tabGroups.query({}, function (groups) {
-          groups.forEach(group => {
+          groups.forEach((group, i) => {
             if (group.id !== activeGroupId) {
-              chrome.tabGroups.update(group.id, { collapsed: true });
+              setTimeout(() => {
+                chrome.tabGroups.update(group.id, { collapsed: true });
+              }, i * 10);
             }
           });
         });
