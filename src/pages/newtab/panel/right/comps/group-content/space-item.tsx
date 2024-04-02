@@ -135,7 +135,7 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
       key={spaceId}
       className={cls(
         styles.spaceItem,
-        'p-2 bg-[#272727] mb-4 rounded-xl shadow-lg max-w-[618px]  ease-in-out duration-300',
+        'p-2 bg-[#272727] mb-2 rounded-xl shadow-lg max-w-[618px]  ease-in-out duration-300',
       )}
       id={spaceId}>
       <div className={styles.titleWrapper} ref={dropRef}>
