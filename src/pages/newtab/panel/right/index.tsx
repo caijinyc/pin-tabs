@@ -45,6 +45,7 @@ export const scrollToSpace = (spaceId: string) => {
       index: -1,
       tab: undefined,
     });
+
     const spaceDom = document.getElementById(spaceId);
     spaceDom.scrollIntoView({
       block: 'center',
@@ -55,7 +56,7 @@ export const scrollToSpace = (spaceId: string) => {
     setTimeout(() => {
       spaceDom.classList.remove('bg-blue-950');
     }, 1000);
-  }, 100);
+  }, 50);
 };
 
 export const RightContentPanel = () => {
