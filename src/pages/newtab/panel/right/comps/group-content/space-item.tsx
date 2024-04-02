@@ -12,7 +12,7 @@ import { cls } from '@src/shared/kits';
 import { produce } from 'immer';
 import { useAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
 import { SPACE_TO_GROUP_DRAG_TYPE } from '@src/constant';
-import { lowerIncludes } from '@pages/newtab/util/common';
+import { lowerMultiIncludes } from '@pages/newtab/util/common';
 import { scrollToSpace } from '@pages/newtab/panel/right';
 
 function updateSpaceName(spaceId: string, val: string) {
@@ -31,8 +31,8 @@ interface DragItem {
 export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; index: number; searchText?: string }) => {
   const spaceId = space.uuid;
   const tabs =
-    searchText && !lowerIncludes(space.name, searchText)
-      ? space.tabs.filter(tab => lowerIncludes(tab.title, searchText))
+    searchText && !lowerMultiIncludes(searchText, space.name)
+      ? space.tabs.filter(tab => lowerMultiIncludes(searchText, tab.title, tab.url))
       : space.tabs;
   const allTabs = useAllOpenedTabs();
   const ref = React.useRef<HTMLDivElement>(null);

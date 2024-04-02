@@ -153,6 +153,8 @@ export const TabItem = ({ tab, space, searchText }: { tab: TabInfo; space: Space
             height={'18px'}
             className={styles.delTab}
           />
+
+          {tab.openCount > 0 && <div className={'text-gray-400'}>⚡️{tab.openCount}</div>}
         </div>
       )}
     </div>

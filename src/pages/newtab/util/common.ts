@@ -1,5 +1,5 @@
 // toLowerCase diff
 
-export const lowerIncludes = (a: string, b: string) => {
-  return (a || '').toLowerCase().includes((b || '').toLowerCase());
+export const lowerMultiIncludes = (searchText: string, ...checkTexts: string[]) => {
+  return checkTexts.some(b => (b || '').toLowerCase().includes((searchText || '').toLowerCase()));
 };

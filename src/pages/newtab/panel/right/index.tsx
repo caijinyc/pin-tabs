@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form';
 import { SpaceItem } from '@pages/newtab/panel/right/comps/group-content/space-item';
 import { create } from 'zustand';
 import { openTab } from '@pages/newtab/util/open-tab';
-import { lowerIncludes } from '@pages/newtab/util/common';
+import { lowerMultiIncludes } from '@pages/newtab/util/common';
 
 export const useSelectedSearchedTabIndex = create<{
   index: number;
@@ -82,43 +82,30 @@ export const RightContentPanel = () => {
   }, [searchSpaceName]);
   const allSpacesMap = useStore(state => state.allSpacesMap);
   const spaceList = Object.values(allSpacesMap);
-  const sortedSpaceList = spaceList;
+  const sortedSpaceList = spaceList.sort((a, b) => {
+    const getOpenCountSum = (space: SpaceInfo) => {
+      return space.tabs.reduce((acc, tab) => {
+        return acc + (tab.openCount || 0);
+      }, 0);
+    };
+    return getOpenCountSum(b) - getOpenCountSum(a);
+  });
   const searchedSpaceList = sortedSpaceList.filter(
     space =>
-      // (lowerIncludes(space.name, searchSpaceName) || space.tabs.some(tab => tab.title.includes(searchSpaceName))) &&
-      (lowerIncludes(space.name, searchSpaceName) ||
-        space.tabs.some(tab => lowerIncludes(tab.title, searchSpaceName))) &&
+      (lowerMultiIncludes(searchSpaceName, space.name) ||
+        space.tabs.some(tab => lowerMultiIncludes(searchSpaceName, tab.title, tab.url))) &&
       !isSpaceArchived(space.uuid),
   );
   const searchedTabs = searchedSpaceList
     .map(searchedSpaceList => searchedSpaceList.tabs.map(tab => ({ ...tab, space: searchedSpaceList })))
     .flat()
-    .filter(tab => lowerIncludes(tab.title, searchSpaceName) || lowerIncludes(tab.space.name, searchSpaceName));
+    .filter(tab => lowerMultiIncludes(searchSpaceName, tab.title, tab.url, tab.space.name));
 
-  // sort SpaceList by openCountSum
-  // const sortedSpaceList = spaceList.sort((a, b) => {
-  //   const getOpenCountSum = (space: SpaceInfo) => {
-  //     return space.tabs.reduce((acc, tab) => {
-  //       return acc + (tab.url || 0);
-  //     }, 0);
-  //   };
-  //   return b.openCountSum - a.openCountSum;
-  // });
+  console.log('searchedTabs', searchedTabs)
 
   return (
     <div className={styles.rightPanel}>
-      <InputGroup
-        size={'xs'}
-        // onBlur={() => {
-        //   setValue('searchSpaceName', '');
-        //   setTimeout(() => {
-        //     useSelectedSearchedTabIndex.setState({
-        //       index: -1,
-        //       tab: undefined,
-        //     });
-        //   }, 1000);
-        // }}
-      >
+      <InputGroup size={'xs'}>
         <InputLeftElement pointerEvents="none">
           <Icon icon="octicon:search-16" width="12px" height="12px" className={'ml-1 text-gray-400'} />
         </InputLeftElement>
