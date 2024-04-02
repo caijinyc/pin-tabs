@@ -1,7 +1,7 @@
 import reloadOnUpdate from 'virtual:reload-on-update-in-background-script';
 import 'webextension-polyfill';
 import './alarm';
-import { getAllGroups } from '@pages/newtab/store/store';
+import { getAllBrowserGroups } from '@pages/newtab/store/store';
 
 reloadOnUpdate('pages/background');
 

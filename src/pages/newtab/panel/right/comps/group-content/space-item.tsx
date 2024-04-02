@@ -13,6 +13,7 @@ import { produce } from 'immer';
 import { useAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
 import { SPACE_TO_GROUP_DRAG_TYPE } from '@src/constant';
 import { lowerIncludes } from '@pages/newtab/util/common';
+import { scrollToSpace } from '@pages/newtab/panel/right';
 
 function updateSpaceName(spaceId: string, val: string) {
   useStore.setState(old => {
@@ -36,6 +37,7 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
   const allTabs = useAllOpenedTabs();
   const ref = React.useRef<HTMLDivElement>(null);
   const dropRef = React.useRef<HTMLDivElement>(null);
+  const isSearching = Boolean(searchText);
 
   const [{ opacity, dragging }, drag, preview] = useDrag(() => {
     const dropProps: DropItem = {
@@ -131,7 +133,10 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
   return (
     <div
       key={spaceId}
-      className={cls(styles.spaceItem, 'p-2 bg-[#272727] mb-4 rounded-xl shadow-lg max-w-[618px]')}
+      className={cls(
+        styles.spaceItem,
+        'p-2 bg-[#272727] mb-4 rounded-xl shadow-lg max-w-[618px]  ease-in-out duration-300',
+      )}
       id={spaceId}>
       <div className={styles.titleWrapper} ref={dropRef}>
         <div
@@ -167,6 +172,21 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
 
         <AddTabToGetPopoverCurrentSpace spaceId={spaceId} />
         {<SpaceMoreActions space={space} />}
+
+        {isSearching ? (
+          <div
+            className={
+              'hover:bg-zinc-600 cursor-pointer rounded-full w-[24px] h-[24px] flex items-center justify-center'
+            }>
+            <Icon
+              icon={'system-uicons:jump-down'}
+              width={'18px'}
+              height={'18px'}
+              className={'cursor-pointer'}
+              onClick={() => scrollToSpace(spaceId)}
+            />
+          </div>
+        ) : null}
       </div>
 
       {tabs.length ? (

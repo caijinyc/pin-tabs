@@ -23,7 +23,7 @@ type GroupMap = Record<string, GroupInfo>;
 
 type BrowsersGroupMap = Record<string, BrowserGroupInfo>;
 
-export const getAllGroups: () => Promise<BrowsersGroupMap> = () =>
+export const getAllBrowserGroups: () => Promise<BrowsersGroupMap> = () =>
   new Promise(resolve => {
     chrome.tabGroups.query({}, function (groups) {
       const res = groups.reduce((acc, item) => {
@@ -43,7 +43,7 @@ export const useAllBrowserGroups = () => {
   const [groupsMap, setGroupsMap] = React.useState<BrowsersGroupMap>({});
 
   function updateGroups() {
-    getAllGroups().then(val => setGroupsMap(val));
+    getAllBrowserGroups().then(val => setGroupsMap(val));
   }
 
   useEffect(() => {

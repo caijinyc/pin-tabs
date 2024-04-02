@@ -72,8 +72,6 @@ export const TabItem = ({ tab, space, searchText }: { tab: TabInfo; space: Space
   // 假设 tab.title 是你要高亮的标题，searchText 是用户的搜索文本
   const searchRenderTitle = highlightSearchText(tab.title, searchText);
 
-  console.log('searchRenderTitle', searchRenderTitle);
-
   return (
     <div
       className={cls(styles.tabListItem, {

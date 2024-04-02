@@ -1,6 +1,6 @@
 import { Button, IconButton, Input, InputGroup, InputLeftElement, useToast } from '@chakra-ui/react';
 import {
-  getAllGroups,
+  getAllBrowserGroups,
   getArchivedSpaces,
   isSpaceArchived,
   SpaceInfo,
@@ -26,6 +26,38 @@ export const useSelectedSearchedTabIndex = create<{
 }>(() => ({
   index: -1,
 }));
+
+export const useFilterSpace = create<{
+  searchSpaceName: string;
+  resetForm?: () => void;
+}>((set, get) => ({
+  searchSpaceName: '',
+}));
+
+export const useIsSearching = () => Boolean(useFilterSpace(state => state.searchSpaceName));
+
+export const scrollToSpace = (spaceId: string) => {
+  useFilterSpace.getState().resetForm?.();
+  const groupId = Object.values(useStore.getState().groupsMap).find(group => group.subSpacesIds.includes(spaceId)).id;
+  Actions.selectGroup(groupId);
+  setTimeout(() => {
+    useSelectedSearchedTabIndex.setState({
+      index: -1,
+      tab: undefined,
+    });
+    const spaceDom = document.getElementById(spaceId);
+    spaceDom.scrollIntoView({
+      block: 'center',
+    });
+
+    // highlight the space 2s, add animation & add animation class
+    spaceDom.classList.add('bg-blue-950');
+    setTimeout(() => {
+      spaceDom.classList.remove('bg-blue-950');
+    }, 1000);
+  }, 100);
+};
+
 export const RightContentPanel = () => {
   const toast = useToast();
   const { register, handleSubmit, watch, setValue } = useForm<{
@@ -39,6 +71,12 @@ export const RightContentPanel = () => {
   useEffect(() => {
     useSelectedSearchedTabIndex.setState({
       index: -1,
+    });
+    useFilterSpace.setState({
+      searchSpaceName,
+      resetForm: () => {
+        setValue('searchSpaceName', '');
+      },
     });
   }, [searchSpaceName]);
   const allSpacesMap = useStore(state => state.allSpacesMap);
@@ -68,11 +106,24 @@ export const RightContentPanel = () => {
 
   return (
     <div className={styles.rightPanel}>
-      <InputGroup size={'xs'}>
+      <InputGroup
+        size={'xs'}
+        // onBlur={() => {
+        //   setValue('searchSpaceName', '');
+        //   setTimeout(() => {
+        //     useSelectedSearchedTabIndex.setState({
+        //       index: -1,
+        //       tab: undefined,
+        //     });
+        //   }, 1000);
+        // }}
+      >
         <InputLeftElement pointerEvents="none">
           <Icon icon="octicon:search-16" width="12px" height="12px" className={'ml-1 text-gray-400'} />
         </InputLeftElement>
         <Input
+          borderColor={'gray.600'}
+          focusBorderColor={'gray.600'}
           size={'xs'}
           autoFocus={true}
           className={'mb-2 max-w-[618px]'}
@@ -106,25 +157,7 @@ export const RightContentPanel = () => {
             }
             // key arrow right double click selected current group & tab
             if (e.key === 'ArrowRight' && e.metaKey) {
-              Actions.selectGroup(
-                Object.values(useStore.getState().groupsMap).find(group =>
-                  group.subSpacesIds.includes(useSelectedSearchedTabIndex.getState().tab.space.uuid),
-                ).id,
-              );
-              setValue('searchSpaceName', '');
-              setTimeout(() => {
-                if (useSelectedSearchedTabIndex.getState().tab.space) {
-                  document.getElementById(useSelectedSearchedTabIndex.getState().tab.space.uuid).scrollIntoView({
-                    block: 'center',
-                  });
-                }
-              }, 100);
-              setTimeout(() => {
-                useSelectedSearchedTabIndex.setState({
-                  index: -1,
-                  tab: undefined,
-                });
-              }, 2000);
+              scrollToSpace(useSelectedSearchedTabIndex.getState().tab.space.uuid);
             }
           }}
         />

@@ -3,6 +3,7 @@ import { produce } from 'immer';
 import { ARCHIVE_GROUP_ID } from '@src/constant';
 import { uuid } from '@src/shared/kits';
 import { globalToast } from '@pages/newtab/Newtab';
+import { useFilterSpace } from '@pages/newtab/panel/right';
 
 export const Actions = {
   selectGroup: (groupId: string) => {
@@ -11,6 +12,7 @@ export const Actions = {
         selectedGroupId: groupId,
       };
     });
+    useFilterSpace.getState().resetForm?.();
   },
   openArchive: () => {
     useStore.setState(old => {
