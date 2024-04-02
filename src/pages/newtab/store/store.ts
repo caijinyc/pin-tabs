@@ -23,7 +23,7 @@ export type TabInfo = {
 
 type GroupMap = Record<string, GroupInfo>;
 
-type BrowsersGroupMap = Record<string, BrowserGroupInfo>;
+export type BrowsersGroupMap = Record<string, BrowserGroupInfo>;
 
 export const getAllBrowserGroups: () => Promise<BrowsersGroupMap> = () =>
   new Promise(resolve => {

@@ -6,11 +6,13 @@ import React, { useEffect, useRef } from 'react';
 import { Actions } from '@pages/newtab/store/actions';
 import { dialog } from '@pages/newtab/comps/global-dialog';
 import { Icon } from '@iconify-icon/react';
-import { SpaceItem } from '@pages/newtab/panel/right/comps/group-content/space-item';
+import { spaceContentMaxWidth, SpaceItem } from '@pages/newtab/panel/right/comps/group-content/space-item';
 import { create } from 'zustand';
 import { openTab } from '@pages/newtab/util/open-tab';
 import { lowerMultiIncludes } from '@pages/newtab/util/common';
-import { debounce, throttle } from 'lodash';
+import { debounce } from 'lodash';
+import { CurrentGroups } from '@pages/newtab/panel/right/comps/current-group';
+import { cls } from '@src/shared/kits';
 
 export const useSelectedSearchedTabIndex = create<{
   index: number;
@@ -22,7 +24,7 @@ export const useSelectedSearchedTabIndex = create<{
 export const useFilterSpace = create<{
   searchSpaceName: string;
   resetForm?: () => void;
-}>((set, get) => ({
+}>((set) => ({
   searchSpaceName: '',
   resetForm: () => {
     set({
@@ -69,11 +71,13 @@ export const RightContentPanel = () => {
     });
   }, [searchSpaceName]);
 
-  const debounceUpdateSearchSpaceName = useRef(debounce((val: string) => {
-    useFilterSpace.setState({
-      searchSpaceName: val,
-    });
-  }, 100));
+  const debounceUpdateSearchSpaceName = useRef(
+    debounce((val: string) => {
+      useFilterSpace.setState({
+        searchSpaceName: val,
+      });
+    }, 100),
+  );
 
   const allSpacesMap = useStore(state => state.allSpacesMap);
   const spaceList = Object.values(allSpacesMap);
@@ -97,54 +101,59 @@ export const RightContentPanel = () => {
     .filter(tab => lowerMultiIncludes(searchSpaceName, tab.title, tab.url, tab.space.name));
 
   return (
-    <div className={styles.rightPanel}>
-      <InputGroup size={'xs'}>
-        <InputLeftElement pointerEvents="none">
-          <Icon icon="octicon:search-16" width="12px" height="12px" className={'ml-1 text-gray-400'} />
-        </InputLeftElement>
-        <Input
-          borderColor={'gray.600'}
-          focusBorderColor={'gray.600'}
-          size={'xs'}
-          onChange={e => {
-            debounceUpdateSearchSpaceName.current(e.target.value)
-          }}
-          autoFocus={true}
-          className={'mb-2 max-w-[618px]'}
-          onKeyDown={e => {
-            // key down selectedSearchedTabIndex++
-            if (e.key === 'ArrowDown') {
-              e.preventDefault();
-              const i = Math.min(searchedTabs.length - 1, useSelectedSearchedTabIndex.getState().index + 1);
-              useSelectedSearchedTabIndex.setState({
-                index: i,
-                tab: searchedTabs[i],
-              });
-            }
-            // key up selectedSearchedTabIndex--
-            if (e.key === 'ArrowUp') {
-              e.preventDefault();
-              const i = Math.max(0, useSelectedSearchedTabIndex.getState().index - 1);
-              useSelectedSearchedTabIndex.setState({
-                index: i,
-                tab: searchedTabs[i],
-              });
-            }
-            // key enter open selectedSearchedTabIndex tab
-            if (e.key === 'Enter') {
-              openTab({
-                tab: useSelectedSearchedTabIndex.getState().tab,
-                space: useSelectedSearchedTabIndex.getState().tab.space,
-                autoActiveOpenedTab: !e.metaKey,
-              });
-            }
-            // key arrow right double click selected current group & tab
-            if (e.key === 'ArrowRight' && e.metaKey) {
-              scrollToSpace(useSelectedSearchedTabIndex.getState().tab.space.uuid);
-            }
-          }}
-        />
-      </InputGroup>
+    <div className={cls(styles.rightPanel, 'relative')}>
+      <div className={`flex justify-between ${spaceContentMaxWidth}`}>
+        <InputGroup size={'xs'}>
+          <InputLeftElement pointerEvents="none">
+            <Icon icon="octicon:search-16" width="12px" height="12px" className={'ml-1 text-gray-400'} />
+          </InputLeftElement>
+          <Input
+            borderColor={'gray.600'}
+            focusBorderColor={'gray.600'}
+            size={'xs'}
+            onChange={e => {
+              debounceUpdateSearchSpaceName.current(e.target.value);
+            }}
+            autoFocus={true}
+            className={`mb-2 ${spaceContentMaxWidth}`}
+            onKeyDown={e => {
+              // key down selectedSearchedTabIndex++
+              if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                const i = Math.min(searchedTabs.length - 1, useSelectedSearchedTabIndex.getState().index + 1);
+                useSelectedSearchedTabIndex.setState({
+                  index: i,
+                  tab: searchedTabs[i],
+                });
+              }
+              // key up selectedSearchedTabIndex--
+              if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                const i = Math.max(0, useSelectedSearchedTabIndex.getState().index - 1);
+                useSelectedSearchedTabIndex.setState({
+                  index: i,
+                  tab: searchedTabs[i],
+                });
+              }
+              // key enter open selectedSearchedTabIndex tab
+              if (e.key === 'Enter') {
+                openTab({
+                  tab: useSelectedSearchedTabIndex.getState().tab,
+                  space: useSelectedSearchedTabIndex.getState().tab.space,
+                  autoActiveOpenedTab: !e.metaKey,
+                });
+              }
+              // key arrow right double click selected current group & tab
+              if (e.key === 'ArrowRight' && e.metaKey) {
+                scrollToSpace(useSelectedSearchedTabIndex.getState().tab.space.uuid);
+              }
+            }}
+          />
+        </InputGroup>
+        <div>
+          <CurrentGroups />
+        </div>
+      </div>
 
       {/*<GroupContent />*/}
       {searchSpaceName ? (
@@ -207,6 +216,9 @@ export const RightContentPanel = () => {
           </div>
         </>
       )}
+      {/*<div className={'fixed bottom-0 left-[154px]'}>*/}
+      {/*  <CurrentGroups/>*/}
+      {/*</div>*/}
     </div>
   );
 };

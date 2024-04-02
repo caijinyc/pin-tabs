@@ -28,6 +28,8 @@ interface DragItem {
   id: string;
   type: string;
 }
+
+export const spaceContentMaxWidth = 'max-w-[638px]';
 export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; index: number; searchText?: string }) => {
   const spaceId = space.uuid;
   const tabs =
@@ -135,7 +137,7 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
       key={spaceId}
       className={cls(
         styles.spaceItem,
-        'p-2 bg-[#272727] mb-2 rounded-xl shadow-lg max-w-[618px]  ease-in-out duration-300',
+        'p-2 bg-[#272727] mb-2 rounded-xl shadow-lg ' + spaceContentMaxWidth + '  ease-in-out duration-300',
       )}
       id={spaceId}>
       <div className={styles.titleWrapper} ref={dropRef}>
