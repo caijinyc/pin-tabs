@@ -2,15 +2,15 @@ import { IconButton, Input, InputGroup, InputLeftElement, useToast } from '@chak
 import { isSpaceArchived, SpaceInfo, TabInfo, useStore } from '@pages/newtab/store/store';
 import styles from '@pages/newtab/style.module.scss';
 import { GroupContent } from '@pages/newtab/panel/right/comps/group-content';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Actions } from '@pages/newtab/store/actions';
 import { dialog } from '@pages/newtab/comps/global-dialog';
 import { Icon } from '@iconify-icon/react';
-import { useForm } from 'react-hook-form';
 import { SpaceItem } from '@pages/newtab/panel/right/comps/group-content/space-item';
 import { create } from 'zustand';
 import { openTab } from '@pages/newtab/util/open-tab';
 import { lowerMultiIncludes } from '@pages/newtab/util/common';
+import { debounce, throttle } from 'lodash';
 
 export const useSelectedSearchedTabIndex = create<{
   index: number;
@@ -24,6 +24,11 @@ export const useFilterSpace = create<{
   resetForm?: () => void;
 }>((set, get) => ({
   searchSpaceName: '',
+  resetForm: () => {
+    set({
+      searchSpaceName: '',
+    });
+  },
 }));
 
 export const useIsSearching = () => Boolean(useFilterSpace(state => state.searchSpaceName));
@@ -53,26 +58,23 @@ export const scrollToSpace = (spaceId: string) => {
 
 export const RightContentPanel = () => {
   const toast = useToast();
-  const { register, handleSubmit, watch, setValue } = useForm<{
-    searchSpaceName: string;
-  }>({
-    defaultValues: {
-      searchSpaceName: undefined,
-    },
-  });
-  const searchSpaceName = watch('searchSpaceName');
+  const searchSpaceName = useFilterSpace(state => state.searchSpaceName);
+
   useEffect(() => {
     useSelectedSearchedTabIndex.setState({
       index: -1,
     });
     useFilterSpace.setState({
       searchSpaceName,
-      resetForm: () => {
-        setValue('searchSpaceName', '');
-      },
     });
   }, [searchSpaceName]);
-  // TODO 优化性能
+
+  const debounceUpdateSearchSpaceName = useRef(debounce((val: string) => {
+    useFilterSpace.setState({
+      searchSpaceName: val,
+    });
+  }, 100));
+
   const allSpacesMap = useStore(state => state.allSpacesMap);
   const spaceList = Object.values(allSpacesMap);
   const sortedSpaceList = spaceList.sort((a, b) => {
@@ -94,7 +96,6 @@ export const RightContentPanel = () => {
     .flat()
     .filter(tab => lowerMultiIncludes(searchSpaceName, tab.title, tab.url, tab.space.name));
 
-
   return (
     <div className={styles.rightPanel}>
       <InputGroup size={'xs'}>
@@ -105,9 +106,11 @@ export const RightContentPanel = () => {
           borderColor={'gray.600'}
           focusBorderColor={'gray.600'}
           size={'xs'}
+          onChange={e => {
+            debounceUpdateSearchSpaceName.current(e.target.value)
+          }}
           autoFocus={true}
           className={'mb-2 max-w-[618px]'}
-          {...register('searchSpaceName')}
           onKeyDown={e => {
             // key down selectedSearchedTabIndex++
             if (e.key === 'ArrowDown') {
