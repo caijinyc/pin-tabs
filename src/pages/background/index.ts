@@ -1,7 +1,7 @@
 import reloadOnUpdate from 'virtual:reload-on-update-in-background-script';
 import 'webextension-polyfill';
 import './alarm';
-import { getAllGroups } from '@pages/newtab/store/store';
+import { getAllBrowserGroups } from '@pages/newtab/store/store';
 
 reloadOnUpdate('pages/background');
 
@@ -15,6 +15,14 @@ console.log('background loaded 2fsxxxxf');
 
 chrome.commands.onCommand.addListener(function (command) {
   if (command === 'command1') {
+    // close all New Tab pages
+    chrome.tabs.query({ currentWindow: true }, function (tabs) {
+      tabs.forEach(tab => {
+        if ((tab.url && tab.url.includes('chrome://newtab')) || tab.url.includes('edge://newtab')) {
+          chrome.tabs.remove(tab.id);
+        }
+      });
+    });
     // collapse all groups, exclude the active tab's group
     chrome.tabs.query({ currentWindow: true }, function (tabs) {
       const activeTab = tabs.find(tab => tab.active);
