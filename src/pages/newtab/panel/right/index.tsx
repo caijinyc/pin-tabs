@@ -1,16 +1,8 @@
-import { Button, IconButton, Input, InputGroup, InputLeftElement, useToast } from '@chakra-ui/react';
-import {
-  getAllBrowserGroups,
-  getArchivedSpaces,
-  isSpaceArchived,
-  SpaceInfo,
-  TabInfo,
-  useStore,
-} from '@pages/newtab/store/store';
+import { IconButton, Input, InputGroup, InputLeftElement, useToast } from '@chakra-ui/react';
+import { isSpaceArchived, SpaceInfo, TabInfo, useStore } from '@pages/newtab/store/store';
 import styles from '@pages/newtab/style.module.scss';
 import { GroupContent } from '@pages/newtab/panel/right/comps/group-content';
 import React, { useEffect } from 'react';
-import { GroupSetting } from '@pages/newtab/panel/right/comps/group-setting';
 import { Actions } from '@pages/newtab/store/actions';
 import { dialog } from '@pages/newtab/comps/global-dialog';
 import { Icon } from '@iconify-icon/react';
@@ -80,6 +72,7 @@ export const RightContentPanel = () => {
       },
     });
   }, [searchSpaceName]);
+  // TODO 优化性能
   const allSpacesMap = useStore(state => state.allSpacesMap);
   const spaceList = Object.values(allSpacesMap);
   const sortedSpaceList = spaceList.sort((a, b) => {
@@ -101,7 +94,6 @@ export const RightContentPanel = () => {
     .flat()
     .filter(tab => lowerMultiIncludes(searchSpaceName, tab.title, tab.url, tab.space.name));
 
-  console.log('searchedTabs', searchedTabs)
 
   return (
     <div className={styles.rightPanel}>
