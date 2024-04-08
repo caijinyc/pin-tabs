@@ -3,6 +3,7 @@ import { removeUrlHash } from '@src/shared/kits';
 import { globalToast } from '@pages/newtab/Newtab';
 import { produce } from 'immer';
 import { getAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
+import { Actions } from '@pages/newtab/store/actions';
 
 export const openTab = async ({
   tab,
@@ -29,9 +30,16 @@ export const openTab = async ({
         if (t.id === tab.id) {
           t.openCount = t.openCount ? t.openCount + 1 : 1;
         }
-      })
+      });
     });
-  })
+  });
+
+  const groupID = Object.values(useStore.getState().groupsMap).find(group => group.subSpacesIds.includes(spaceId)).id;
+  if (groupID && autoActiveOpenedTab) {
+    Actions.selectGroup(
+      Object.values(useStore.getState().groupsMap).find(group => group.subSpacesIds.includes(spaceId)).id,
+    );
+  }
 
   if (activeTab && activeTab.pinned) {
     globalToast({
