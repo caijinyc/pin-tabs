@@ -118,7 +118,7 @@ export const RightContentPanel = () => {
             className={`mb-2 ${spaceContentMaxWidth}`}
             onKeyDown={e => {
               // key down selectedSearchedTabIndex++
-              if (e.key === 'ArrowDown' || (e.key === 'n' && e.ctrlKey)) {
+              if (e.key === 'ArrowDown' || (['n', 'j'].includes(e.key) && e.ctrlKey)) {
                 e.preventDefault();
                 const i = Math.min(searchedTabs.length - 1, useSelectedSearchedTabIndex.getState().index + 1);
                 useSelectedSearchedTabIndex.setState({
@@ -127,7 +127,7 @@ export const RightContentPanel = () => {
                 });
               }
               // key up selectedSearchedTabIndex--
-              if (e.key === 'ArrowUp' || (e.key === 'p' && e.ctrlKey)) {
+              if (e.key === 'ArrowUp' || (['p', 'k'].includes(e.key) && e.ctrlKey)) {
                 e.preventDefault();
                 const i = Math.max(0, useSelectedSearchedTabIndex.getState().index - 1);
                 useSelectedSearchedTabIndex.setState({
