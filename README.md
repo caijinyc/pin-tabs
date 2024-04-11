@@ -4,7 +4,7 @@
 
 ## 安装
 
-https://chromewebstore.google.com/detail/pintabs-project-based-tab/mpjgigpdepkhfkgjcjnelffdnimeomao
+Chrome Extension: [PinTabs - Chrome Web Store](https://chromewebstore.google.com/detail/pintabs-project-based-tab/mpjgigpdepkhfkgjcjnelffdnimeomao)
 
 ## 介绍
 在使用游览器的时候，我遇到经常困扰我的两个问题：
