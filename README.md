@@ -118,7 +118,7 @@ https://gist.github.com 进入此页面，随便填一些东西之后，创建 G
 
 https://github.com/settings/tokens/new
 
-![image.png](./assets/images/image_1708337362933_0.png){:height 322, :width 554}
+![image.png](./assets/images/image_1708337362933_0.png)
 
 完成之后就可以获得你的 Gist 更新权限的 Token。
 
@@ -129,6 +129,11 @@ https://github.com/settings/tokens/new
 ![image.png](./assets/images/image_1712801379340_0.png)
 
 ![image.png](./assets/images/image_1712801360003_0.png)
+
+## 归档项目
+当我们的项目已经完成之后，我们可以将项目进行归档，这样就可以将项目从当前的列表中移除，但是不会删除数据，我们可以在 Archive 中查看已经归档的项目。
+
+![20240411095052_rec_.gif](./assets/images/20240411103853_rec_.gif)
 
 ## Thanks To
 
