@@ -44,17 +44,22 @@
 ### 配置快捷键
 
 对于我自己来说，PinTab 是一个日常工作中使用频率极高的插件，所以我会配置快捷键的方式来操作它，你可以参考我的快捷键来进行配置，我将最常用的唤起**插件浮窗**设置为 CMD + E，对我来说非常顺手的快捷键位置。
+
 ![image.png](./assets/images/image_1712800210334_0.png)
+
 ![image.png](./assets/images/image_1712800229631_0.png)
 
 剩下的两个快捷键功能分别为：
 折叠所有游览器分组，除了当前 Active 标签所在的分组：这在我们处理多个工作项目时非常好用，避免我们的标签太多，展示不下，具体效果如图所示。
+
 ![20240411095519_rec_.gif](./assets/images/20240411095519_rec_1712800536821_0.gif)
 
 单独打开 PinTab 标签页，让我们可以有更多的空间来显示 PinTab 的内容；
+
 ![20240411095632_rec_.gif](./assets/images/20240411095632_rec_1712800608065_0.gif)
   
 你还需要做的是将 PinTab 插件 Pin 到插件栏上，这样在使用快捷键打开时就不会有过度动画导致的延迟。
+
 ![image.png](./assets/images/image_1712801133047_0.png)
 
 当然，如果你不习惯使用快捷键的话，也可以直接通过图标的方式进行使用。
@@ -62,6 +67,7 @@
 ### 添加 Space / Project
 
 左上角的添加按钮可以用来添加 Space，Space 内的添加按钮则可以增加一个 Project。
+
 ![image.png](./assets/images/image_1712799615799_0.png)
 
 ### Pin 标签到 Project 中
@@ -77,6 +83,7 @@
 ### 调整 Space / Project 位置
 
 通过拖拽 Space / Project 我们可以调整他们的上下位置，以及 Project 所在的 Space。
+
 ![20240411094613_rec_.gif](./assets/images/20240411094613_rec_1712800000243_0.gif)
 
 ### 搜索 Tab / Project
@@ -98,8 +105,11 @@
 首先你肯定需要一个 GitHub 账号，如果还没有的话，可以自行搜索如何创建。
 
 https://gist.github.com 进入此页面，随便填一些东西之后，创建 Gist 空间即可。
+
 ![image.png](./assets/images/image_1712801524822_0.png)
+
 ![image.png](./assets/images/image_1712801585825_0.png)
+
 这样你就获得了你的 Gist ID。
 
 **生成 Gist 操作 Token**
@@ -107,7 +117,9 @@ https://gist.github.com 进入此页面，随便填一些东西之后，创建 G
 由于是你自己的个人 Gist，所以需要配置 Token 来给插件权限更新 Gist 数据，这里只需要选中 Gist 权限就可以了。
 
 https://github.com/settings/tokens/new
+
 ![image.png](./assets/images/image_1708337362933_0.png){:height 322, :width 554}
+
 完成之后就可以获得你的 Gist 更新权限的 Token。
 
 **配置相关信息：**
@@ -115,6 +127,7 @@ https://github.com/settings/tokens/new
 打开 Options 页面，将 GitHub 的 Username, Gist ID Gist Token 填写进行即可完成同步配置，配置完成之后在 PinTab 中就会展示 GitHub 的 Logo，点击就可以跳转到自己的 Gist 空间查看备份数据。
 
 ![image.png](./assets/images/image_1712801379340_0.png)
+
 ![image.png](./assets/images/image_1712801360003_0.png)
 
 ## Thanks To
