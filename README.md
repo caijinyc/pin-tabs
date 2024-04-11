@@ -122,7 +122,7 @@ https://github.com/settings/tokens/new
 
 完成之后就可以获得你的 Gist 更新权限的 Token。
 
-**配置相关信息：**
+**配置相关信息**
 
 打开 Options 页面，将 GitHub 的 Username, Gist ID Gist Token 填写进行即可完成同步配置，配置完成之后在 PinTab 中就会展示 GitHub 的 Logo，点击就可以跳转到自己的 Gist 空间查看备份数据。
 
