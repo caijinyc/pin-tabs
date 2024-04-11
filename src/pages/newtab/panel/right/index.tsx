@@ -204,8 +204,8 @@ export const RightContentPanel = () => {
                 }
 
                 dialog.confirm({
-                  title: 'Delete Group',
-                  content: 'Are you sure to delete this group?',
+                  title: 'Delete Project',
+                  content: 'Are you sure to delete this project?',
                   onOk: () => {
                     Actions.removeGroup(state.selectedGroupId);
                   },

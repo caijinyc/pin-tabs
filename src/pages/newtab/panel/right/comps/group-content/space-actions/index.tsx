@@ -70,7 +70,7 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
         if (currentSpace.tabs.length) {
           dialog.confirm({
             title: 'Confirm',
-            content: 'Are you sure to delete this space?',
+            content: 'Are you sure to delete this project?',
             onOk: () => {
               fn();
             },
