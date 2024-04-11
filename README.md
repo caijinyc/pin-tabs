@@ -2,6 +2,10 @@
 
 📌 一款浏览器扩展，帮助你从项目（或工作区）的角度管理标签页。
 
+## 安装
+
+https://chromewebstore.google.com/detail/pintabs-project-based-tab/mpjgigpdepkhfkgjcjnelffdnimeomao
+
 ## 介绍
 在使用游览器的时候，我遇到经常困扰我的两个问题：
 
