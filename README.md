@@ -1,8 +1,6 @@
 # PinTabs - Chrome Extension
 
-📌 一款浏览器扩展，帮助您从项目（或工作区）的角度管理标签页。
-
-📌 PinTabs is a browser extension that helps you manage your tabs from the perspective of projects (or workspaces).
+📌 一款浏览器扩展，帮助你从项目（或工作区）的角度管理标签页。
 
 ## 介绍
 在使用游览器的时候，经常困扰我的问题
