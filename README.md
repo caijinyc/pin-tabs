@@ -4,20 +4,20 @@
 
 ## 安装
 
-Chrome Extension: [PinTabs - Chrome Web Store](https://chromewebstore.google.com/detail/pintabs-project-based-tab/mpjgigpdepkhfkgjcjnelffdnimeomao)
+Chrome 应用市场：[PinTabs - Chrome Web Store](https://chromewebstore.google.com/detail/pintabs-project-based-tab/mpjgigpdepkhfkgjcjnelffdnimeomao)
 
 ## 介绍
 在使用游览器的时候，我遇到经常困扰我的两个问题：
 
-**找不到一个项目的某个文档**，由于我常常并发在做很多的项目，所以相关文档特别多，这种问题就常常会发生（主要是因为这个原因才让我想开发此插件），当然也可以使用书签来管理，但是书签收藏异常麻烦，我尝试使用之后也放弃了，且书签也少了一些我想要的功能。
+**找不到一个项目的某个文档**，由于我常常并发在做很多的项目，所以相关文档特别多，这种问题就常常会发生（主要是因为这个原因才让我想开发此插件）。当然，我也可以使用书签来管理，但是书签收藏异常麻烦，也少了一些我想要的功能。
 
-**Tab 常年异常混乱，没有找到合适的方法管理**，当然，分组是一个好的方式，但是如果使用分组功能的话，一不小心关掉游览器又会丢失当前项目的文档，且分组的成本又特别高，手动拖拽，命名，过于麻烦。
+**Tab 常年异常混乱，没有找到合适的方法管理**，当然，分组是一个好的方式，但是如果使用分组功能的话，一不小心关掉游览器又会丢失当前项目的文档，且分组的成本又特别高，手动拖拽，命名，都过于麻烦。
 
-我尝试了很多游览器插件，但都没有解决我的问题，所以我决定自己写一个插件来解决这个问题。
+我尝试了很多游览器插件，但都没有解决我的问题，所以我决定自己写一个 Tab 管理鞠躬来解决这个问题。
 
-它的设计思路很像 Arc 游览器的 Space & Project 概念，我在写这个插件的过程中也发现了 Arc 游览器的思路和我这个插件想要解决的问题很像。所以中途也暂停了插件的开发，尝试切到 Arc 游览器上，只是最终遇到的众多 bug 以及卡顿问题让我最终还是放弃使用 Arc 游览器，转而坚定地开发我自己能够顺手管理项目文档的插件。
+它的设计思路很像 Arc 游览器的 Space & Project 概念。我在写这个插件的过程中也发现了 Arc 游览器的思路和我这个插件想要解决的问题很像。所以中途暂停了插件的开发，尝试切到 Arc 游览器上，只是最终遇到的众多 bug 以及卡顿问题让我最终还是放弃使用 Arc 游览器，转而坚定地开发我自己能够顺手管理项目文档的插件。
 
-当然，类似的插件产品还有 Workona 等，但是我感觉略有些重了（而且收费还不便宜），不太符合我的使用习惯。如果 Workona 插件 / Arc 游览器能够很好的适应你工作流的话，我也非常推荐~废话了那么多，介绍一下  PinTabs 吧！
+当然，类似的插件产品还有 Workona 等，但是我感觉略有些重了（而且收费还不便宜），不太符合我的使用习惯。如果 Workona 插件 / Arc 游览器能够很好的适应你工作流的话，我也非常推荐~废话了那么多，介绍一下 PinTabs 吧！
 
 ### PinTabs 有什么自己的优势呢？
 
@@ -41,28 +41,29 @@ Chrome Extension: [PinTabs - Chrome Web Store](https://chromewebstore.google.com
 
 总的来说，如果你想按照项目维度来管理自己的游览器标签，你就可以尝试使用 PinTabs 来管理自己的标签。
 
-目前 PinTab 我个人已经用了两三个月了，公司内部其他小伙伴也在用，所以可用性应该没什么问题，且有 Gist 备份，所以数据肯定不会丢🥹，有类似痛点的朋友可以尝试一下。
+目前 PinTabs 我个人已经用了两三个月了，公司内部其他小伙伴也在用，所以可用性应该没什么问题，且有 Gist 备份，所以数据肯定不会丢🥹，有类似痛点的朋友可以尝试一下。
 
 ## 使用说明
 
 ### 配置快捷键
 
-对于我自己来说，PinTab 是一个日常工作中使用频率极高的插件，所以我会配置快捷键的方式来操作它，你可以参考我的快捷键来进行配置，我将最常用的唤起**插件浮窗**设置为 CMD + E，对我来说非常顺手的快捷键位置。
+对于我自己来说，PinTabs 是一个日常工作中使用频率极高的插件，所以我会配置快捷键的方式来操作它，你可以参考我的快捷键来进行配置，我将最常用的唤起**插件浮窗**设置为 CMD + E，对我来说非常顺手的快捷键位置。
 
 ![image.png](./assets/images/image_1712800210334_0.png)
 
 ![image.png](./assets/images/image_1712800229631_0.png)
 
 剩下的两个快捷键功能分别为：
+
 折叠所有游览器分组，除了当前 Active 标签所在的分组：这在我们处理多个工作项目时非常好用，避免我们的标签太多，展示不下，具体效果如图所示。
 
 ![20240411095519_rec_.gif](./assets/images/20240411095519_rec_1712800536821_0.gif)
 
-单独打开 PinTab 标签页，让我们可以有更多的空间来显示 PinTab 的内容；
+单独打开 PinTabs 标签页，让我们可以有更多的空间来显示 PinTabs 的内容；
 
 ![20240411095632_rec_.gif](./assets/images/20240411095632_rec_1712800608065_0.gif)
   
-你还需要做的是将 PinTab 插件 Pin 到插件栏上，这样在使用快捷键打开时就不会有过度动画导致的延迟。
+你还需要做的是将 PinTabs 插件 Pin 到插件栏上，这样在使用快捷键打开时就不会有过度动画导致的延迟。
 
 ![image.png](./assets/images/image_1712801133047_0.png)
 
@@ -80,7 +81,7 @@ Chrome Extension: [PinTabs - Chrome Web Store](https://chromewebstore.google.com
 
 ![20240411094401_rec_.gif](./assets/images/20240411094401_rec_1712799878985_0.gif)
 
-如果单独打开 PinTab 的页面，则有另一种 Pin 的方式，将整个分组标签内容，直接添加到某个 Project 中。
+如果单独打开 PinTabs 的页面，则有另一种 Pin 的方式，将整个分组标签内容，直接添加到某个 Project 中。
 
 ![20240411094838_rec_.gif](./assets/images/20240411094838_rec_1712800134057_0.gif)
 
@@ -100,9 +101,9 @@ Chrome Extension: [PinTabs - Chrome Web Store](https://chromewebstore.google.com
 
 在搜索结果也有一些特殊处理，它会根据 Space 内项目被打开的次数来进行排序，一个 Space 项目中标签被打开的次数越多，它在结果页上就会越前置。
 
-## 备份数据 / 多设备同步
+### 备份数据 / 多设备同步
 
-由于 PinTab 的数据结构相对复杂，且数据量偏大，所以就无法使用 Chrome 内置的 syncStorage 来进行远端数据存储。我这里则是选择了最简单的 GitHub Gist 方式来备份 + 多设备同步我们的数据，这里需要你创建一个自己的 Gist 空间。
+由于 PinTabs 的数据结构相对复杂，且数据量偏大，所以就无法使用 Chrome 内置的 syncStorage 来进行远端数据存储。我这里则是选择了最简单的 GitHub Gist 方式来备份 + 多设备同步我们的数据，这里需要你创建一个自己的 Gist 空间。
 
 **注册 Gist 私密空间**
 
@@ -128,13 +129,14 @@ https://github.com/settings/tokens/new
 
 **配置相关信息**
 
-打开 Options 页面，将 GitHub 的 Username, Gist ID Gist Token 填写进行即可完成同步配置，配置完成之后在 PinTab 中就会展示 GitHub 的 Logo，点击就可以跳转到自己的 Gist 空间查看备份数据。
+打开 Options 页面，将 GitHub 的 Username, Gist ID Gist Token 填写进行即可完成同步配置，配置完成之后在 PinTabs 中就会展示 GitHub 的 Logo，点击就可以跳转到自己的 Gist 空间查看备份数据。
 
 ![image.png](./assets/images/image_1712801379340_0.png)
 
 ![image.png](./assets/images/image_1712801360003_0.png)
 
-## 归档项目
+### 归档项目
+
 当我们的项目已经完成之后，我们可以将项目进行归档，这样就可以将项目从当前的列表中移除，但是不会删除数据，我们可以在 Archive 中查看已经归档的项目。
 
 ![20240411095052_rec_.gif](./assets/images/20240411103853_rec_.gif)
