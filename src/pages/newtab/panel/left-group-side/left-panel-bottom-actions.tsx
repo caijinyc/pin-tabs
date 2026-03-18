@@ -1,10 +1,10 @@
 import { useStorageData } from '@src/shared/storages/base';
 import { optionsStorage } from '@src/shared/storages/optionsStorage';
 import { Icon } from '@iconify-icon/react';
-import { Tooltip } from '@chakra-ui/react';
 import { Actions } from '@pages/newtab/store/actions';
 import { dialog } from '@pages/newtab/comps/global-dialog';
 import React from 'react';
+import { SimpleTooltip } from '@src/shared/ui/simple-tooltip';
 
 export const LeftPanelBottomActions = () => {
   const { syncGistId, githubUsername } = useStorageData(optionsStorage);
@@ -24,7 +24,7 @@ export const LeftPanelBottomActions = () => {
         className={iconClassName}
       />
 
-      <Tooltip label={'Archive projects'}>
+      <SimpleTooltip label={'Archive projects'}>
         <Icon
           icon="material-symbols:archive"
           width="18"
@@ -34,10 +34,10 @@ export const LeftPanelBottomActions = () => {
           }}
           className={iconClassName}
         />
-      </Tooltip>
+      </SimpleTooltip>
 
       {githubUsername && syncGistId ? (
-        <Tooltip label={'Gist backup data'}>
+        <SimpleTooltip label={'Gist backup data'}>
           <Icon
             onClick={() => {
               const { syncGistId, githubUsername } = optionsStorage.getSnapshot();
@@ -57,7 +57,7 @@ export const LeftPanelBottomActions = () => {
             height="18"
             className={iconClassName}
           />
-        </Tooltip>
+        </SimpleTooltip>
       ) : null}
     </div>
   );

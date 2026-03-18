@@ -3,7 +3,6 @@ import styles from './style.module.scss';
 import '@pages/newtab/index.css';
 import withSuspense from '@src/shared/hoc/withSuspense';
 import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
-import { ChakraProvider, ColorModeScript, createStandaloneToast } from '@chakra-ui/react';
 import { loadStoreFromStorage, useIsPopupStore, useStore } from '@pages/newtab/store/store';
 import { LeftPanel } from '@pages/newtab/panel/left-group-side';
 import { RightContentPanel } from '@pages/newtab/panel/right';
@@ -11,10 +10,11 @@ import { GlobalDialog } from '@pages/newtab/comps/global-dialog';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useSaveStoreDataToStorage } from '@pages/newtab/util/use-save-store-data-to-storage';
-import theme from '@pages/newtab/theme';
+import { AppProvider } from '@src/shared/ui/app-provider';
+import { ToastViewport, globalToast } from '@src/shared/ui/toast';
+import { Theme } from '@chakra-ui/react';
 
-const { ToastContainer, toast } = createStandaloneToast();
-export const globalToast = toast;
+export { globalToast };
 
 // 每次切换到前台时，都尝试从 storage 中加载数据（防止 cloud 更新，但是本地被未同步到 store 中）
 function useLoadStoreData() {
@@ -44,20 +44,20 @@ const NewTab = (props: { isPopup?: boolean }) => {
   useLoadStoreData();
   return (
     <div className="App">
-      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-
       {redirectMode ? null : (
-        <ChakraProvider theme={theme}>
-          <GlobalDialog />
-          <ToastContainer />
+        <AppProvider>
+          <Theme appearance="dark" minH="100vh">
+            <GlobalDialog />
+            <ToastViewport />
 
-          <DndProvider backend={HTML5Backend}>
-            <div className={styles.wrapper}>
-              <LeftPanel />
-              <RightContentPanel />
-            </div>
-          </DndProvider>
-        </ChakraProvider>
+            <DndProvider backend={HTML5Backend}>
+              <div className={styles.wrapper}>
+                <LeftPanel />
+                <RightContentPanel />
+              </div>
+            </DndProvider>
+          </Theme>
+        </AppProvider>
       )}
     </div>
   );

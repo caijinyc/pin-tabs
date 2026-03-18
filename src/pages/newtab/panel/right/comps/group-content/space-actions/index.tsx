@@ -1,7 +1,6 @@
 import { SpaceInfo, useStore } from '@pages/newtab/store/store';
 import { produce } from 'immer';
 import { dialog } from '@pages/newtab/comps/global-dialog';
-import { Popover, PopoverContent, PopoverTrigger } from '@chakra-ui/react';
 import styles from '@pages/newtab/panel/right/comps/group-content/style.module.scss';
 import { Icon } from '@iconify-icon/react';
 import React from 'react';
@@ -12,6 +11,7 @@ import { ARCHIVE_GROUP_ID } from '@src/constant';
 import copy from 'copy-to-clipboard';
 import { globalToast } from '@pages/newtab/Newtab';
 import { spaceActionIconHoverClassNameArgs } from './add-tab';
+import { SimplePopover } from '@src/shared/ui/simple-popover';
 
 export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
   const spaceId = space.uuid;
@@ -162,19 +162,18 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
         <Icon icon={disableAutoGroup ? 'uil:layer-group-slash' : 'uim:layer-group'} width="18" height="18" inline />
       </div>
 
-      <Popover placement={'bottom-start'} matchWidth={true}>
-        <PopoverTrigger>
+      <SimplePopover
+        contentClassName={styles.spaceMoreActionWrapper}
+        contentStyle={{
+          boxShadow: '0 0 10px 0 rgba(0,0,0,0.1)',
+          width: 150,
+        }}
+        matchTriggerWidth={true}
+        trigger={
           <div className={cls(styles.moreActionIcon, `${spaceActionIconHoverClassNameArgs}`)}>
             <Icon icon="material-symbols:more-horiz" width="18" height="18" inline />
           </div>
-        </PopoverTrigger>
-
-        <PopoverContent
-          className={styles.spaceMoreActionWrapper}
-          width={150}
-          style={{
-            boxShadow: '0 0 10px 0 rgba(0,0,0,0.1)',
-          }}>
+        }>
           {actionsList.map(item => (
             <div
               key={item.name}
@@ -185,8 +184,7 @@ export const SpaceMoreActions = ({ space }: { space: SpaceInfo }) => {
               <div>{item.name}</div>
             </div>
           ))}
-        </PopoverContent>
-      </Popover>
+      </SimplePopover>
     </>
   );
 };

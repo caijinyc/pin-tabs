@@ -9,6 +9,7 @@ import { Actions } from '@pages/newtab/store/actions';
 import { GroupSortItemTypes, SPACE_TO_GROUP_DRAG_TYPE } from '@src/constant';
 import { Input } from '@chakra-ui/react';
 import { useComposition } from '@src/shared/kits';
+import { useShallow } from 'zustand/react/shallow';
 
 const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
   const { group, groupIndex } = props;
@@ -51,7 +52,7 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
 
   const isActive = isOver && canDrop;
 
-  const [{ handlerId }, sortDrop] = useDrop({
+  const [, sortDrop] = useDrop({
     accept: GroupSortItemTypes.CARD,
     collect(monitor) {
       return {
@@ -183,9 +184,9 @@ interface DragItem {
 }
 
 export const Groups = () => {
-  const allGroups = useStore(state => {
+  const allGroups = useStore(useShallow(state => {
     return state.groupsSort.map(id => state.groupsMap[id]);
-  });
+  }));
 
   return allGroups.map((item, index) => {
     return <GroupItem group={item} groupIndex={index} key={item.id} />;

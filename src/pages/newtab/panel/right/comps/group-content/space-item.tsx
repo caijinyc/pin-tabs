@@ -41,7 +41,7 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
   const dropRef = React.useRef<HTMLDivElement>(null);
   const isSearching = Boolean(searchText);
 
-  const [{ opacity, dragging }, drag, preview] = useDrag(() => {
+  const [{ dragging }, drag, preview] = useDrag(() => {
     const dropProps: DropItem = {
       spaceId,
       index,
@@ -56,7 +56,7 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
     };
   });
 
-  const [{ handlerId }, sortDrop] = useDrop({
+  const [, sortDrop] = useDrop({
     accept: SPACE_TO_GROUP_DRAG_TYPE,
     collect(monitor) {
       return {
@@ -142,7 +142,9 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
       id={spaceId}>
       <div className={styles.titleWrapper} ref={dropRef}>
         <div
-          ref={preview}
+          ref={node => {
+            preview(node);
+          }}
           className={cls('flex items-center', {
             ['opacity-40']: dragging,
           })}>
@@ -158,8 +160,7 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
             }}
             className={'font-medium'}
             size={'sm'}
-            variant="unstyled"
-            placeholder="Unstyled"
+            variant="flushed"
             value={space.name}
             onBlur={() => {
               if (!space.name) {
