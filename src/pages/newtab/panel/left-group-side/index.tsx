@@ -1,5 +1,4 @@
 import styles from '@pages/newtab/style.module.scss';
-import { Button } from '@chakra-ui/react';
 import React from 'react';
 import cls from 'classnames';
 import { Groups } from '@pages/newtab/panel/left-group-side/group';

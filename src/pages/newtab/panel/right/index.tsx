@@ -1,4 +1,4 @@
-import { IconButton, Input, InputGroup, InputLeftElement, useToast } from '@chakra-ui/react';
+import { IconButton, Input, InputGroup } from '@chakra-ui/react';
 import { isSpaceArchived, SpaceInfo, TabInfo, useStore } from '@pages/newtab/store/store';
 import styles from '@pages/newtab/style.module.scss';
 import { GroupContent } from '@pages/newtab/panel/right/comps/group-content';
@@ -13,6 +13,7 @@ import { lowerMultiIncludes } from '@pages/newtab/util/common';
 import { debounce } from 'lodash';
 import { CurrentGroups } from '@pages/newtab/panel/right/comps/current-group';
 import { cls } from '@src/shared/kits';
+import { globalToast } from '@src/shared/ui/toast';
 
 export const useSelectedSearchedTabIndex = create<{
   index: number;
@@ -59,15 +60,11 @@ export const scrollToSpace = (spaceId: string) => {
 };
 
 export const RightContentPanel = () => {
-  const toast = useToast();
   const searchSpaceName = useFilterSpace(state => state.searchSpaceName);
 
   useEffect(() => {
     useSelectedSearchedTabIndex.setState({
       index: -1,
-    });
-    useFilterSpace.setState({
-      searchSpaceName,
     });
   }, [searchSpaceName]);
 
@@ -103,13 +100,9 @@ export const RightContentPanel = () => {
   return (
     <div className={cls(styles.rightPanel, 'relative')}>
       <div className={`flex justify-between ${spaceContentMaxWidth}`}>
-        <InputGroup size={'xs'}>
-          <InputLeftElement pointerEvents="none">
-            <Icon icon="octicon:search-16" width="12px" height="12px" className={'ml-1 text-gray-400'} />
-          </InputLeftElement>
+        <InputGroup startElement={<Icon icon="octicon:search-16" width="12px" height="12px" className={'ml-1 text-gray-400'} />}>
           <Input
             borderColor={'gray.600'}
-            focusBorderColor={'gray.600'}
             size={'xs'}
             onChange={e => {
               debounceUpdateSearchSpaceName.current(e.target.value);
@@ -168,24 +161,24 @@ export const RightContentPanel = () => {
           <div className={'pb-4'}>
             <IconButton
               aria-label="Add SubSpace"
-              icon={<Icon icon="material-symbols:add" width={'16'} height={'16'} />}
               size={'xs'}
               onClick={() => {
                 Actions.addSubSpace(useStore.getState().selectedGroupId);
-              }}></IconButton>
+              }}>
+              <Icon icon="material-symbols:add" width={'16'} height={'16'} />
+            </IconButton>
 
             {/*{<GroupSetting />}*/}
 
             <IconButton
               aria-label="Del Group"
-              icon={<Icon icon="lets-icons:del-alt-fill" width={'16'} height={'16'} />}
               // colorScheme="red"
               size={'xs'}
               ml={2}
               onClick={() => {
                 const state = useStore.getState();
                 if (state.groupsSort.length === 1) {
-                  toast({
+                  globalToast({
                     title: 'Must have at least one group.',
                     status: 'error',
                     isClosable: true,
@@ -211,6 +204,7 @@ export const RightContentPanel = () => {
                   },
                 });
               }}>
+              <Icon icon="lets-icons:del-alt-fill" width={'16'} height={'16'} />
               DEL
             </IconButton>
           </div>

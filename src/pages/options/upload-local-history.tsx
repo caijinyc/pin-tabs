@@ -2,8 +2,9 @@ import React from 'react';
 import { StoreType, useStore } from '@pages/newtab/store/store';
 import { dialog } from '@pages/newtab/comps/global-dialog';
 import { Icon } from '@iconify-icon/react';
-import { IconButton, Tooltip } from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
 import { storeLocalStorage } from '@src/shared/storages/deviceSyncStorage';
+import { SimpleTooltip } from '@src/shared/ui/simple-tooltip';
 
 export const UploadLocalHistory = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -53,15 +54,16 @@ export const UploadLocalHistory = () => {
         }}
       />
 
-      <Tooltip label={'上传备份文件'}>
+      <SimpleTooltip label={'上传备份文件'}>
         <IconButton
           aria-label={'Save'}
-          icon={<Icon icon="ic:round-upload-file" width="24" height="24" />}
+          type="button"
           onClick={() => {
             inputRef.current?.click();
-          }}
-        />
-      </Tooltip>
+          }}>
+          <Icon icon="ic:round-upload-file" width="24" height="24" />
+        </IconButton>
+      </SimpleTooltip>
     </>
   );
 };

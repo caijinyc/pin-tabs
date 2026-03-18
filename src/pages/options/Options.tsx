@@ -1,18 +1,23 @@
 import React from 'react';
 import '@pages/options/Options.css';
-import { Button, ChakraProvider, FormLabel, Input, InputGroup, InputRightElement, Textarea } from '@chakra-ui/react';
+import { Button, Input, InputGroup, Textarea } from '@chakra-ui/react';
 import { commonLocalStorage, optionsStorage } from '@src/shared/storages/optionsStorage';
 import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify-icon/react';
 import { UploadLocalHistory } from '@pages/options/upload-local-history';
+import { AppProvider } from '@src/shared/ui/app-provider';
 
 const GithubAppendIcon = (props: { onClick: () => void }) => (
   <Icon inline icon="mdi:github" width="20" height="20" className={'cursor-pointer'} onClick={props.onClick} />
 );
 
+const FieldLabel = ({ children }: { children: React.ReactNode }) => (
+  <label className="mb-2 block text-sm font-medium text-white/80">{children}</label>
+);
+
 const Options: React.FC = () => {
   const [showPassword, setShowPassword] = React.useState(false);
-  const { register, handleSubmit, watch, setValue } = useForm<{
+  const { register, watch } = useForm<{
     name: string;
     syncGistId: string;
     backupGistId: string;
@@ -32,7 +37,7 @@ const Options: React.FC = () => {
   });
 
   React.useEffect(() => {
-    const subscription = watch((value, { name, type }) => {
+    const subscription = watch((value, { type }) => {
       if (type === 'change') {
         optionsStorage.set({
           gistId: value.backupGistId,
@@ -49,12 +54,12 @@ const Options: React.FC = () => {
   }, [watch]);
 
   return (
-    <ChakraProvider>
-      <div className={'m-12 max-w-lg'}>
-        <FormLabel>GitHub Username</FormLabel>
+    <AppProvider>
+      <div className={'m-12 max-w-lg text-white'}>
+        <FieldLabel>GitHub Username</FieldLabel>
         <Input {...register('githubUsername')} className={'mb-6'} />
 
-        <FormLabel>
+        <FieldLabel>
           <div className={'flex items-center gap-2'}>
             <div>Sync Gist ID</div>
             <GithubAppendIcon
@@ -63,32 +68,37 @@ const Options: React.FC = () => {
               }}
             />
           </div>
-        </FormLabel>
+        </FieldLabel>
         <Input {...register('syncGistId')} className={'mb-6'} />
 
-        <FormLabel>Gist Token</FormLabel>
-        <InputGroup>
-          <Input {...register('token')} className={'mb-6'} type={showPassword ? 'text' : 'password'}/>
-          <InputRightElement width='4.5rem'>
-            <Button h='1.75rem' size='sm' onClick={()=>{
-              setShowPassword(!showPassword);
-            }}>
+        <FieldLabel>Gist Token</FieldLabel>
+        <InputGroup
+          className={'mb-6'}
+          endElement={
+            <Button
+              h="1.75rem"
+              size="sm"
+              type="button"
+              onClick={() => {
+                setShowPassword(!showPassword);
+              }}>
               {showPassword ? 'Hide' : 'Show'}
             </Button>
-          </InputRightElement>
+          }>
+          <Input {...register('token')} type={showPassword ? 'text' : 'password'} />
         </InputGroup>
 
-        <FormLabel>Device Id</FormLabel>
+        <FieldLabel>Device Id</FieldLabel>
         <Input {...register('deviceId')} className={'mb-6'} />
 
-        <FormLabel>Favicon Sync List</FormLabel>
+        <FieldLabel>Favicon Sync List</FieldLabel>
         <Textarea {...register('faviconSyncList')} className={'mb-6'} />
 
-        <FormLabel>Other Actions</FormLabel>
+        <FieldLabel>Other Actions</FieldLabel>
 
         <UploadLocalHistory />
       </div>
-    </ChakraProvider>
+    </AppProvider>
   );
 };
 

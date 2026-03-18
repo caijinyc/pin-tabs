@@ -1,11 +1,11 @@
 import { TabInfo, useAllBrowserGroups, useIsPopupStore, useStore } from '@pages/newtab/store/store';
-import { Popover, PopoverBody, PopoverContent, PopoverTrigger, Portal } from '@chakra-ui/react';
 import styles from './style.module.scss';
 import { Icon } from '@iconify-icon/react';
 import React, { HTMLProps } from 'react';
 import { cls } from '@src/shared/kits';
 import { Actions } from '@pages/newtab/store/actions';
 import { useAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
+import { SimplePopover } from '@src/shared/ui/simple-popover';
 
 export const spaceActionIconHoverClassNameArgs = 'text-zinc-300 hover:text-zinc-50 hover:bg-zinc-600';
 
@@ -69,29 +69,21 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
   }
 
   return (
-    <Popover placement={'bottom-start'}>
-      <PopoverTrigger>
+    <SimplePopover
+      contentStyle={{
+        boxShadow: '0 0 10px 0 rgba(0,0,0,0.1)',
+      }}
+      trigger={
         <div className={cls(styles.addIconWrapper, 'text-zinc-500 hover:text-zinc-50 hover:bg-zinc-600')}>
           <Icon icon="fluent:pin-12-filled" className={''} inline width="18" height="18" />
         </div>
-      </PopoverTrigger>
-
-      <Portal>
-        <PopoverContent
-          style={{
-            boxShadow: '0 0 10px 0 rgba(0,0,0,0.1)',
-            // width: 500,
-          }}>
-          {/*<PopoverArrow />*/}
-          {/*<PopoverHeader>Header</PopoverHeader>*/}
-          {/*<PopoverCloseButton />*/}
-
-          <PopoverBody
-            style={{
-              maxHeight: 500,
-              overflowY: 'auto',
-            }}>
-            {data.map((item, index) => {
+      }>
+      <div
+        style={{
+          maxHeight: 500,
+          overflowY: 'auto',
+        }}>
+            {data.map(item => {
               const renderTab = (tab: TabInfo) => {
                 const isSelect = currentSpaceTabs.some(t => t.id === tab.id);
                 return (
@@ -198,11 +190,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
             {/*    </>*/}
             {/*  );*/}
             {/*})}*/}
-          </PopoverBody>
-
-          {/*<PopoverFooter>This is the footer</PopoverFooter>*/}
-        </PopoverContent>
-      </Portal>
-    </Popover>
+      </div>
+    </SimplePopover>
   );
 };
