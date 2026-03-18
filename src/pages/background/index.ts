@@ -1,7 +1,6 @@
 import reloadOnUpdate from 'virtual:reload-on-update-in-background-script';
 import 'webextension-polyfill';
 import './alarm';
-import { getAllBrowserGroups } from '@pages/newtab/store/store';
 
 reloadOnUpdate('pages/background');
 

@@ -1,5 +1,4 @@
 import * as path from 'path';
-import { readFileSync } from 'fs';
 import type { PluginOption } from 'vite';
 
 const isDev = process.env.__DEV__ === 'true';
@@ -7,7 +6,8 @@ const isDev = process.env.__DEV__ === 'true';
 const DUMMY_CODE = `export default function(){};`;
 
 function getInjectionCode(fileName: string): string {
-  return readFileSync(path.resolve(__dirname, '..', 'reload', 'injections', fileName), { encoding: 'utf8' });
+  const resolvedPath = path.resolve(__dirname, '..', 'reload', 'injections', fileName);
+  return `export { default } from ${JSON.stringify(resolvedPath)};`;
 }
 
 type Config = {
@@ -20,8 +20,8 @@ export default function addHmr(config?: Config): PluginOption {
   const idInBackgroundScript = 'virtual:reload-on-update-in-background-script';
   const idInView = 'virtual:reload-on-update-in-view';
 
-  const scriptHmrCode = isDev ? getInjectionCode('script.js') : DUMMY_CODE;
-  const viewHmrCode = isDev ? getInjectionCode('view.js') : DUMMY_CODE;
+  const scriptHmrCode = isDev ? getInjectionCode('script.ts') : DUMMY_CODE;
+  const viewHmrCode = isDev ? getInjectionCode('view.ts') : DUMMY_CODE;
 
   return {
     name: 'add-hmr',

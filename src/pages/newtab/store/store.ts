@@ -100,7 +100,7 @@ export type StoreType = {
   redirect?: boolean;
 };
 
-export const useStore = create<StoreType>(() => produce(DEFAULT_STORE_STATE, draft => {}));
+export const useStore = create<StoreType>(() => produce(DEFAULT_STORE_STATE, () => {}));
 
 export const getArchivedSpaces = () => {
   const state = useStore.getState();
@@ -118,7 +118,7 @@ export const isSpaceArchived = (spaceId: string) => {
 };
 
 export const loadStoreFromStorage = () => {
-  return Promise.all([storeLocalStorage.get()]).then(([localData]) => {
+  return storeLocalStorage.get().then(localData => {
     const storeData = useStore.getState();
 
     if (!diffMapPickKeys(localData, storeData, [...NEED_SYNC_KEYS, 'selectedGroupId'])) {
