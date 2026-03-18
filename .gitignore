@@ -3,6 +3,9 @@
 
 # testing
 /coverage
+/playwright-report
+/test-results
+/.tmp
 
 # build
 /dist
