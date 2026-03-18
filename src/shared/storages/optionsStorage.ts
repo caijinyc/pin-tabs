@@ -1,4 +1,4 @@
-import { BaseStorage, createStorage, StorageType } from '@src/shared/storages/base';
+import { createStorage, StorageType } from '@src/shared/storages/base';
 
 type OptionsType = {
   gistId: string;

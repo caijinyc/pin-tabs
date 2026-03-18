@@ -29,7 +29,7 @@ export async function getImageBase64(url: string): Promise<string> {
       img.remove();
       reject(e);
     };
-    img.onload = function (e) {
+    img.onload = function () {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
 

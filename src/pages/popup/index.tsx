@@ -16,8 +16,6 @@ function init() {
 
   // find page status, if it's alread opened, jump to it. else open it
 
-  const url = `chrome-extension://${chrome.runtime.id}/src/pages/newtab/index.html`;
-
   // chrome.tabs.query({ url }, tabs => {
   //   if (tabs.length > 0) {
   //     chrome.tabs.update(tabs[0].id, { active: true });

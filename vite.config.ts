@@ -3,7 +3,6 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path, { resolve } from 'path';
 import makeManifest from './utils/plugins/make-manifest';
-import customDynamicImport from './utils/plugins/custom-dynamic-import';
 import addHmr from './utils/plugins/add-hmr';
 import watchRebuild from './utils/plugins/watch-rebuild';
 import inlineVitePreloadScript from './utils/plugins/inline-vite-preload-script';
@@ -38,7 +37,6 @@ export default defineConfig(({ mode }) => ({
       getCacheInvalidationKey,
     }),
     react(),
-    customDynamicImport(),
     addHmr({ background: enableHmrInBackgroundScript, view: true }),
     isDev && watchRebuild({ afterWriteBundle: regenerateCacheInvalidationKey }),
     inlineVitePreloadScript(),
@@ -76,7 +74,8 @@ export default defineConfig(({ mode }) => ({
         entryFileNames: 'src/pages/[name]/index.js',
         chunkFileNames: isDev ? 'assets/js/[name].js' : 'assets/js/[name].[hash].js',
         assetFileNames: assetInfo => {
-          const { name } = path.parse(assetInfo.name);
+          const assetName = assetInfo.name ?? 'asset';
+          const { name } = path.parse(assetName);
           const assetFileName = name === 'contentStyle' ? `${name}${getCacheInvalidationKey()}` : name;
           return `assets/[ext]/${assetFileName}.chunk.[ext]`;
         },

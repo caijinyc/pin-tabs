@@ -1,10 +1,6 @@
-import { BaseStorage, createStorage, StorageType } from '@src/shared/storages/base';
+import { createStorage, StorageType } from '@src/shared/storages/base';
 import { StoreType } from '@pages/newtab/store/store';
 import { DEFAULT_STORE_STATE } from '@src/constant';
-
-type SToreStorage = BaseStorage<StoreType> & {
-  // toggle: () => Promise<void>;
-};
 
 const localStorage = createStorage<StoreType>('store-storage', DEFAULT_STORE_STATE, {
   storageType: StorageType.Local,
