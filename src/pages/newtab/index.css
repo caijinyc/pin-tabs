@@ -4,15 +4,14 @@
   /*--chakra-fontSizes-lg: '18px';*/
   /*--chakra-colors-gray-100: '#fafafa';*/
   /*--chakra-colors-gray-200: '#f7f7f7';*/
-  --chakra-modal-bg: #1E1E1E;
-  --chakra-colors-gray-700: #272727 !important;
+  --chakra-modal-bg: var(--app-surface);
+  --chakra-colors-gray-700: var(--app-card-bg) !important;
 }
 
 body {
   margin: 0;
-  background: #1E1E1E !important;
-  color: #f5f5f5;
-  color-scheme: dark;
+  background: var(--app-bg) !important;
+  color: var(--app-text);
   font-family:
     PingFang SC,
     -apple-system,

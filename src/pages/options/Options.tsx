@@ -6,17 +6,23 @@ import { useForm } from 'react-hook-form';
 import { Icon } from '@iconify-icon/react';
 import { UploadLocalHistory } from '@pages/options/upload-local-history';
 import { AppProvider } from '@src/shared/ui/app-provider';
+import { ThemeToggleButton } from '@src/shared/ui/theme-toggle-button';
 
 const GithubAppendIcon = (props: { onClick: () => void }) => (
   <Icon inline icon="mdi:github" width="20" height="20" className={'cursor-pointer'} onClick={props.onClick} />
 );
 
 const FieldLabel = ({ children }: { children: React.ReactNode }) => (
-  <label className="mb-2 block text-sm font-medium text-white/80">{children}</label>
+  <label className="mb-2 block text-sm font-medium" style={{ color: 'var(--app-text-muted)' }}>
+    {children}
+  </label>
 );
 
 const Options: React.FC = () => {
   const [showPassword, setShowPassword] = React.useState(false);
+  const optionsSnapshot = optionsStorage.getSnapshot();
+  const commonSnapshot = commonLocalStorage.getSnapshot();
+
   const { register, watch } = useForm<{
     name: string;
     syncGistId: string;
@@ -27,12 +33,12 @@ const Options: React.FC = () => {
     githubUsername: string;
   }>({
     defaultValues: {
-      syncGistId: optionsStorage.getSnapshot().syncGistId,
-      token: optionsStorage.getSnapshot().token,
-      backupGistId: optionsStorage.getSnapshot().backupGistId,
-      githubUsername: optionsStorage.getSnapshot()?.githubUsername,
-      faviconSyncList: optionsStorage.getSnapshot()?.faviconSyncList,
-      deviceId: commonLocalStorage.getSnapshot()?.deviceId,
+      syncGistId: optionsSnapshot?.syncGistId ?? '',
+      token: optionsSnapshot?.token ?? '',
+      backupGistId: optionsSnapshot?.backupGistId ?? '',
+      githubUsername: optionsSnapshot?.githubUsername ?? '',
+      faviconSyncList: optionsSnapshot?.faviconSyncList ?? '',
+      deviceId: commonSnapshot?.deviceId ?? '',
     },
   });
 
@@ -55,7 +61,11 @@ const Options: React.FC = () => {
 
   return (
     <AppProvider>
-      <div className={'m-12 max-w-lg text-white'}>
+      <div className={'m-12 max-w-lg'} style={{ color: 'var(--app-text)' }}>
+        <div className={'mb-6'}>
+          <ThemeToggleButton />
+        </div>
+
         <FieldLabel>GitHub Username</FieldLabel>
         <Input {...register('githubUsername')} className={'mb-6'} />
 

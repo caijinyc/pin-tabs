@@ -10,8 +10,9 @@ import { GlobalDialog } from '@pages/newtab/comps/global-dialog';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useSaveStoreDataToStorage } from '@pages/newtab/util/use-save-store-data-to-storage';
-import { AppProvider } from '@src/shared/ui/app-provider';
+import { AppProvider, useThemeAppearance } from '@src/shared/ui/app-provider';
 import { ToastViewport, globalToast } from '@src/shared/ui/toast';
+import { ThemeToggleButton } from '@src/shared/ui/theme-toggle-button';
 import { Theme } from '@chakra-ui/react';
 
 export { globalToast };
@@ -35,6 +36,7 @@ function useLoadStoreData() {
 
 const NewTab = (props: { isPopup?: boolean }) => {
   const redirectMode = useStore(state => state.redirect);
+  const themeAppearance = useThemeAppearance();
 
   if (props.isPopup && !useIsPopupStore.getState()) {
     useIsPopupStore.setState(true);
@@ -46,9 +48,13 @@ const NewTab = (props: { isPopup?: boolean }) => {
     <div className="App">
       {redirectMode ? null : (
         <AppProvider>
-          <Theme appearance="dark" minH="100vh">
+          <Theme appearance={themeAppearance} minH="100vh">
             <GlobalDialog />
             <ToastViewport />
+
+            <div className={'fixed right-4 bottom-4 z-[10000]'}>
+              <ThemeToggleButton />
+            </div>
 
             <DndProvider backend={HTML5Backend}>
               <div className={styles.wrapper}>

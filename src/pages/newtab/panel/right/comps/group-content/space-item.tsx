@@ -135,10 +135,11 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
   return (
     <div
       key={spaceId}
-      className={cls(
-        styles.spaceItem,
-        'p-2 bg-[#272727] mb-2 rounded-xl shadow-lg ' + spaceContentMaxWidth + '  ease-in-out duration-300',
-      )}
+      className={cls(styles.spaceItem, 'p-2 mb-2 rounded-xl shadow-lg ' + spaceContentMaxWidth + '  ease-in-out duration-300')}
+      style={{
+        backgroundColor: 'var(--app-card-bg)',
+        border: '1px solid var(--app-border)',
+      }}
       id={spaceId}>
       <div className={styles.titleWrapper} ref={dropRef}>
         <div

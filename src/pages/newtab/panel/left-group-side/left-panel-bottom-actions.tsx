@@ -7,7 +7,9 @@ import React from 'react';
 import { SimpleTooltip } from '@src/shared/ui/simple-tooltip';
 
 export const LeftPanelBottomActions = () => {
-  const { syncGistId, githubUsername } = useStorageData(optionsStorage);
+  const options = useStorageData(optionsStorage);
+  const syncGistId = options?.syncGistId;
+  const githubUsername = options?.githubUsername;
 
   const iconClassName = 'text-gray-400 hover:text-gray-100 cursor-pointer';
 
