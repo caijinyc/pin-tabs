@@ -52,7 +52,7 @@ const highlightSearchText = (title: string, searchText: string) => {
   // 用正则表达式创建一个动态的搜索模式，'gi' 表示全局搜索且不区分大小写
   const regex = new RegExp(searchText, 'gi');
   // 使用 replace 方法替换所有匹配的文本
-  const highlightedTitle = title.replace(regex, match => `<span class="bg-amber-800">${match}</span>`);
+  const highlightedTitle = title.replace(regex, match => `<span class="bg-yellow-200 text-yellow-900 dark:bg-amber-800 dark:text-amber-100 rounded-sm px-[2px]">${match}</span>`);
 
   // 由于结果是一个字符串，我们需要使用 dangerouslySetInnerHTML 来渲染它
   // 这样可以避免 React 将其作为文本而不是 HTML 解析
@@ -75,7 +75,7 @@ export const TabItem = ({ tab, space, searchText }: { tab: TabInfo; space: Space
   return (
     <div
       className={cls(styles.tabListItem, {
-        ['bg-amber-800']: isSearchCursorTab,
+        ['bg-app-hover-bg ring-1 ring-app-border']: isSearchCursorTab,
       })}
       key={tab.id}>
       <div
@@ -137,7 +137,7 @@ export const TabItem = ({ tab, space, searchText }: { tab: TabInfo; space: Space
             icon="lets-icons:edit-duotone-line"
             width={'18px'}
             height={'18px'}
-            className={styles.delTab}
+            className={styles.editTab}
           />
           <Icon
             onClick={() => {
@@ -154,7 +154,7 @@ export const TabItem = ({ tab, space, searchText }: { tab: TabInfo; space: Space
             className={styles.delTab}
           />
 
-          {tab.openCount > 0 && <div className={'text-gray-400'}>⚡️{tab.openCount}</div>}
+          {tab.openCount > 0 && <div className={'text-app-text-muted text-xs'}>⚡️{tab.openCount}</div>}
         </div>
       )}
     </div>

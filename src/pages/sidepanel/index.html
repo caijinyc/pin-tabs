@@ -3,6 +3,45 @@
   <head>
     <meta charset="UTF-8" />
     <title>Side Panel</title>
+    <style>
+      html {
+        /* let script decide */
+      }
+      html[data-theme="light"] {
+        background: #f6f8fb;
+      }
+      html[data-theme="dark"] {
+        background: #1e1e1e;
+      }
+      body {
+        background: transparent !important;
+      }
+    </style>
+    <script>
+      (function() {
+        try {
+          var storageValue = localStorage.getItem('theme-storage-key');
+          var theme = 'dark'; // 默认深色
+
+          if (storageValue) {
+            try {
+              var parsed = JSON.parse(storageValue);
+              if (typeof parsed === 'string') {
+                theme = parsed;
+              }
+            } catch (err) {
+              theme = storageValue.replace(/["']/g, '');
+            }
+          }
+
+          if (theme === 'light' || theme === 'dark') {
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.style.colorScheme = theme;
+            document.documentElement.style.background = theme === 'dark' ? '#1e1e1e' : '#f6f8fb';
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
 
   <body>

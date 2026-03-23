@@ -2,6 +2,11 @@ import { ChakraProvider, defaultSystem } from '@chakra-ui/react';
 import { useEffect, useSyncExternalStore } from 'react';
 import type { PropsWithChildren } from 'react';
 import { DEFAULT_THEME, ThemeAppearance, themeStorage } from '@src/shared/storages/theme-storage';
+import {
+  cacheThemeAppearance,
+  resolveBootstrapTheme,
+  THEME_BACKGROUNDS,
+} from '@src/shared/ui/theme-bootstrap';
 import './app-theme.css';
 
 export function resolveThemeAppearance(theme: ThemeAppearance | null | undefined): ThemeAppearance {
@@ -11,6 +16,7 @@ export function resolveThemeAppearance(theme: ThemeAppearance | null | undefined
 export function applyThemeAppearance(theme: ThemeAppearance) {
   document.documentElement.dataset.theme = theme;
   document.documentElement.style.colorScheme = theme;
+  document.documentElement.style.background = THEME_BACKGROUNDS[theme];
 
   if (document.body) {
     document.body.dataset.theme = theme;
@@ -26,7 +32,8 @@ export function useThemeAppearance() {
 export function AppProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     const applyCurrentTheme = () => {
-      applyThemeAppearance(resolveThemeAppearance(themeStorage.getSnapshot()));
+      const nextTheme = resolveBootstrapTheme(themeStorage.getSnapshot(), document.documentElement.dataset.theme);
+      applyThemeAppearance(resolveThemeAppearance(nextTheme));
     };
 
     applyCurrentTheme();
@@ -36,6 +43,7 @@ export function AppProvider({ children }: PropsWithChildren) {
     });
 
     void themeStorage.get().then(theme => {
+      cacheThemeAppearance(theme);
       applyThemeAppearance(resolveThemeAppearance(theme));
     });
 

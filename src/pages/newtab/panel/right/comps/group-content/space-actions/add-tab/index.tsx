@@ -7,7 +7,7 @@ import { Actions } from '@pages/newtab/store/actions';
 import { useAllOpenedTabs } from '@pages/newtab/util/get-all-opened-tabs';
 import { SimplePopover } from '@src/shared/ui/simple-popover';
 
-export const spaceActionIconHoverClassNameArgs = 'text-zinc-300 hover:text-zinc-50 hover:bg-zinc-600';
+export const spaceActionIconHoverClassNameArgs = 'text-app-text-muted hover:text-app-text hover:bg-app-hover-bg transition-colors';
 
 const PinIcon = (props: {} & HTMLProps<any>) => {
   console.log('props', props);
@@ -74,7 +74,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
         boxShadow: '0 0 10px 0 rgba(0,0,0,0.1)',
       }}
       trigger={
-        <div className={cls(styles.addIconWrapper, 'text-zinc-500 hover:text-zinc-50 hover:bg-zinc-600')}>
+        <div className={cls(styles.addIconWrapper, spaceActionIconHoverClassNameArgs)}>
           <Icon icon="fluent:pin-12-filled" className={''} inline width="18" height="18" />
         </div>
       }>
@@ -140,7 +140,7 @@ export const AddTabToGetPopoverCurrentSpace = (props: { spaceId: string }) => {
                         }}
                         title={'Add group all tabs to current space'}
                         icon="lets-icons:add-duotone"
-                        className={'hover:text-gray-100 text-gray-500 cursor-pointer'}
+                        className={'hover:text-app-text text-app-text-muted cursor-pointer transition-colors'}
                         width="16px"
                         height="16px"
                         inline

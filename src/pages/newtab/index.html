@@ -3,6 +3,95 @@
   <head>
     <meta charset="UTF-8" />
     <title>Pin Tabs</title>
+    <style>
+      html {
+        background: #f6f8fb;
+      }
+      html[data-theme="light"] {
+        background: #f6f8fb;
+      }
+      html[data-theme="dark"] {
+        background: #1e1e1e;
+      }
+      body {
+        background: transparent !important;
+        visibility: hidden;
+      }
+      html[data-theme-ready="true"] body {
+        visibility: visible;
+      }
+    </style>
+    <script>
+      (function() {
+        var themeStorageKey = 'theme-storage-key';
+        var html = document.documentElement;
+
+        function parseTheme(value) {
+          if (typeof value !== 'string') {
+            return null;
+          }
+
+          var trimmedValue = value.trim();
+          if (!trimmedValue) {
+            return null;
+          }
+
+          try {
+            var parsedValue = JSON.parse(trimmedValue);
+            if (parsedValue === 'light' || parsedValue === 'dark') {
+              return parsedValue;
+            }
+          } catch (error) {}
+
+          var normalizedValue = trimmedValue.replace(/["']/g, '');
+          return normalizedValue === 'light' || normalizedValue === 'dark' ? normalizedValue : null;
+        }
+
+        function applyTheme(theme) {
+          if (theme !== 'light' && theme !== 'dark') {
+            return false;
+          }
+
+          html.dataset.theme = theme;
+          html.style.colorScheme = theme;
+          html.style.background = theme === 'dark' ? '#1e1e1e' : '#f6f8fb';
+          return true;
+        }
+
+        function markReady() {
+          html.dataset.themeReady = 'true';
+
+          if (document.body) {
+            document.body.dataset.themeReady = 'true';
+          }
+        }
+
+        try {
+          var cachedTheme = parseTheme(localStorage.getItem(themeStorageKey));
+          if (applyTheme(cachedTheme)) {
+            markReady();
+            return;
+          }
+
+          if (typeof chrome !== 'undefined' && chrome.storage && chrome.storage.local) {
+            chrome.storage.local.get([themeStorageKey], function(items) {
+              var storedTheme = parseTheme(items && items[themeStorageKey]);
+              if (applyTheme(storedTheme)) {
+                localStorage.setItem(themeStorageKey, storedTheme);
+              }
+
+              markReady();
+            });
+
+            return;
+          }
+
+          markReady();
+        } catch (error) {
+          markReady();
+        }
+      })();
+    </script>
   </head>
 
   <body>

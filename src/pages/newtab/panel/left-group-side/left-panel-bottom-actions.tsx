@@ -11,7 +11,7 @@ export const LeftPanelBottomActions = () => {
   const syncGistId = options?.syncGistId;
   const githubUsername = options?.githubUsername;
 
-  const iconClassName = 'text-gray-400 hover:text-gray-100 cursor-pointer';
+  const iconClassName = 'text-app-text-muted hover:text-app-text cursor-pointer transition-colors';
 
   return (
     <div className={'inline-flex gap-1 pt-2'}>

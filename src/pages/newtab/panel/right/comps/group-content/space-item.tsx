@@ -135,11 +135,7 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
   return (
     <div
       key={spaceId}
-      className={cls(styles.spaceItem, 'p-2 mb-2 rounded-xl shadow-lg ' + spaceContentMaxWidth + '  ease-in-out duration-300')}
-      style={{
-        backgroundColor: 'var(--app-card-bg)',
-        border: '1px solid var(--app-border)',
-      }}
+      className={cls(styles.spaceItem, 'p-3 mb-3 rounded-xl shadow-sm border border-app-border bg-app-card-bg transition-colors duration-300', spaceContentMaxWidth)}
       id={spaceId}>
       <div className={styles.titleWrapper} ref={dropRef}>
         <div
@@ -150,7 +146,7 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
             ['opacity-40']: dragging,
           })}>
           {searchText ? null : (
-            <div ref={ref} className={'cursor-move mr-1 w-[12px]'}>
+            <div ref={ref} className={'cursor-move mr-1 w-[16px] text-app-text-muted hover:text-app-text transition-colors'}>
               <Icon inline icon="akar-icons:drag-vertical" />
             </div>
           )}
@@ -159,7 +155,7 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
             style={{
               width: 200,
             }}
-            className={'font-medium'}
+            className={'font-semibold text-[15px]'}
             size={'sm'}
             variant="flushed"
             value={space.name}
@@ -180,13 +176,13 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
         {isSearching ? (
           <div
             className={
-              'hover:bg-zinc-600 cursor-pointer rounded-full w-[24px] h-[24px] flex items-center justify-center'
+              'hover:bg-app-hover-bg cursor-pointer rounded-full w-[28px] h-[28px] flex items-center justify-center transition-colors'
             }>
             <Icon
               icon={'system-uicons:jump-down'}
-              width={'18px'}
-              height={'18px'}
-              className={'cursor-pointer'}
+              width={'20px'}
+              height={'20px'}
+              className={'cursor-pointer text-app-text-muted'}
               onClick={() => scrollToSpace(spaceId)}
             />
           </div>
@@ -194,9 +190,11 @@ export const SpaceItem = ({ space, index, searchText }: { space: SpaceInfo; inde
       </div>
 
       {tabs.length ? (
-        tabs.map(tab => <TabItem {...{ tab, allTabs, space, searchText }} key={tab.id} />)
+        <div className="flex flex-col gap-1 mt-2">
+          {tabs.map(tab => <TabItem {...{ tab, allTabs, space, searchText }} key={tab.id} />)}
+        </div>
       ) : (
-        <div>No Pinned Tabs</div>
+        <div className="text-app-text-muted text-sm mt-4 px-2">No Pinned Tabs</div>
       )}
     </div>
   );

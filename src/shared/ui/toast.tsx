@@ -25,9 +25,9 @@ type ToastStore = {
 let toastId = 0;
 
 const statusClassNameMap: Record<ToastStatus, string> = {
-  success: 'border-emerald-500/50 bg-emerald-950/90',
-  error: 'border-rose-500/50 bg-rose-950/90',
-  info: 'border-sky-500/50 bg-zinc-900/95',
+  success: 'border-green-500/30 bg-green-50 text-green-900 dark:bg-green-900/50 dark:text-green-100 dark:border-green-500/50',
+  error: 'border-red-500/30 bg-red-50 text-red-900 dark:bg-red-900/50 dark:text-red-100 dark:border-red-500/50',
+  info: 'border-blue-500/30 bg-blue-50 text-blue-900 dark:bg-blue-900/50 dark:text-blue-100 dark:border-blue-500/50',
 };
 
 const useToastStore = create<ToastStore>(set => ({
@@ -77,15 +77,15 @@ function ToastCard({ toast }: { toast: ToastItem }) {
 
   return (
     <div
-      className={`w-full rounded-xl border px-4 py-3 text-sm text-white shadow-xl backdrop-blur ${statusClassNameMap[toast.status ?? 'info']}`}>
+      className={`w-full rounded-xl border px-4 py-3 text-sm shadow-xl backdrop-blur ${statusClassNameMap[toast.status ?? 'info']}`}>
       <div className="flex items-start gap-3">
         <div className="min-w-0 flex-1">
           {toast.title ? <div className="font-semibold">{toast.title}</div> : null}
-          {toast.description ? <div className="mt-1 text-white/80">{toast.description}</div> : null}
+          {toast.description ? <div className="mt-1 opacity-80">{toast.description}</div> : null}
         </div>
         {toast.isClosable ? (
           <button
-            className="text-xs uppercase tracking-wide text-white/60 transition hover:text-white"
+            className="text-xs uppercase tracking-wide opacity-60 transition hover:opacity-100"
             onClick={() => remove(toast.id)}
             type="button">
             close
