@@ -1,1 +1,0 @@
-import{o as e,v as t,x as n}from"../../../assets/js/cache-images.BcpVTkLV.js";import{b as r,t as i,y as a}from"../../../assets/js/Newtab.BhN51nZd.js";t();var o=r(),s=n(a(),1);function c(){let e=document.querySelector(`#app-container`);if(!e)throw Error(`Can not find #app-container`);(0,o.createRoot)(e).render((0,s.jsx)(i,{}))}e(),c();
