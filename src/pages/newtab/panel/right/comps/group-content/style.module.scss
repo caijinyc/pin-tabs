@@ -6,10 +6,11 @@
 
 .tabListItem {
   display: flex;
-
+  align-items: center;
   margin-bottom: 2px;
-  padding: 3px 4px;
-  border-radius: 4px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
 
   .tabActions {
     display: none;
@@ -32,17 +33,17 @@
   display: flex;
   gap: 8px;
   align-items: center;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
+  flex: 1;
 
   .favicon {
-    width: 14px;
-    height: 14px;
-    margin-right: 4px;
+    width: 16px;
+    height: 16px;
   }
 
   .tabTitle {
-    max-width: 400px;
+    max-width: 420px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -66,11 +67,19 @@
 
 .delTab {
   cursor: pointer;
-  :hover {
+  transition: color 0.2s ease;
+  &:hover {
     color: #ff4d4f;
   }
 }
 
+.editTab {
+  cursor: pointer;
+  transition: color 0.2s ease;
+  &:hover {
+    color: var(--app-text);
+  }
+}
 
 .spaceMoreActionWrapper {
   padding: 8px;

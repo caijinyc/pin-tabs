@@ -99,16 +99,20 @@ export const RightContentPanel = () => {
 
   return (
     <div className={cls(styles.rightPanel, 'relative')}>
-      <div className={`flex justify-between ${spaceContentMaxWidth}`}>
-        <InputGroup startElement={<Icon icon="octicon:search-16" width="12px" height="12px" className={'ml-1 text-gray-400'} />}>
+      <div className={`flex justify-between items-center mb-3 ${spaceContentMaxWidth}`}>
+        <InputGroup className="w-[300px]" startElement={<Icon icon="octicon:search-16" width="14px" height="14px" className={'ml-2 text-app-text-muted'} />}>
           <Input
-            borderColor={'gray.600'}
-            size={'xs'}
+            borderColor={'var(--app-border)'}
+            _hover={{ borderColor: 'var(--app-text-muted)' }}
+            _focus={{ borderColor: 'var(--app-text)', boxShadow: 'none' }}
+            size={'sm'}
+            borderRadius="md"
+            placeholder="Search spaces or tabs..."
             onChange={e => {
               debounceUpdateSearchSpaceName.current(e.target.value);
             }}
             autoFocus={true}
-            className={`mb-2 ${spaceContentMaxWidth}`}
+            className={`w-full bg-app-surface text-app-text transition-colors`}
             onKeyDown={e => {
               // key down selectedSearchedTabIndex++
               if (e.key === 'ArrowDown' || (['n', 'j'].includes(e.key) && e.ctrlKey)) {
@@ -158,23 +162,25 @@ export const RightContentPanel = () => {
       ) : (
         <>
           <GroupContent />
-          <div className={'pb-4'}>
+          <div className={'pt-4 pb-8 flex gap-3'}>
             <IconButton
               aria-label="Add SubSpace"
-              size={'xs'}
+              size={'sm'}
+              variant="surface"
               onClick={() => {
                 Actions.addSubSpace(useStore.getState().selectedGroupId);
               }}>
-              <Icon icon="material-symbols:add" width={'16'} height={'16'} />
+              <Icon icon="material-symbols:add" width={'18'} height={'18'} />
+              Add Project
             </IconButton>
 
             {/*{<GroupSetting />}*/}
 
             <IconButton
               aria-label="Del Group"
-              // colorScheme="red"
-              size={'xs'}
-              ml={2}
+              colorPalette="red"
+              variant="ghost"
+              size={'sm'}
               onClick={() => {
                 const state = useStore.getState();
                 if (state.groupsSort.length === 1) {

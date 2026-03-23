@@ -44,10 +44,10 @@ export const CurrentGroups = () => {
         return (
           <div
             key={group.id}
-            className={'ml-1 mr-1  p-1 rounded bg-neutral-700 text-[10px] group inline-flex relative'}>
-            <div className="truncate m-w-[36px]">{name}</div>
+            className={'ml-1 mr-1 p-1 px-2 rounded-md bg-app-surface border border-app-border text-app-text-muted text-[10px] group inline-flex relative transition-colors hover:text-app-text'}>
+            <div className="truncate max-w-[36px]">{name}</div>
             <div
-              className={'group-hover:block hidden absolute right-1 top-1 bg-neutral-700  cursor-pointer'}
+              className={'group-hover:flex hidden absolute -right-2 -top-2 bg-app-surface border border-app-border rounded-full p-0.5 cursor-pointer text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors'}
               onClick={() => {
                 removeGroupTabs(group.id)
                   .then(() => {
@@ -63,8 +63,8 @@ export const CurrentGroups = () => {
         );
       })}
       {needShowMoreFlagStrips && (
-        <div className={'ml-1  p-1 mr-1 rounded bg-neutral-700 text-[10px] group inline-flex relative'}>
-          <div className="truncate m-w-[36px]">...</div>
+        <div className={'ml-1 p-1 px-2 mr-1 rounded-md bg-app-surface border border-app-border text-app-text-muted text-[10px] inline-flex'}>
+          <div className="truncate max-w-[36px]">...</div>
         </div>
       )}
     </div>

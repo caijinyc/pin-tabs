@@ -24,4 +24,6 @@ body[data-theme='light'] {
 body {
   background: var(--app-bg) !important;
   color: var(--app-text);
+  /* 避免在应用主题前出现默认的过渡动画或白/黑屏跳变 */
+  transition: background-color 0s !important;
 }

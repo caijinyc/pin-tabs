@@ -1,4 +1,5 @@
 import { BaseStorage, createStorage, StorageType } from '@src/shared/storages/base';
+import { cacheThemeAppearance, THEME_STORAGE_KEY } from '@src/shared/ui/theme-bootstrap';
 
 export type ThemeAppearance = 'light' | 'dark';
 
@@ -36,7 +37,7 @@ const createMemoryThemeStorage = (): BaseStorage<ThemeAppearance> => {
 const canUseChromeStorage = typeof chrome !== 'undefined' && Boolean(chrome.storage?.local);
 
 const storage: BaseStorage<ThemeAppearance> = canUseChromeStorage
-  ? createStorage<ThemeAppearance>('theme-storage-key', DEFAULT_THEME, {
+  ? createStorage<ThemeAppearance>(THEME_STORAGE_KEY, DEFAULT_THEME, {
       storageType: StorageType.Local,
       liveUpdate: true,
     })
@@ -45,9 +46,14 @@ const storage: BaseStorage<ThemeAppearance> = canUseChromeStorage
 export const themeStorage = {
   ...storage,
   setTheme: async (theme: ThemeAppearance) => {
+    cacheThemeAppearance(theme);
     return storage.set(theme);
   },
   toggle: async () => {
-    return storage.set(currentTheme => getNextTheme((currentTheme ?? DEFAULT_THEME) as ThemeAppearance));
+    return storage.set(currentTheme => {
+      const nextTheme = getNextTheme((currentTheme ?? DEFAULT_THEME) as ThemeAppearance);
+      cacheThemeAppearance(nextTheme);
+      return nextTheme;
+    });
   },
 };

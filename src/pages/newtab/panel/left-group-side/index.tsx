@@ -10,13 +10,13 @@ import { Icon } from '@iconify-icon/react';
 export const LeftPanel = () => {
   return (
     <div className={cls(styles.leftPanel, 'flex flex-col h-screen')}>
-      <div className={'inline-flex justify-between items-center pb-1 border-b-1 border-[#2d2d2d] mb-1'}>
-        <div className={'flex gap-2'}>
-          <img src={Favicon} alt="Logo" width="14" height="14" />
-          <span className={'text-sm font-serif font-bold'}>Spaces</span>
+      <div className={'inline-flex justify-between items-center pb-2 border-b border-app-border mb-2'}>
+        <div className={'flex gap-2 items-center'}>
+          <img src={Favicon} alt="Logo" width="16" height="16" />
+          <span className={'text-sm font-semibold tracking-wide'}>Spaces</span>
         </div>
         <div
-          className={' cursor-pointer flex items-center justify-center hover:text-gray-100 text-gray-500'}
+          className={'cursor-pointer flex items-center justify-center text-app-text-muted hover:text-app-text transition-colors'}
           onClick={() => {
             Actions.addNewGroup();
           }}>

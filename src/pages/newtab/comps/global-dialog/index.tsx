@@ -39,10 +39,10 @@ export function GlobalDialog() {
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-zinc-900 p-6 text-white shadow-2xl">
+    <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-2xl border border-app-border bg-app-surface p-6 text-app-text shadow-2xl">
         <div className="mb-4 text-lg font-semibold">{title}</div>
-        <div className="mb-6 text-sm text-white/80">{content}</div>
+        <div className="mb-6 text-sm text-app-text-muted">{content}</div>
         <div className="flex justify-end gap-3">
           <Button
             onClick={() => {

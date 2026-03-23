@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+  --color-app-bg: var(--app-bg);
+  --color-app-surface: var(--app-surface);
+  --color-app-card-bg: var(--app-card-bg);
+  --color-app-text: var(--app-text);
+  --color-app-text-muted: var(--app-text-muted);
+  --color-app-border: var(--app-border);
+  --color-app-hover-bg: var(--app-hover-bg);
+}
+
 :root {
   /*--chakra-fontSizes-lg: '18px';*/
   /*--chakra-colors-gray-100: '#fafafa';*/

@@ -141,12 +141,12 @@ const GroupItem = (props: { group: GroupInfo; groupIndex: number }) => {
       className={cls(
         styles.leftSpaceItem,
         { [styles.leftSpaceItemActive]: selectedGroupId === group.id },
-        'group',
+        'group flex items-center',
         {
-          'bg-gray-200': isActive,
+          'bg-app-hover-bg': isActive,
           ['opacity-0']: isDragging,
         },
-        'transition-colors duration-300',
+        'transition-colors duration-200 hover:bg-app-hover-bg',
       )}
       onClick={() => {
         Actions.selectGroup(group.id);
