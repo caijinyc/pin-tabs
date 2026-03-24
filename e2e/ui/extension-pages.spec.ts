@@ -143,4 +143,23 @@ test.describe('extension page smoke', () => {
       }),
     );
   });
+
+  test('popup resolves the persisted light theme before marking bootstrap ready', async ({ context, extensionUrl }) => {
+    const optionsPage = await context.newPage();
+
+    await optionsPage.goto(extensionUrl('src/pages/options/index.html'));
+    await optionsPage.getByRole('button', { name: 'Use light theme' }).click();
+    await expect.poll(async () => optionsPage.locator('html').getAttribute('data-theme')).toBe('light');
+
+    const popupPage = await context.newPage();
+    await popupPage.addInitScript(() => {
+      localStorage.removeItem('theme-storage-key');
+    });
+
+    await popupPage.goto(extensionUrl('src/pages/popup/index.html'));
+
+    await expect.poll(async () => popupPage.locator('html').getAttribute('data-theme')).toBe('light');
+    await expect.poll(async () => popupPage.locator('html').getAttribute('data-theme-ready')).toBe('true');
+    await expect(popupPage.getByRole('button', { name: 'Use dark theme' })).toBeVisible();
+  });
 });

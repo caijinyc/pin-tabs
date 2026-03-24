@@ -5,17 +5,20 @@ import Popup from '@pages/popup/Popup';
 import refreshOnUpdate from 'virtual:reload-on-update-in-view';
 import { applyThemeAppearance, resolveThemeAppearance } from '@src/shared/ui/app-provider';
 import { themeStorage } from '@src/shared/storages/theme-storage';
+import { markThemeReady } from '@src/shared/ui/theme-bootstrap';
 
 refreshOnUpdate('pages/popup');
 
-function init() {
+async function init() {
   const appContainer = document.querySelector('#app-container');
   if (!appContainer) {
     throw new Error('Can not find #app-container');
   }
-  
-  applyThemeAppearance(resolveThemeAppearance(themeStorage.getSnapshot()));
-  
+
+  const initialTheme = resolveThemeAppearance(themeStorage.getSnapshot() ?? (await themeStorage.get()));
+  applyThemeAppearance(initialTheme);
+  markThemeReady();
+
   const root = createRoot(appContainer);
   root.render(<Popup />);
 
@@ -34,4 +37,4 @@ function init() {
   // window.open(`chrome-extension://${chrome.runtime.id}/src/pages/newtab/index.html`);
 }
 
-init();
+void init();
